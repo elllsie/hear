@@ -1,0 +1,110 @@
+[
+  {
+    "id": "47",
+    "text": "der Januar",
+    "article": "der",
+    "phonetic": "[ˈjanuaːɐ̯]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "一月",
+    "example": "Im Januar ist es kalt."
+  },
+  {
+    "id": "48",
+    "text": "der Februar",
+    "article": "der",
+    "phonetic": "[ˈfeːbʁuaːɐ̯]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "二月",
+    "example": "Februar hat 28 Tage."
+  },
+  {
+    "id": "49",
+    "text": "der März",
+    "article": "der",
+    "phonetic": "[mɛʁt͡s]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "三月",
+    "example": "Der März beginnt bald."
+  },
+  {
+    "id": "50",
+    "text": "der April",
+    "article": "der",
+    "phonetic": "[aˈpʁɪl]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "四月",
+    "example": "April, April!"
+  },
+  {
+    "id": "51",
+    "text": "der Mai",
+    "article": "der",
+    "phonetic": "[maɪ̯]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "五月",
+    "example": "Im Mai blühen die Blumen."
+  },
+  {
+    "id": "52",
+    "text": "der Juni",
+    "article": "der",
+    "phonetic": "[ˈjuːni]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "六月",
+    "example": "Juni ist ein Sommermonat."
+  },
+  {
+    "id": "53",
+    "text": "der Juli",
+    "article": "der",
+    "phonetic": "[ˈjuːli]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "七月",
+    "example": "Im Juli ist es heiß."
+  },
+  {
+    "id": "54",
+    "text": "der August",
+    "article": "der",
+    "phonetic": "[aʊ̯ˈɡʊst]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "八月",
+    "example": "Urlaub im August."
+  },
+  {
+    "id": "55",
+    "text": "der September",
+    "article": "der",
+    "phonetic": "[zɛpˈtɛmbɐ]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "九月",
+    "example": "Die Schule beginnt im September."
+  },
+  {
+    "id": "56",
+    "text": "der Oktober",
+    "article": "der",
+    "phonetic": "[ɔkˈtoːbɐ]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "十月",
+    "example": "Oktoberfest im Oktober."
+  },
+  {
+    "id": "57",
+    "text": "der November",
+    "article": "der",
+    "phonetic": "[noˈvɛmbɐ]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "十一月",
+    "example": "Im November wird es kalt."
+  },
+  {
+    "id": "58",
+    "text": "der Dezember",
+    "article": "der",
+    "phonetic": "[deˈt͡sɛmbɐ]",
+    "source": "Goethe A1 Wortliste",
+    "meaning": "十二月",
+    "example": "Weihnachten ist im Dezember."
+  }
+]
