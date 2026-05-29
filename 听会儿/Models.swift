@@ -26,6 +26,96 @@ public struct Word: Codable, Equatable {
         case meaningEn
         case source
     }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if let id = try? container.decode(String.self, forKey: .id) {
+            self.id = id
+        } else if let id = try? container.decode(Int.self, forKey: .id) {
+            self.id = String(id)
+        } else {
+            self.id = ""
+        }
+
+        self.word = try container.decode(String.self, forKey: .word)
+        self.translation = try container.decode(String.self, forKey: .translation)
+        self.phonetic = try container.decodeIfPresent(String.self, forKey: .phonetic)
+        self.example = try container.decodeIfPresent(String.self, forKey: .example)
+        self.audioFileName = try container.decodeIfPresent(String.self, forKey: .audioFileName)
+        self.article = try container.decodeIfPresent(String.self, forKey: .article)
+        self.meaningZh = try container.decodeIfPresent(String.self, forKey: .meaningZh)
+        self.meaningEn = try container.decodeIfPresent(String.self, forKey: .meaningEn)
+        self.source = try container.decodeIfPresent(String.self, forKey: .source)
+    }
+}
+
+public enum LearningLanguage: String, CaseIterable, Identifiable {
+    case english
+    case chinese
+
+    public var id: String { rawValue }
+
+    public var title: String {
+        switch self {
+        case .english: return "English Learning"
+        case .chinese: return "中文"
+        }
+    }
+
+    public var description: String {
+        switch self {
+        case .english: return "English descriptions"
+        case .chinese: return "用中文描述"
+        }
+    }
+
+    public func title(for interfaceLanguage: LearningLanguage) -> String {
+        switch interfaceLanguage {
+        case .english:
+            switch self {
+            case .english: return "English Learning"
+            case .chinese: return "Chinese Learning"
+            }
+        case .chinese:
+            switch self {
+            case .english: return "English Learning"
+            case .chinese: return "中文学习"
+            }
+        }
+    }
+
+    public var speechLanguageCode: String {
+        switch self {
+        case .english: return "en-US"
+        case .chinese: return "zh-CN"
+        }
+    }
+
+    public var meaningAudioSubdirectory: String {
+        switch self {
+        case .english: return "audio/meanings/en"
+        case .chinese: return "audio/meanings/zh"
+        }
+    }
+}
+
+public extension Word {
+    func meaning(for language: LearningLanguage) -> String {
+        let preferred: String?
+        switch language {
+        case .english:
+            preferred = meaningEn
+        case .chinese:
+            preferred = meaningZh
+        }
+
+        if let preferred, !preferred.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return preferred
+        }
+
+        return translation
+    }
 }
 
 // Model representing a wordbook (e.g., A1, A2, B1)
