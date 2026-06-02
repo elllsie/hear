@@ -5,6 +5,20 @@ public struct AppUser: Codable, Equatable {
     public let id: String
     public let username: String
     public let displayName: String
+
+    public static let guest = AppUser(
+        id: "local-guest",
+        username: "guest",
+        displayName: "Guest"
+    )
+
+    public var isGuest: Bool {
+        id == Self.guest.id
+    }
+
+    public var storageKey: String {
+        isGuest ? "guest" : username
+    }
 }
 
 @MainActor
@@ -32,6 +46,10 @@ public final class AuthStore: ObservableObject {
         KeychainStore.read(service: keychainService, account: accessTokenAccount)
     }
 
+    private var refreshToken: String? {
+        KeychainStore.read(service: keychainService, account: refreshTokenAccount)
+    }
+
     public func register(email: String, password: String) {
         runAuth(email: email, password: password, action: SupabaseClient.shared.signUp)
     }
@@ -46,6 +64,48 @@ public final class AuthStore: ObservableObject {
         defaults.removeObject(forKey: currentUserKey)
         currentUser = nil
         errorMessage = nil
+    }
+
+    public func deleteAccount() async -> Bool {
+        errorMessage = nil
+        guard accessToken != nil else {
+            errorMessage = "登录已过期，请重新登录后再删除账号"
+            return false
+        }
+
+        isWorking = true
+        defer { isWorking = false }
+
+        do {
+            let validAccessToken = try await refreshedAccessToken()
+            try await SupabaseClient.shared.deleteAccount(accessToken: validAccessToken)
+            logout()
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    private func refreshedAccessToken() async throws -> String {
+        guard let refreshToken else {
+            guard let accessToken else {
+                throw SupabaseClientError.message("登录已过期，请重新登录后再删除账号")
+            }
+            return accessToken
+        }
+
+        do {
+            let session = try await SupabaseClient.shared.refreshSession(refreshToken: refreshToken)
+            KeychainStore.save(session.accessToken, service: keychainService, account: accessTokenAccount)
+            if let refreshToken = session.refreshToken {
+                KeychainStore.save(refreshToken, service: keychainService, account: refreshTokenAccount)
+            }
+            return session.accessToken
+        } catch {
+            logout()
+            throw SupabaseClientError.message("登录已过期，请重新登录后再删除账号")
+        }
     }
 
     private func runAuth(

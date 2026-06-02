@@ -4,6 +4,11 @@ import AVFoundation
 struct ContentView: View {
     @StateObject private var authStore = AuthStore()
     @State private var screen: PlayerScreen = .books
+    @State private var authRoute: AuthRoute?
+    @State private var isShowingFavoriteSignInPrompt = false
+    @State private var pendingFavorite: PendingFavorite?
+    @State private var deleteSuccessMessage: String?
+    @State private var isShowingDeleteSuccess = false
     @State private var books: [WordBook] = []
     @State private var selectedBook: WordBook?
     @State private var speed: Double = 1.0
@@ -18,13 +23,42 @@ struct ContentView: View {
     @State private var progressRefreshSeed = 0
     @State private var learningLanguage: LearningLanguage = .chinese
     @State private var hasSavedLearningLanguage = false
+    @State private var favoriteRefs: [FavoriteWordReference] = []
     private let progressStore = LearningProgressStore.shared
+
+    private var activeUser: AppUser {
+        authStore.currentUser ?? .guest
+    }
+
+    private var isGuestMode: Bool {
+        authStore.currentUser == nil
+    }
 
     var body: some View {
         ZStack {
             AppColors.background.ignoresSafeArea()
 
-            if let currentUser = authStore.currentUser {
+            if let route = authRoute {
+                AuthView(
+                    mode: route,
+                    learningLanguage: learningLanguage,
+                    errorMessage: authStore.errorMessage,
+                    isWorking: authStore.isWorking,
+                    onLogin: { email, password in
+                        authStore.login(email: email, password: password)
+                    },
+                    onRegister: { email, password in
+                        authStore.register(email: email, password: password)
+                    },
+                    onSwitchMode: {
+                        authRoute = route == .login ? .register : .login
+                    },
+                    onBack: {
+                        authRoute = nil
+                    }
+                )
+            } else {
+                let currentUser = activeUser
                 if !hasSavedLearningLanguage {
                     LanguageSetupView { language in
                         saveLearningLanguage(language)
@@ -34,19 +68,29 @@ struct ContentView: View {
                     switch screen {
                     case .books:
                         BookSelectionView(
-                            books: books,
+                            books: displayBooks(),
                             isLoading: isLoadingBooks,
                             errorMessage: loadErrorMessage,
                             currentUser: currentUser,
+                            isGuestMode: isGuestMode,
                             learningLanguage: learningLanguage,
                             progressText: progressText(for:),
                             onProfile: {
                                 screen = .profile
                             },
-                            onLogout: logout
+                            onLogin: {
+                                authRoute = .login
+                            },
+                            onLogout: {
+                                logout()
+                            }
                         ) { book in
+                            if isGuestMode, book.bookId == FavoriteWordStore.favoriteBookId {
+                                promptForFavoriteSignIn()
+                                return
+                            }
                             let savedIndex = progressStore.lastIndex(
-                                for: currentUser.username,
+                                for: currentUser.storageKey,
                                 bookId: book.bookId,
                                 wordCount: book.words.count
                             )
@@ -79,6 +123,7 @@ struct ContentView: View {
                                 currentWord: currentWord ?? selectedBook.words.first,
                                 isPlaying: isPlaying,
                                 learningLanguage: learningLanguage,
+                                isCurrentFavorite: isFavorite(currentWord ?? selectedBook.words.first, in: selectedBook),
                                 onBack: {
                                     saveProgress(book: selectedBook, index: currentIndex)
                                     stopPlayback()
@@ -91,8 +136,16 @@ struct ContentView: View {
                                 onNext: {
                                     startPlayback(book: selectedBook, from: min(selectedBook.words.count - 1, currentIndex + 1))
                                 },
+                                onPreviewIndex: { index in
+                                    previewWord(book: selectedBook, at: index)
+                                },
                                 onJumpToIndex: { index in
                                     startPlayback(book: selectedBook, from: index)
+                                },
+                                onToggleFavorite: {
+                                    if let word = currentWord ?? selectedBook.words.first {
+                                        toggleFavorite(word: word, in: selectedBook)
+                                    }
                                 }
                             )
                             .onAppear {
@@ -104,41 +157,65 @@ struct ContentView: View {
                     case .profile:
                         ProfileSettingsView(
                             currentUser: currentUser,
+                            isGuestMode: isGuestMode,
                             learningLanguage: learningLanguage,
+                            deleteErrorMessage: authStore.errorMessage,
+                            deleteSuccessMessage: deleteSuccessMessage,
+                            isDeletingAccount: authStore.isWorking,
                             onBack: {
                                 screen = .books
                             },
                             onLanguageChange: { language in
                                 saveLearningLanguage(language)
                             },
-                            onLogout: logout
+                            onLogin: {
+                                authRoute = .login
+                            },
+                            onRegister: {
+                                authRoute = .register
+                            },
+                            onDeleteAccount: deleteAccount
                         )
                     }
                 }
-            } else {
-                AuthView(
-                    errorMessage: authStore.errorMessage,
-                    isWorking: authStore.isWorking,
-                    onLogin: { email, password in
-                        authStore.login(email: email, password: password)
-                    },
-                    onRegister: { email, password in
-                        authStore.register(email: email, password: password)
-                    }
-                )
             }
+        }
+        .alert(favoriteSignInTitle, isPresented: $isShowingFavoriteSignInPrompt) {
+            Button(learningLanguage == .english ? "Sign In" : "登录") {
+                authRoute = .login
+            }
+            Button(learningLanguage == .english ? "Create Account" : "创建账号") {
+                authRoute = .register
+            }
+            Button(learningLanguage == .english ? "Cancel" : "取消", role: .cancel) {}
+        } message: {
+            Text(favoriteSignInMessage)
+        }
+        .alert("删除成功", isPresented: $isShowingDeleteSuccess) {
+            Button("OK") {
+                deleteSuccessMessage = nil
+            }
+        } message: {
+            Text(deleteSuccessMessage ?? "账号和云端数据已删除")
         }
         .onAppear {
             loadBooks()
             loadLearningLanguage()
+            loadFavorites()
         }
-        .onChange(of: authStore.currentUser?.id) { _, _ in
+        .onChange(of: authStore.currentUser?.id) { oldValue, newValue in
             stopPlayback()
             selectedBook = nil
             currentIndex = 0
             currentWord = nil
             screen = .books
+            authRoute = nil
+            if oldValue == nil, newValue != nil, let user = authStore.currentUser {
+                migrateGuestData(to: user)
+                completePendingFavoriteIfNeeded()
+            }
             loadLearningLanguage()
+            loadFavorites()
         }
         .task(id: "\(authStore.currentUser?.id ?? "guest")-\(books.count)") {
             await syncRemoteProgress()
@@ -164,6 +241,39 @@ struct ContentView: View {
         }
     }
 
+    private var favoriteSignInTitle: String {
+        learningLanguage == .english ? "Sign in to save your favorites" : "登录以保存收藏"
+    }
+
+    private var favoriteSignInMessage: String {
+        learningLanguage == .english
+            ? "Create an account or sign in to sync your favorite words across devices."
+            : "创建账号或登录后，可以在多台设备同步收藏单词。"
+    }
+
+    private func displayBooks() -> [WordBook] {
+        return [favoriteBook()] + books
+    }
+
+    private func favoriteBook() -> WordBook {
+        let words = isGuestMode ? [] : favoriteRefs.compactMap { word(for: $0) }
+        return WordBook(bookId: FavoriteWordStore.favoriteBookId, title: FavoriteWordStore.favoriteBookTitle, words: words)
+    }
+
+    private func word(for reference: FavoriteWordReference) -> Word? {
+        books.first { $0.bookId == reference.bookId }?
+            .words
+            .first { $0.id == reference.wordId }
+    }
+
+    private func previewWord(book: WordBook, at index: Int) {
+        guard book.words.indices.contains(index) else { return }
+        stopPlayback()
+        selectedBook = book
+        currentIndex = index
+        currentWord = book.words[index]
+    }
+
     private func startPlayback(book: WordBook, from index: Int) {
         guard !book.words.isEmpty else { return }
 
@@ -171,6 +281,7 @@ struct ContentView: View {
         currentIndex = safeIndex
         currentWord = book.words[safeIndex]
         isPlaying = true
+        didStartPlayback = true
         saveProgress(book: book, index: safeIndex)
 
         let delegate = PlayerScreenDelegate(
@@ -184,6 +295,7 @@ struct ContentView: View {
             },
             onComplete: {
                 isPlaying = false
+                didStartPlayback = false
             }
         )
 
@@ -198,12 +310,78 @@ struct ContentView: View {
         AudioPlayerManager.shared.play(words: book.words, startIndex: safeIndex)
     }
 
+    private func loadFavorites() {
+        favoriteRefs = isGuestMode ? [] : FavoriteWordStore.load(for: activeUser)
+    }
+
+    private func saveFavorites() {
+        guard !isGuestMode else { return }
+        FavoriteWordStore.save(favoriteRefs, for: activeUser)
+    }
+
+    private func favoriteReference(for word: Word, in book: WordBook) -> FavoriteWordReference? {
+        if book.bookId != FavoriteWordStore.favoriteBookId {
+            return FavoriteWordReference(bookId: book.bookId, wordId: word.id)
+        }
+
+        return favoriteRefs.first { reference in
+            guard let storedWord = self.word(for: reference) else { return false }
+            return storedWord.id == word.id && storedWord.word == word.word
+        }
+    }
+
+    private func isFavorite(_ word: Word?, in book: WordBook) -> Bool {
+        guard let word, let reference = favoriteReference(for: word, in: book) else { return false }
+        return favoriteRefs.contains(reference)
+    }
+
+    private func toggleFavorite(word: Word, in book: WordBook) {
+        guard !isGuestMode else {
+            stopPlayback()
+            pendingFavorite = PendingFavorite(book: book, word: word, index: currentIndex)
+            isShowingFavoriteSignInPrompt = true
+            return
+        }
+        toggleFavoriteReference(for: word, in: book)
+    }
+
+    private func toggleFavoriteReference(for word: Word, in book: WordBook) {
+        guard let reference = favoriteReference(for: word, in: book) else { return }
+
+        if let existingIndex = favoriteRefs.firstIndex(of: reference) {
+            favoriteRefs.remove(at: existingIndex)
+        } else {
+            favoriteRefs.append(reference)
+        }
+
+        saveFavorites()
+        syncFavoriteChange(reference: reference, isFavorite: favoriteRefs.contains(reference))
+    }
+
+    private func promptForFavoriteSignIn() {
+        stopPlayback()
+        pendingFavorite = nil
+        isShowingFavoriteSignInPrompt = true
+    }
+
+    private func completePendingFavoriteIfNeeded() {
+        guard let pendingFavorite else { return }
+        selectedBook = pendingFavorite.book
+        currentIndex = pendingFavorite.index
+        currentWord = pendingFavorite.word
+        favoriteRefs = FavoriteWordStore.load(for: activeUser)
+        toggleFavoriteReference(for: pendingFavorite.word, in: pendingFavorite.book)
+        self.pendingFavorite = nil
+        screen = .player
+        didStartPlayback = false
+    }
+
     private func saveProgress(book: WordBook, index: Int) {
-        guard let user = authStore.currentUser else { return }
+        let user = activeUser
         progressStore.saveAndSync(
-            username: user.username,
+            username: user.storageKey,
             userId: user.id,
-            accessToken: authStore.accessToken,
+            accessToken: isGuestMode ? nil : authStore.accessToken,
             bookId: book.bookId,
             index: index,
             wordCount: book.words.count
@@ -212,8 +390,7 @@ struct ContentView: View {
 
     private func progressText(for book: WordBook) -> String? {
         _ = progressRefreshSeed
-        guard let username = authStore.currentUser?.username,
-              let progress = progressStore.progress(for: username, bookId: book.bookId),
+        guard let progress = progressStore.progress(for: activeUser.storageKey, bookId: book.bookId),
               book.words.indices.contains(progress.lastIndex) else {
             return nil
         }
@@ -239,27 +416,32 @@ struct ContentView: View {
             ) else {
                 continue
             }
-            progressStore.save(username: user.username, progress: remote)
+            progressStore.save(username: user.storageKey, progress: remote)
             progressRefreshSeed += 1
         }
+
+        await syncRemoteFavorites(user: user, accessToken: accessToken)
     }
 
     private func logout() {
+        let wasGuestMode = isGuestMode
         stopPlayback()
         selectedBook = nil
         currentIndex = 0
         currentWord = nil
         screen = .books
         hasSavedLearningLanguage = false
-        authStore.logout()
+        authRoute = nil
+        deleteSuccessMessage = nil
+        if !wasGuestMode {
+            authStore.logout()
+        }
+        loadLearningLanguage()
+        loadFavorites()
     }
 
     private func loadLearningLanguage() {
-        guard let user = authStore.currentUser else {
-            learningLanguage = .chinese
-            hasSavedLearningLanguage = false
-            return
-        }
+        let user = activeUser
 
         guard let rawValue = UserDefaults.standard.string(forKey: learningLanguageKey(for: user)),
               let language = LearningLanguage(rawValue: rawValue) else {
@@ -273,19 +455,108 @@ struct ContentView: View {
     }
 
     private func saveLearningLanguage(_ language: LearningLanguage) {
-        guard let user = authStore.currentUser else { return }
+        let user = activeUser
         learningLanguage = language
         hasSavedLearningLanguage = true
         UserDefaults.standard.set(language.rawValue, forKey: learningLanguageKey(for: user))
     }
 
     private func learningLanguageKey(for user: AppUser) -> String {
-        "tinghui.learningLanguage.\(user.id)"
+        "tinghui.learningLanguage.\(user.storageKey)"
+    }
+
+    private func syncFavoriteChange(reference: FavoriteWordReference, isFavorite: Bool) {
+        guard !isGuestMode,
+              let accessToken = authStore.accessToken,
+              let user = authStore.currentUser else {
+            return
+        }
+
+        Task {
+            if isFavorite {
+                try? await SupabaseClient.shared.upsertFavorite(
+                    accessToken: accessToken,
+                    userId: user.id,
+                    reference: reference
+                )
+            } else {
+                try? await SupabaseClient.shared.deleteFavorite(
+                    accessToken: accessToken,
+                    userId: user.id,
+                    reference: reference
+                )
+            }
+        }
+    }
+
+    private func syncRemoteFavorites(user: AppUser, accessToken: String) async {
+        guard let remoteRefs = try? await SupabaseClient.shared.fetchFavorites(
+            accessToken: accessToken,
+            userId: user.id
+        ) else {
+            return
+        }
+
+        let merged = Array(Set(favoriteRefs).union(remoteRefs))
+            .sorted { "\($0.bookId)-\($0.wordId)" < "\($1.bookId)-\($1.wordId)" }
+        favoriteRefs = merged
+        FavoriteWordStore.save(merged, for: user)
+
+        for reference in merged {
+            try? await SupabaseClient.shared.upsertFavorite(
+                accessToken: accessToken,
+                userId: user.id,
+                reference: reference
+            )
+        }
+    }
+
+    private func migrateGuestData(to user: AppUser) {
+        let guestRefs = FavoriteWordStore.load(for: .guest)
+        if !guestRefs.isEmpty {
+            let userRefs = FavoriteWordStore.load(for: user)
+            FavoriteWordStore.save(Array(Set(userRefs).union(guestRefs)), for: user)
+        }
+
+        for book in books {
+            guard let guestProgress = progressStore.progress(for: AppUser.guest.storageKey, bookId: book.bookId) else {
+                continue
+            }
+            progressStore.save(username: user.storageKey, progress: guestProgress)
+            if let accessToken = authStore.accessToken {
+                progressStore.saveAndSync(
+                    username: user.storageKey,
+                    userId: user.id,
+                    accessToken: accessToken,
+                    bookId: book.bookId,
+                    index: guestProgress.lastIndex,
+                    wordCount: book.words.count
+                )
+            }
+        }
+    }
+
+    private func deleteAccount() {
+        Task {
+            let didDelete = await authStore.deleteAccount()
+            guard didDelete else { return }
+            stopPlayback()
+            selectedBook = nil
+            currentIndex = 0
+            currentWord = nil
+            screen = .books
+            hasSavedLearningLanguage = false
+            authRoute = nil
+            deleteSuccessMessage = "账号和云端数据已删除"
+            isShowingDeleteSuccess = true
+        }
     }
 
     private func togglePlayback() {
         if isPlaying {
             AudioPlayerManager.shared.pause()
+        } else if let selectedBook, selectedBook.words.indices.contains(currentIndex), !didStartPlayback {
+            startPlayback(book: selectedBook, from: currentIndex)
         } else {
             AudioPlayerManager.shared.resume()
         }
@@ -305,6 +576,45 @@ private enum PlayerScreen {
     case profile
 }
 
+enum AuthRoute {
+    case login
+    case register
+}
+
+private struct PendingFavorite {
+    let book: WordBook
+    let word: Word
+    let index: Int
+}
+
+struct FavoriteWordReference: Codable, Hashable {
+    let bookId: String
+    let wordId: String
+}
+
+private enum FavoriteWordStore {
+    static let favoriteBookId = "favorites"
+    static let favoriteBookTitle = "MY"
+
+    static func load(for user: AppUser) -> [FavoriteWordReference] {
+        guard let data = UserDefaults.standard.data(forKey: key(for: user.storageKey)),
+              let refs = try? JSONDecoder().decode([FavoriteWordReference].self, from: data) else {
+            return []
+        }
+
+        return refs
+    }
+
+    static func save(_ refs: [FavoriteWordReference], for user: AppUser) {
+        guard let data = try? JSONEncoder().encode(refs) else { return }
+        UserDefaults.standard.set(data, forKey: key(for: user.storageKey))
+    }
+
+    private static func key(for storageKey: String) -> String {
+        "tinghui.favoriteWords.\(storageKey)"
+    }
+}
+
 private enum AppColors {
     static let background = Color.black
     static let panel = Color(red: 0.07, green: 0.10, blue: 0.17)
@@ -313,32 +623,139 @@ private enum AppColors {
     static let track = Color(red: 0.12, green: 0.18, blue: 0.27)
 }
 
+private struct WelcomeView: View {
+    let signedInUser: AppUser?
+    let onContinueAsGuest: () -> Void
+    let onContinueSignedIn: () -> Void
+    let onLogin: () -> Void
+    let onRegister: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Spacer(minLength: 88)
+
+            VStack(spacing: 16) {
+                Text("听会儿")
+                    .font(.system(size: 50, weight: .bold))
+                    .foregroundColor(.white)
+
+                Text("先听起来，账号只用于云端同步")
+                    .font(.system(size: 21, weight: .semibold))
+                    .foregroundColor(AppColors.muted)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal, 32)
+
+            VStack(spacing: 16) {
+                Button(action: onContinueAsGuest) {
+                    Text("Continue Without Account")
+                        .font(.system(size: 23, weight: .bold))
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 66)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+                .buttonStyle(.plain)
+
+                if let signedInUser {
+                    Button(action: onContinueSignedIn) {
+                        Text("Continue as \(signedInUser.displayName)")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.72)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 64)
+                            .background(AppColors.panel)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .stroke(AppColors.stroke, lineWidth: 1.5)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                Button(action: onLogin) {
+                    Text("Login")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 64)
+                        .background(AppColors.panel)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(AppColors.stroke, lineWidth: 1.5)
+                        )
+                }
+                .buttonStyle(.plain)
+
+                Button(action: onRegister) {
+                    Text("Register")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(AppColors.muted)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 34)
+            .padding(.top, 76)
+
+            Spacer(minLength: 64)
+        }
+    }
+}
+
 private struct AuthView: View {
+    let mode: AuthRoute
+    let learningLanguage: LearningLanguage
     let errorMessage: String?
     let isWorking: Bool
     let onLogin: (String, String) -> Void
     let onRegister: (String, String) -> Void
+    let onSwitchMode: () -> Void
+    let onBack: () -> Void
 
-    @State private var isRegistering = false
     @State private var email = ""
     @State private var password = ""
 
     var body: some View {
+        let isRegistering = mode == .register
+        let isEnglish = learningLanguage == .english
+
         VStack(spacing: 0) {
-            Spacer(minLength: 84)
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 24, weight: .semibold))
+                        Text(isEnglish ? "Back" : "返回")
+                            .font(.system(size: 22, weight: .bold))
+                    }
+                    .foregroundColor(AppColors.muted)
+                }
+                .buttonStyle(.plain)
+
+                Spacer()
+            }
+            .padding(.horizontal, 28)
+            .padding(.top, 22)
+
+            Spacer(minLength: 52)
 
             VStack(spacing: 16) {
                 Text("听会儿")
                     .font(.system(size: 46, weight: .bold))
                     .foregroundColor(.white)
 
-                Text(isRegistering ? "注册账号后开始学习" : "登录后继续学习")
+                Text(authSubtitle(isRegistering: isRegistering, isEnglish: isEnglish))
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundColor(AppColors.muted)
             }
 
             VStack(spacing: 18) {
-                TextField("邮箱", text: $email)
+                TextField(isEnglish ? "Email" : "邮箱", text: $email)
                     .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
                     .autocorrectionDisabled()
@@ -352,7 +769,7 @@ private struct AuthView: View {
                             .stroke(AppColors.stroke, lineWidth: 1.5)
                     )
 
-                SecureField("密码", text: $password)
+                SecureField(isEnglish ? "Password" : "密码", text: $password)
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 22)
@@ -364,7 +781,7 @@ private struct AuthView: View {
                     )
 
                 if let errorMessage {
-                    Text(errorMessage)
+                    Text(localizedErrorMessage(errorMessage, isEnglish: isEnglish))
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.red.opacity(0.85))
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -377,7 +794,7 @@ private struct AuthView: View {
                         onLogin(email, password)
                     }
                 } label: {
-                    Text(isWorking ? "处理中..." : (isRegistering ? "注册并登录" : "登录"))
+                    Text(authPrimaryButtonTitle(isRegistering: isRegistering, isWorking: isWorking, isEnglish: isEnglish))
                         .font(.system(size: 23, weight: .bold))
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity)
@@ -390,10 +807,8 @@ private struct AuthView: View {
                 .opacity(isWorking ? 0.65 : 1)
                 .padding(.top, 10)
 
-                Button {
-                    isRegistering.toggle()
-                } label: {
-                    Text(isRegistering ? "已有账号，去登录" : "没有账号，注册一个")
+                Button(action: onSwitchMode) {
+                    Text(authSwitchTitle(isRegistering: isRegistering, isEnglish: isEnglish))
                         .font(.system(size: 19, weight: .bold))
                         .foregroundColor(AppColors.muted)
                         .frame(height: 44)
@@ -404,6 +819,51 @@ private struct AuthView: View {
             .padding(.top, 72)
 
             Spacer(minLength: 56)
+        }
+        .frame(maxWidth: 560)
+        .frame(maxWidth: .infinity)
+    }
+
+    private func authSubtitle(isRegistering: Bool, isEnglish: Bool) -> String {
+        if isEnglish {
+            return isRegistering ? "Create an account to save favorites" : "Sign in to save favorites"
+        }
+
+        return isRegistering ? "注册账号后收藏单词" : "登录后收藏单词"
+    }
+
+    private func authPrimaryButtonTitle(isRegistering: Bool, isWorking: Bool, isEnglish: Bool) -> String {
+        if isWorking {
+            return isEnglish ? "Processing..." : "处理中..."
+        }
+
+        if isEnglish {
+            return isRegistering ? "Create Account and Sign In" : "Sign In"
+        }
+
+        return isRegistering ? "注册并登录" : "登录"
+    }
+
+    private func authSwitchTitle(isRegistering: Bool, isEnglish: Bool) -> String {
+        if isEnglish {
+            return isRegistering ? "Already have an account? Sign in" : "No account yet? Create one"
+        }
+
+        return isRegistering ? "已有账号，去登录" : "没有账号，注册一个"
+    }
+
+    private func localizedErrorMessage(_ message: String, isEnglish: Bool) -> String {
+        guard isEnglish else { return message }
+
+        switch message {
+        case "请输入邮箱":
+            return "Please enter a valid email address"
+        case "密码至少需要6个字符":
+            return "Password must be at least 6 characters"
+        case "登录已过期，请重新登录后再删除账号":
+            return "Your session has expired. Please sign in again before deleting your account."
+        default:
+            return message
         }
     }
 }
@@ -451,6 +911,8 @@ private struct LanguageSetupView: View {
 
             Spacer(minLength: 64)
         }
+        .frame(maxWidth: 760)
+        .frame(maxWidth: .infinity)
     }
 }
 
@@ -502,9 +964,11 @@ private struct BookSelectionView: View {
     let isLoading: Bool
     let errorMessage: String?
     let currentUser: AppUser
+    let isGuestMode: Bool
     let learningLanguage: LearningLanguage
     let progressText: (WordBook) -> String?
     let onProfile: () -> Void
+    let onLogin: () -> Void
     let onLogout: () -> Void
     let onSelect: (WordBook) -> Void
 
@@ -518,7 +982,7 @@ private struct BookSelectionView: View {
                         Image(systemName: "person.crop.circle")
                             .font(.system(size: 20, weight: .semibold))
 
-                        Text(currentUser.displayName)
+                        Text(isGuestMode ? (isEnglish ? "Guest" : "游客") : currentUser.displayName)
                             .font(.system(size: 18, weight: .bold))
                     }
                     .foregroundColor(AppColors.muted)
@@ -527,8 +991,8 @@ private struct BookSelectionView: View {
 
                 Spacer()
 
-                Button(action: onLogout) {
-                    Text(isEnglish ? "Log Out" : "退出")
+                Button(action: isGuestMode ? onLogin : onLogout) {
+                    Text(isGuestMode ? (isEnglish ? "Sign In" : "登录") : (isEnglish ? "Log Out" : "退出"))
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(AppColors.muted)
                 }
@@ -536,6 +1000,8 @@ private struct BookSelectionView: View {
             }
             .padding(.horizontal, 28)
             .padding(.top, 22)
+            .frame(maxWidth: 820)
+            .frame(maxWidth: .infinity)
 
             ScrollView {
                 VStack(spacing: 0) {
@@ -575,6 +1041,8 @@ private struct BookSelectionView: View {
                     }
                 }
                 .padding(.bottom, 96)
+                .frame(maxWidth: 820)
+                .frame(maxWidth: .infinity)
             }
             .scrollIndicators(.visible)
         }
@@ -590,6 +1058,10 @@ private struct BookListView: View {
     var body: some View {
         VStack(spacing: 16) {
             ForEach(books, id: \.bookId) { book in
+                let isFavoriteBook = book.bookId == FavoriteWordStore.favoriteBookId
+                let isDisabled = isFavoriteBook && book.words.isEmpty
+                let shouldShowDisabled = isDisabled
+
                 Button {
                     onSelect(book)
                 } label: {
@@ -600,15 +1072,22 @@ private struct BookListView: View {
                             .foregroundColor(AppColors.muted)
 
                         VStack(alignment: .leading, spacing: 8) {
-                            Text(isEnglish ? "German \(book.title)" : "德语 \(book.title)")
+                            Text(title(for: book, isEnglish: isEnglish))
                                 .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(.white)
+                                .foregroundColor(isDisabled ? AppColors.muted : .white)
 
-                            if let progressText = progressText(book) {
+                            if isFavoriteBook {
+                                Text(isEnglish ? "\(book.words.count) saved words" : "已收藏 \(book.words.count) 个单词")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(AppColors.muted)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.72)
+                            } else if let progressText = progressText(book) {
                                 Text(progressText)
                                     .font(.system(size: 18, weight: .bold))
                                     .foregroundColor(AppColors.muted)
-                                    .lineLimit(1)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.72)
                             }
                         }
 
@@ -625,20 +1104,40 @@ private struct BookListView: View {
                         RoundedRectangle(cornerRadius: 18)
                             .stroke(AppColors.stroke, lineWidth: 2)
                     )
+                    .opacity(shouldShowDisabled ? 0.55 : 1)
                 }
                 .buttonStyle(.plain)
             }
         }
         .padding(.horizontal, 24)
+        .frame(maxWidth: 820)
+        .frame(maxWidth: .infinity)
+    }
+
+    private func title(for book: WordBook, isEnglish: Bool) -> String {
+        if book.bookId == FavoriteWordStore.favoriteBookId {
+            return isEnglish ? "My Word Book" : "我的词书"
+        }
+
+        return isEnglish ? "German \(book.title)" : "德语 \(book.title)"
     }
 }
 
 private struct ProfileSettingsView: View {
     let currentUser: AppUser
+    let isGuestMode: Bool
     let learningLanguage: LearningLanguage
+    let deleteErrorMessage: String?
+    let deleteSuccessMessage: String?
+    let isDeletingAccount: Bool
     let onBack: () -> Void
     let onLanguageChange: (LearningLanguage) -> Void
-    let onLogout: () -> Void
+    let onLogin: () -> Void
+    let onRegister: () -> Void
+    let onDeleteAccount: () -> Void
+
+    @State private var isShowingDeleteWarning = false
+    @State private var isShowingFinalDeleteWarning = false
 
     var body: some View {
         let isEnglish = learningLanguage == .english
@@ -657,16 +1156,9 @@ private struct ProfileSettingsView: View {
                 .buttonStyle(.plain)
 
                 Spacer()
-
-                Button(action: onLogout) {
-                    Text(isEnglish ? "Log Out" : "退出")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(AppColors.muted)
-                }
-                .buttonStyle(.plain)
             }
             .padding(.horizontal, 28)
-            .padding(.top, 22)
+            .padding(.top, 58)
 
             VStack(spacing: 12) {
                 Image(systemName: "person.crop.circle.fill")
@@ -686,10 +1178,10 @@ private struct ProfileSettingsView: View {
                     .minimumScaleFactor(0.7)
             }
             .padding(.horizontal, 28)
-            .padding(.top, 58)
+            .padding(.top, 42)
 
             VStack(alignment: .leading, spacing: 18) {
-                Text(isEnglish ? "Preferences" : "偏好设置")
+                Text(isEnglish ? "Settings" : "设置")
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 6)
@@ -723,27 +1215,107 @@ private struct ProfileSettingsView: View {
                         .stroke(AppColors.stroke, lineWidth: 1.5)
                 )
 
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(isEnglish ? "More Settings" : "更多设置")
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(.white)
+                if isGuestMode {
+                    VStack(spacing: 0) {
+                        SettingsActionButton(
+                            title: isEnglish ? "Login to Sync" : "登录以同步",
+                            subtitle: isEnglish ? "Sync favorites and progress across devices" : "跨设备同步收藏和学习记录",
+                            iconName: "icloud.and.arrow.up",
+                            tint: .white,
+                            action: onLogin
+                        )
 
-                    Text(isEnglish ? "Reserved for future options." : "后续设置预留位置。")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(AppColors.muted)
+                        Divider()
+                            .background(AppColors.stroke)
+                            .padding(.leading, 24)
+
+                        SettingsActionButton(
+                            title: isEnglish ? "Create Account" : "注册账号",
+                            subtitle: isEnglish ? "Keep your learning data in the cloud" : "把学习数据保存到云端",
+                            iconName: "person.badge.plus",
+                            tint: .white,
+                            action: onRegister
+                        )
+                    }
+                    .background(AppColors.panel)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(AppColors.stroke, lineWidth: 1.5)
+                    )
+                } else {
+                    VStack(alignment: .leading, spacing: 18) {
+                        Text(isEnglish ? "Account" : "账号")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 6)
+
+                        VStack(spacing: 0) {
+                            SettingsActionButton(
+                                title: isEnglish ? "Cloud Sync" : "云端同步",
+                                subtitle: isEnglish ? "Favorites and progress are synced after login" : "登录后同步收藏和学习记录",
+                                iconName: "checkmark.icloud",
+                                tint: AppColors.muted,
+                                isPassive: true,
+                                action: {}
+                            )
+                            .disabled(true)
+
+                            Divider()
+                                .background(AppColors.stroke)
+                                .padding(.leading, 24)
+
+                            SettingsActionButton(
+                                title: isEnglish ? "Delete Account" : "删除账号",
+                                subtitle: isEnglish ? "Delete account and cloud learning data" : "删除账号和云端学习数据",
+                                iconName: "trash",
+                                tint: .red.opacity(0.9),
+                                action: {
+                                    isShowingDeleteWarning = true
+                                }
+                            )
+                        }
+                        .background(AppColors.panel)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(AppColors.stroke, lineWidth: 1.5)
+                        )
+                    }
                 }
-                .padding(24)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(AppColors.panel)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(AppColors.stroke, lineWidth: 1.5)
-                )
+
+                if let deleteErrorMessage {
+                    Text(deleteErrorMessage)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.red.opacity(0.9))
+                }
+
+                if let deleteSuccessMessage {
+                    Text(deleteSuccessMessage)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.green.opacity(0.9))
+                }
             }
             .padding(.horizontal, 28)
             .padding(.top, 58)
 
             Spacer(minLength: 32)
+        }
+        .frame(maxWidth: 820)
+        .frame(maxWidth: .infinity)
+        .alert(isEnglish ? "Delete Account?" : "删除账号？", isPresented: $isShowingDeleteWarning) {
+            Button(isEnglish ? "Cancel" : "取消", role: .cancel) {}
+            Button(isEnglish ? "Continue" : "继续", role: .destructive) {
+                isShowingFinalDeleteWarning = true
+            }
+        } message: {
+            Text(isEnglish ? "This will delete your cloud favorites, learning progress, profile, and login account." : "这会删除你的云端收藏、学习记录、个人资料和登录账号。")
+        }
+        .alert(isEnglish ? "Confirm Deletion" : "再次确认删除", isPresented: $isShowingFinalDeleteWarning) {
+            Button(isEnglish ? "Cancel" : "取消", role: .cancel) {}
+            Button(isDeletingAccount ? (isEnglish ? "Deleting..." : "删除中...") : (isEnglish ? "Delete Account" : "删除账号"), role: .destructive) {
+                onDeleteAccount()
+            }
+        } message: {
+            Text(isEnglish ? "This action cannot be undone." : "此操作无法撤销。")
         }
     }
 }
@@ -782,6 +1354,48 @@ private struct SettingsLanguageButton: View {
     }
 }
 
+private struct SettingsActionButton: View {
+    let title: String
+    let subtitle: String
+    let iconName: String
+    let tint: Color
+    var isPassive = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 18) {
+                Image(systemName: iconName)
+                    .font(.system(size: 23, weight: .semibold))
+                    .foregroundColor(tint)
+                    .frame(width: 28)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(title)
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(isPassive ? AppColors.muted : .white)
+
+                    Text(subtitle)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(AppColors.muted)
+                        .lineLimit(2)
+                }
+
+                Spacer()
+
+                if !isPassive {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(AppColors.muted)
+                }
+            }
+            .padding(.horizontal, 24)
+            .frame(height: 96)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 private struct PlaybackSettingsView: View {
     let book: WordBook
     let learningLanguage: LearningLanguage
@@ -799,9 +1413,13 @@ private struct PlaybackSettingsView: View {
                 Image(systemName: "gearshape")
                     .font(.system(size: 34, weight: .bold))
                 Text(isEnglish ? "Playback Settings" : learningLanguage.description)
-                    .font(.system(size: 40, weight: .bold))
+                    .font(.system(size: 36, weight: .bold))
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.62)
+                    .multilineTextAlignment(.leading)
             }
             .foregroundColor(.white)
+            .padding(.horizontal, 32)
             .padding(.bottom, 92)
 
             VStack(spacing: 64) {
@@ -902,11 +1520,18 @@ private struct PlayerView: View {
     let currentWord: Word?
     let isPlaying: Bool
     let learningLanguage: LearningLanguage
+    let isCurrentFavorite: Bool
     let onBack: () -> Void
     let onPrevious: () -> Void
     let onTogglePlayback: () -> Void
     let onNext: () -> Void
+    let onPreviewIndex: (Int) -> Void
     let onJumpToIndex: (Int) -> Void
+    let onToggleFavorite: () -> Void
+
+    @State private var isSearchVisible = false
+    @State private var searchText = ""
+    @State private var isDetailVisible = false
 
     private var progress: Double {
         guard !book.words.isEmpty else { return 0 }
@@ -926,6 +1551,25 @@ private struct PlayerView: View {
 
     private var currentLetter: String {
         indexLetter(for: currentWord?.word ?? "")
+    }
+
+    private var searchResults: [(index: Int, word: Word)] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !query.isEmpty else { return [] }
+
+        return book.words.enumerated().compactMap { index, word in
+            let searchableText = [
+                word.word,
+                word.meaning(for: learningLanguage),
+                word.exampleText(for: learningLanguage)
+            ]
+                .joined(separator: " ")
+                .lowercased()
+
+            return searchableText.contains(query) ? (index, word) : nil
+        }
+        .prefix(8)
+        .map { $0 }
     }
 
     private func indexLetter(for word: String) -> String {
@@ -951,40 +1595,79 @@ private struct PlayerView: View {
             let isCompactHeight = proxy.size.height < 740
             let horizontalPadding: CGFloat = proxy.size.width < 390 ? 22 : 32
             let topPadding: CGFloat = isCompactHeight ? 28 : 48
-            let controlSize: CGFloat = isCompactHeight ? 104 : 128
+            let controlSize: CGFloat = isCompactHeight ? 52 : 64
 
             VStack(alignment: .leading, spacing: 0) {
-                Button(action: onBack) {
-                    HStack(spacing: 14) {
-                        Image(systemName: "house")
-                            .font(.system(size: 28, weight: .semibold))
-                        Text(isEnglish ? "Home" : "返回")
-                            .font(.system(size: 27, weight: .bold))
+                HStack {
+                    Button(action: onBack) {
+                        HStack(spacing: 14) {
+                            Image(systemName: "house")
+                                .font(.system(size: 24, weight: .semibold))
+                            Text(isEnglish ? "Home" : "返回")
+                                .font(.system(size: 22, weight: .bold))
+                        }
+                        .foregroundColor(AppColors.muted)
                     }
-                    .foregroundColor(AppColors.muted)
+                    .buttonStyle(.plain)
+
+                    Spacer()
+
+                    Button {
+                        isSearchVisible.toggle()
+                        if !isSearchVisible {
+                            searchText = ""
+                        }
+                    } label: {
+                        Image(systemName: isSearchVisible ? "xmark.circle.fill" : "magnifyingglass")
+                            .font(.system(size: 28, weight: .semibold))
+                            .foregroundColor(AppColors.muted)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
-                .padding(.leading, horizontalPadding)
+                .padding(.horizontal, horizontalPadding)
                 .padding(.top, topPadding)
 
-                Spacer(minLength: isCompactHeight ? 24 : 54)
+                if isSearchVisible {
+                    SearchWordPanel(
+                        searchText: $searchText,
+                        results: searchResults,
+                        learningLanguage: learningLanguage,
+                        onPreview: { index in
+                            isDetailVisible = true
+                            onPreviewIndex(index)
+                        },
+                        onPlay: { index in
+                            isDetailVisible = false
+                            isSearchVisible = false
+                            searchText = ""
+                            onJumpToIndex(index)
+                        }
+                    )
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.top, 18)
+                }
+
+                Spacer(minLength: isCompactHeight ? 18 : 42)
 
                 VStack(spacing: 0) {
-                    HStack(spacing: 0) {
-                        ForEach(letterIndexes, id: \.letter) { item in
-                            Button {
-                                onJumpToIndex(item.index)
-                            } label: {
-                                Text(item.letter)
-                                    .font(.system(size: isCompactHeight ? 14 : 16, weight: .bold))
-                                    .foregroundColor(item.letter == currentLetter ? .white : AppColors.muted)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: isCompactHeight ? 30 : 34)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: proxy.size.width < 390 ? 8 : 12) {
+                            ForEach(letterIndexes, id: \.letter) { item in
+                                Button {
+                                    onJumpToIndex(item.index)
+                                } label: {
+                                    Text(item.letter)
+                                        .font(.system(size: isCompactHeight ? 14 : 16, weight: .bold))
+                                        .foregroundColor(item.letter == currentLetter ? .black : AppColors.muted)
+                                        .frame(width: isCompactHeight ? 30 : 34, height: isCompactHeight ? 30 : 34)
+                                        .background(item.letter == currentLetter ? Color.white : AppColors.panel)
+                                        .clipShape(Circle())
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
+                        .padding(.horizontal, proxy.size.width < 390 ? 8 : 18)
                     }
-                    .padding(.horizontal, proxy.size.width < 390 ? 8 : 18)
                     .padding(.top, isCompactHeight ? 24 : 42)
 
                     ProgressView(value: progress)
@@ -997,20 +1680,51 @@ private struct PlayerView: View {
 
                     Spacer(minLength: isCompactHeight ? 26 : 46)
 
-                    Text(currentWord?.word ?? "")
-                        .font(.system(size: isCompactHeight ? 60 : 74, weight: .regular))
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.45)
-                        .frame(maxWidth: .infinity)
+                    VStack(spacing: isCompactHeight ? 14 : 20) {
+                        HStack(spacing: 14) {
+                            Spacer(minLength: 0)
 
-                    Text(currentWord?.meaning(for: learningLanguage) ?? "")
-                        .font(.system(size: isCompactHeight ? 28 : 34, weight: .bold))
-                        .foregroundColor(AppColors.muted)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.center)
-                        .minimumScaleFactor(0.65)
-                        .padding(.top, isCompactHeight ? 20 : 28)
+                            Text(currentWord?.word ?? "")
+                                .font(.system(size: isCompactHeight ? 54 : 68, weight: .regular))
+                                .foregroundColor(.white)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.45)
+
+                            Button(action: onToggleFavorite) {
+                                Image(systemName: isCurrentFavorite ? "star.fill" : "star")
+                                    .font(.system(size: isCompactHeight ? 26 : 30, weight: .semibold))
+                                    .foregroundColor(isCurrentFavorite ? .yellow : AppColors.muted)
+                                    .frame(width: 44, height: 44)
+                            }
+                            .buttonStyle(.plain)
+
+                            Spacer(minLength: 0)
+                        }
+
+                        Text(currentWord?.meaning(for: learningLanguage) ?? "")
+                            .font(.system(size: isCompactHeight ? 26 : 32, weight: .bold))
+                            .foregroundColor(AppColors.muted)
+                            .lineLimit(isDetailVisible ? 4 : 2)
+                            .multilineTextAlignment(.center)
+                            .minimumScaleFactor(0.65)
+
+                        if isDetailVisible, let currentWord {
+                            ScrollView {
+                                DetailExampleView(
+                                    word: currentWord,
+                                    learningLanguage: learningLanguage,
+                                    isCompactHeight: isCompactHeight
+                                )
+                            }
+                            .frame(maxHeight: isCompactHeight ? 150 : 220)
+                            .scrollIndicators(.visible)
+                        }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        isDetailVisible.toggle()
+                    }
+                    .frame(maxWidth: .infinity)
 
                     HStack(spacing: proxy.size.width < 390 ? 42 : 62) {
                         Button(action: onPrevious) {
@@ -1022,7 +1736,7 @@ private struct PlayerView: View {
 
                         Button(action: onTogglePlayback) {
                             Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                                .font(.system(size: isCompactHeight ? 50 : 58, weight: .regular))
+                                .font(.system(size: isCompactHeight ? 26 : 30, weight: .regular))
                                 .foregroundColor(.black)
                                 .frame(width: controlSize, height: controlSize)
                                 .background(Color.white)
@@ -1056,6 +1770,142 @@ private struct PlayerView: View {
             .background(AppColors.background)
         }
         .background(AppColors.background)
+    }
+}
+
+private struct DetailExampleView: View {
+    let word: Word
+    let learningLanguage: LearningLanguage
+    let isCompactHeight: Bool
+
+    var body: some View {
+        let localizedExample = word.exampleText(for: learningLanguage)
+
+        VStack(spacing: 10) {
+            if let example = word.example, !example.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                Text(example)
+                    .font(.system(size: isCompactHeight ? 20 : 23, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.86))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .minimumScaleFactor(0.62)
+            }
+
+            if !localizedExample.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+               localizedExample != word.example {
+                Text(localizedExample)
+                    .font(.system(size: isCompactHeight ? 19 : 22, weight: .semibold))
+                    .foregroundColor(AppColors.muted)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .minimumScaleFactor(0.62)
+            }
+        }
+        .padding(.horizontal, 12)
+    }
+}
+
+private struct SearchWordPanel: View {
+    @Binding var searchText: String
+    let results: [(index: Int, word: Word)]
+    let learningLanguage: LearningLanguage
+    let onPreview: (Int) -> Void
+    let onPlay: (Int) -> Void
+
+    var body: some View {
+        let isEnglish = learningLanguage == .english
+
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(AppColors.muted)
+
+                TextField(isEnglish ? "Search word" : "搜索单词", text: $searchText)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.white)
+            }
+            .padding(.horizontal, 18)
+            .frame(height: 54)
+            .background(AppColors.panel)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(AppColors.stroke, lineWidth: 1.3)
+            )
+
+            if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                VStack(spacing: 0) {
+                    ForEach(results, id: \.index) { result in
+                        SearchResultRow(
+                            index: result.index,
+                            word: result.word,
+                            learningLanguage: learningLanguage,
+                            onPreview: {
+                                onPreview(result.index)
+                            },
+                            onPlay: {
+                                onPlay(result.index)
+                            }
+                        )
+
+                        if result.index != (results.last?.index ?? -1) {
+                            Divider()
+                                .background(AppColors.stroke)
+                                .padding(.leading, 18)
+                        }
+                    }
+                }
+                .background(AppColors.panel)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(AppColors.stroke, lineWidth: 1.3)
+                )
+            }
+        }
+    }
+}
+
+private struct SearchResultRow: View {
+    let index: Int
+    let word: Word
+    let learningLanguage: LearningLanguage
+    let onPreview: () -> Void
+    let onPlay: () -> Void
+
+    var body: some View {
+        HStack(spacing: 14) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(word.word)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+
+                Text(word.meaning(for: learningLanguage))
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(AppColors.muted)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            Button(action: onPlay) {
+                Image(systemName: "play.fill")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundColor(.black)
+                    .frame(width: 36, height: 36)
+                    .background(Color.white)
+                    .clipShape(Circle())
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 18)
+        .frame(height: 68)
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onPreview)
     }
 }
 

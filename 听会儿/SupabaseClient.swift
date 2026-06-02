@@ -69,6 +69,14 @@ public final class SupabaseClient {
         return try session(from: data)
     }
 
+    public func refreshSession(refreshToken: String) async throws -> SupabaseSession {
+        let body: [String: Any] = [
+            "refresh_token": refreshToken
+        ]
+        let data = try await request(path: "/auth/v1/token?grant_type=refresh_token", method: "POST", body: body)
+        return try session(from: data)
+    }
+
     public func fetchProgress(accessToken: String, userId: String, bookId: String) async throws -> LearningProgress? {
         let filter = "/rest/v1/learning_progress?user_id=eq.\(userId)&book_id=eq.\(bookId)&select=book_id,last_index,updated_at&limit=1"
         let data = try await request(path: filter, method: "GET", accessToken: accessToken, bodyData: nil)
@@ -90,6 +98,43 @@ public final class SupabaseClient {
             accessToken: accessToken,
             headers: ["Prefer": "resolution=merge-duplicates"],
             encodableBody: [row]
+        )
+    }
+
+    func fetchFavorites(accessToken: String, userId: String) async throws -> [FavoriteWordReference] {
+        let filter = "/rest/v1/favorite_words?user_id=eq.\(userId)&select=book_id,word_id"
+        let data = try await request(path: filter, method: "GET", accessToken: accessToken, bodyData: nil)
+        let rows = try decoder.decode([RemoteFavoriteWord].self, from: data)
+        return rows.map { FavoriteWordReference(bookId: $0.bookId, wordId: $0.wordId) }
+    }
+
+    func upsertFavorite(accessToken: String, userId: String, reference: FavoriteWordReference) async throws {
+        let row = RemoteFavoriteWordUpsert(
+            userId: userId,
+            bookId: reference.bookId,
+            wordId: reference.wordId,
+            updatedAt: Date()
+        )
+        _ = try await request(
+            path: "/rest/v1/favorite_words",
+            method: "POST",
+            accessToken: accessToken,
+            headers: ["Prefer": "resolution=merge-duplicates"],
+            encodableBody: [row]
+        )
+    }
+
+    func deleteFavorite(accessToken: String, userId: String, reference: FavoriteWordReference) async throws {
+        let path = "/rest/v1/favorite_words?user_id=eq.\(userId)&book_id=eq.\(reference.bookId)&word_id=eq.\(reference.wordId)"
+        _ = try await request(path: path, method: "DELETE", accessToken: accessToken, bodyData: nil)
+    }
+
+    public func deleteAccount(accessToken: String) async throws {
+        _ = try await request(
+            path: "/functions/v1/delete-account",
+            method: "POST",
+            accessToken: accessToken,
+            body: [:]
         )
     }
 
@@ -175,7 +220,11 @@ public final class SupabaseClient {
         guard let error = try? decoder.decode(SupabaseErrorResponse.self, from: data) else {
             return nil
         }
-        return error.errorDescription ?? error.message ?? error.msg
+        let message = error.errorDescription ?? error.message ?? error.msg
+        if message?.localizedCaseInsensitiveContains("requested function was not found") == true {
+            return "删除账号服务尚未部署。请先在 Supabase 部署 delete-account Edge Function。"
+        }
+        return message
     }
 
     private func displayName(from email: String) -> String {
@@ -204,5 +253,17 @@ private struct RemoteProgressUpsert: Codable {
     let userId: String
     let bookId: String
     let lastIndex: Int
+    let updatedAt: Date
+}
+
+private struct RemoteFavoriteWord: Codable {
+    let bookId: String
+    let wordId: String
+}
+
+private struct RemoteFavoriteWordUpsert: Codable {
+    let userId: String
+    let bookId: String
+    let wordId: String
     let updatedAt: Date
 }

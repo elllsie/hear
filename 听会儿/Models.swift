@@ -7,6 +7,8 @@ public struct Word: Codable, Equatable {
     public let translation: String
     public let phonetic: String?
     public let example: String?
+    public let exampleZh: String?
+    public let exampleEn: String?
     public let audioFileName: String?
 
     public let article: String? // Additional field
@@ -20,6 +22,8 @@ public struct Word: Codable, Equatable {
         case translation = "meaning" // Map JSON 'meaning' to 'translation'
         case phonetic
         case example
+        case exampleZh
+        case exampleEn
         case audioFileName
         case article
         case meaningZh
@@ -42,6 +46,8 @@ public struct Word: Codable, Equatable {
         self.translation = try container.decode(String.self, forKey: .translation)
         self.phonetic = try container.decodeIfPresent(String.self, forKey: .phonetic)
         self.example = try container.decodeIfPresent(String.self, forKey: .example)
+        self.exampleZh = try container.decodeIfPresent(String.self, forKey: .exampleZh)
+        self.exampleEn = try container.decodeIfPresent(String.self, forKey: .exampleEn)
         self.audioFileName = try container.decodeIfPresent(String.self, forKey: .audioFileName)
         self.article = try container.decodeIfPresent(String.self, forKey: .article)
         self.meaningZh = try container.decodeIfPresent(String.self, forKey: .meaningZh)
@@ -115,6 +121,22 @@ public extension Word {
         }
 
         return translation
+    }
+
+    func exampleText(for language: LearningLanguage) -> String {
+        let preferred: String?
+        switch language {
+        case .english:
+            preferred = exampleEn
+        case .chinese:
+            preferred = exampleZh
+        }
+
+        if let preferred, !preferred.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return preferred
+        }
+
+        return example ?? ""
     }
 }
 
