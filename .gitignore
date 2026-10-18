@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+backend/.env
+backend/.models/
+backend/.transcription-cache/
+Audio.bundle.local-backup/

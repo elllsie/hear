@@ -129,6 +129,89 @@ public final class SupabaseClient {
         _ = try await request(path: path, method: "DELETE", accessToken: accessToken, bodyData: nil)
     }
 
+    func fetchUserState<T: Decodable>(
+        accessToken: String,
+        userId: String,
+        key: String,
+        as type: T.Type = T.self
+    ) async throws -> T? {
+        let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? key
+        let path = "/rest/v1/user_app_state?user_id=eq.\(userId)&state_key=eq.\(encodedKey)&select=value&limit=1"
+        let data = try await request(path: path, method: "GET", accessToken: accessToken, bodyData: nil)
+        return try decoder.decode([RemoteUserState<T>].self, from: data).first?.value
+    }
+
+    func upsertUserState<T: Encodable>(
+        accessToken: String,
+        userId: String,
+        key: String,
+        value: T
+    ) async throws {
+        let row = RemoteUserStateUpsert(userId: userId, stateKey: key, value: value)
+        _ = try await request(
+            path: "/rest/v1/user_app_state",
+            method: "POST",
+            accessToken: accessToken,
+            headers: ["Prefer": "resolution=merge-duplicates"],
+            encodableBody: row
+        )
+    }
+
+    func fetchPodcasts(language: StudyLanguage) async throws -> [CuratedPodcast] {
+        let languageCode = language == .german ? "de" : "en"
+        let path = "/rest/v1/podcasts?is_active=eq.true&rights_status=eq.approved&language=eq.\(languageCode)&select=id,name,host,region,level,language,category,rss_url,website_url,cover_url&order=name.asc"
+        let data = try await request(path: path, method: "GET", bodyData: nil)
+        return try decoder.decode([RemotePodcast].self, from: data).compactMap(\.appModel)
+    }
+
+    func fetchPodcastEpisodes(language: StudyLanguage? = nil, podcastID: String? = nil, limit: Int = 20, offset: Int = 0) async throws -> [PodcastEpisode] {
+        let safeLimit = min(max(limit, 1), 50)
+        let safeOffset = max(offset, 0)
+        let selection = [
+            "id", "title", "description", "audio_url", "source_url", "cover_url",
+            "duration_seconds", "publish_date",
+            "podcast:podcasts!inner(id,name,host,region,level,language,category,rss_url,website_url,cover_url)"
+        ].joined(separator: ",")
+        let podcastFilter = podcastID.map { "&podcast_id=eq.\($0)" } ?? ""
+        let languageFilter = language.map { "&podcast.language=eq.\($0 == .german ? "de" : "en")" } ?? ""
+        let path = "/rest/v1/episodes?editorial_status=eq.published&transcript_status=eq.ready\(podcastFilter)\(languageFilter)&select=\(selection)&order=publish_date.desc.nullslast,id.desc&limit=\(safeLimit)&offset=\(safeOffset)"
+        let data = try await request(path: path, method: "GET", bodyData: nil)
+        let rows = try decoder.decode([RemotePodcastEpisode].self, from: data)
+        return rows.compactMap { $0.appModel }
+    }
+
+    func fetchPodcastSentences(episodeId: String) async throws -> [PodcastSentence] {
+        let encodedID = episodeId.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? episodeId
+        let path = "/rest/v1/episode_sentences?episode_id=eq.\(encodedID)&select=id,start_ms,end_ms,english,chinese&order=sequence.asc"
+        let data = try await request(path: path, method: "GET", bodyData: nil)
+        return try decoder.decode([RemotePodcastSentence].self, from: data).map(\.appModel)
+    }
+
+    func fetchPodcastAIInsights(episodeId: String) async throws -> PodcastAIInsights? {
+        let encodedID = episodeId.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? episodeId
+        async let insightData = request(
+            path: "/rest/v1/episode_ai_insights?episode_id=eq.\(encodedID)&select=summary_zh,summary_en,key_points&limit=1",
+            method: "GET",
+            bodyData: nil
+        )
+        async let wordsData = request(
+            path: "/rest/v1/episode_difficult_words?episode_id=eq.\(encodedID)&select=*&order=sequence.asc",
+            method: "GET",
+            bodyData: nil
+        )
+        let (resolvedInsightData, resolvedWordsData) = try await (insightData, wordsData)
+        guard let insight = try decoder.decode([RemotePodcastAIInsight].self, from: resolvedInsightData).first else {
+            return nil
+        }
+        let words = try decoder.decode([RemotePodcastDifficultWord].self, from: resolvedWordsData)
+        return PodcastAIInsights(
+            summaryZh: insight.summaryZh,
+            summaryEn: insight.summaryEn,
+            keyPoints: insight.keyPoints,
+            difficultWords: words.map(\.appModel)
+        )
+    }
+
     public func deleteAccount(accessToken: String) async throws {
         _ = try await request(
             path: "/functions/v1/delete-account",
@@ -259,6 +342,158 @@ private struct RemoteProgressUpsert: Codable {
 private struct RemoteFavoriteWord: Codable {
     let bookId: String
     let wordId: String
+}
+
+private struct RemoteUserState<Value: Decodable>: Decodable {
+    let value: Value
+}
+
+private struct RemoteUserStateUpsert<Value: Encodable>: Encodable {
+    let userId: String
+    let stateKey: String
+    let value: Value
+}
+
+private struct RemotePodcastEpisode: Decodable {
+    let id: String
+    let title: String
+    let description: String
+    let audioUrl: URL
+    let sourceUrl: URL?
+    let coverUrl: URL?
+    let durationSeconds: Int?
+    let publishDate: Date?
+        let podcast: RemotePodcast
+
+    var appModel: PodcastEpisode? {
+        guard let feedURL = URL(string: podcast.rssUrl) else { return nil }
+        let shelf: PodcastShelf
+        switch podcast.category {
+        case "easy": shelf = .easy
+        case "thinking": shelf = .thinking
+        case "world": shelf = .world
+        case "future": shelf = .future
+        default: return nil
+        }
+        let show = CuratedPodcast(
+            id: podcast.id,
+            title: podcast.name,
+            host: podcast.host ?? "",
+            region: podcast.region ?? "",
+            level: podcast.level ?? "B1-C1",
+            shelf: shelf,
+            language: podcast.language == "de" ? .german : .english,
+            feedURL: feedURL,
+            websiteURL: URL(string: podcast.websiteUrl ?? podcast.rssUrl) ?? feedURL,
+            artworkURL: podcast.coverUrl,
+            learningScore: shelf == .easy ? 96 : 86,
+            transcriptQuality: "待生成学习文本",
+            rightsRisk: "已通过后台内容审核"
+        )
+        return PodcastEpisode(
+            id: id,
+            podcast: show,
+            title: title,
+            summary: description,
+            audioURL: audioUrl,
+            sourceURL: sourceUrl,
+            artworkURL: coverUrl ?? podcast.coverUrl,
+            publishedAt: publishDate,
+            duration: durationSeconds.map(TimeInterval.init)
+        )
+    }
+}
+
+private struct RemotePodcast: Decodable {
+    let id: String
+    let name: String
+    let host: String?
+    let region: String?
+    let level: String?
+    let language: String
+    let category: String
+    let rssUrl: String
+    let websiteUrl: String?
+    let coverUrl: URL?
+
+    var appModel: CuratedPodcast? {
+        guard let feedURL = URL(string: rssUrl) else { return nil }
+        let shelf: PodcastShelf
+        switch category {
+        case "easy": shelf = .easy
+        case "thinking": shelf = .thinking
+        case "world": shelf = .world
+        case "future": shelf = .future
+        default: return nil
+        }
+        return CuratedPodcast(
+            id: id,
+            title: name,
+            host: host ?? "",
+            region: region ?? "",
+            level: level ?? "B1-C1",
+            shelf: shelf,
+            language: language == "de" ? .german : .english,
+            feedURL: feedURL,
+            websiteURL: URL(string: websiteUrl ?? rssUrl) ?? feedURL,
+            artworkURL: coverUrl,
+            learningScore: shelf == .easy ? 96 : 86,
+            transcriptQuality: "待生成学习文本",
+            rightsRisk: "已通过后台内容审核"
+        )
+    }
+}
+
+private struct RemotePodcastSentence: Decodable {
+    let id: String
+    let startMs: Int
+    let endMs: Int
+    let english: String
+    let chinese: String?
+
+    var appModel: PodcastSentence {
+        PodcastSentence(
+            id: id,
+            start: TimeInterval(startMs) / 1_000,
+            end: TimeInterval(endMs) / 1_000,
+            english: english,
+            chinese: chinese
+        )
+    }
+}
+
+private struct RemotePodcastAIInsight: Decodable {
+    let summaryZh: String
+    let summaryEn: String
+    let keyPoints: [String]
+}
+
+private struct RemotePodcastDifficultWord: Decodable {
+    let id: String
+    let word: String
+    let lemma: String
+    let meaning: String
+    let meaningZh: String?
+    let meaningEn: String?
+    let cefrLevel: String?
+    let sentence: String
+    let startMs: Int
+    let reason: String
+
+    var appModel: PodcastDifficultWord {
+        PodcastDifficultWord(
+            id: id,
+            word: word,
+            lemma: lemma,
+            meaning: meaning,
+            meaningZh: meaningZh,
+            meaningEn: meaningEn,
+            cefrLevel: cefrLevel,
+            sentence: sentence,
+            start: TimeInterval(startMs) / 1_000,
+            reason: reason
+        )
+    }
 }
 
 private struct RemoteFavoriteWordUpsert: Codable {

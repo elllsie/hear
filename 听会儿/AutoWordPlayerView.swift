@@ -39,12 +39,6 @@ struct AutoWordPlayerView: View {
                                     .font(.system(size: 44, weight: .semibold))
                                     .foregroundColor(.white)
                                 
-                                if let phonetic = word.phonetic, !phonetic.isEmpty {
-                                    Text(phonetic)
-                                        .font(.system(size: 18))
-                                        .foregroundColor(.white.opacity(0.6))
-                                }
-                                
                                 Text(word.translation)
                                     .font(.system(size: 20))
                                     .foregroundColor(.white.opacity(0.85))

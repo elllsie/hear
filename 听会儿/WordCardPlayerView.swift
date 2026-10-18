@@ -61,8 +61,7 @@ struct WordCardPlayerView: View {
             // Header
             HStack {
                 Text(dataSetName)
-                    .font(.title2)
-                    .fontWeight(.bold)
+                    .font(.system(.title2, design: .default).weight(.bold))
                 Spacer()
                 if viewModel.isLoading {
                     Text("加载中...")
@@ -100,7 +99,9 @@ struct WordCardPlayerView: View {
                         .multilineTextAlignment(.center)
                     
                     // 音标
-                    if let phonetic = viewModel.words[currentIndex].phonetic, !phonetic.isEmpty {
+                    if !["A1", "A2", "B1"].contains(dataSetName),
+                       let phonetic = viewModel.words[currentIndex].phonetic,
+                       !phonetic.isEmpty {
                         Text(phonetic)
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(.blue)

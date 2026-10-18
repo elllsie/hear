@@ -43,7 +43,7 @@ python3 generate_word_audio.py '听会儿/data/*.json'
 默认输出到：
 
 ```text
-听会儿/audio/words/
+听会儿/Audio.bundle/words/
 ```
 
 ## 生成中英文释义音频
@@ -57,8 +57,8 @@ python3 generate_word_audio.py A1 A2 B1 --only-meanings
 输出目录：
 
 ```text
-听会儿/audio/meanings/zh/
-听会儿/audio/meanings/en/
+听会儿/Audio.bundle/meanings/zh/
+听会儿/Audio.bundle/meanings/en/
 ```
 
 ## 同时生成单词和释义音频
@@ -70,9 +70,9 @@ python3 generate_word_audio.py A1 A2 B1 --include-meanings
 会同时写入：
 
 ```text
-听会儿/audio/words/
-听会儿/audio/meanings/zh/
-听会儿/audio/meanings/en/
+听会儿/Audio.bundle/words/
+听会儿/Audio.bundle/meanings/zh/
+听会儿/Audio.bundle/meanings/en/
 ```
 
 ## 重新生成已有音频
@@ -100,19 +100,19 @@ python3 generate_word_audio.py A1 --only-meanings --slow
 德语单词音频可指定目录：
 
 ```bash
-python3 generate_word_audio.py A1 --audio-dir 听会儿/audio/words
+python3 generate_word_audio.py A1 --audio-dir 听会儿/Audio.bundle/words
 ```
 
 `--only-meanings` 的中英文释义目录是固定的：
 
 ```text
-听会儿/audio/meanings/zh/
-听会儿/audio/meanings/en/
+听会儿/Audio.bundle/meanings/zh/
+听会儿/Audio.bundle/meanings/en/
 ```
 
 ## 不复用旧音频
 
-脚本默认会尝试从旧的 `听会儿/audio/` 子目录里复用同名单词音频。想完全重新按当前逻辑生成时：
+脚本默认会尝试从旧的 `听会儿/Audio.bundle/` 子目录里复用同名单词音频。想完全重新按当前逻辑生成时：
 
 ```bash
 python3 generate_word_audio.py A1 A2 B1 --no-reuse-existing
@@ -172,4 +172,3 @@ python3 -B -m py_compile generate_word_audio.py
 ```bash
 python3 generate_word_audio.py A1 --help
 ```
-

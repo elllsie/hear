@@ -1,0 +1,5 @@
+-r requirements.txt
+faster-whisper==1.2.1
+openai-whisper==20250625
+pypdf>=5,<7
+beautifulsoup4>=4.12,<5

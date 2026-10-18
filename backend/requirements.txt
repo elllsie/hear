@@ -1,0 +1,6 @@
+feedparser>=6.0,<7
+gTTS>=2.5,<3
+edge-tts>=7.0,<8
+xlrd>=2.0,<3
+httpx>=0.27,<1
+python-dotenv>=1.0,<2

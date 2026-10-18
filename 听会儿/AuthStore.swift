@@ -32,6 +32,7 @@ public final class AuthStore: ObservableObject {
     private let keychainService = "tinghui.supabase.auth"
     private let accessTokenAccount = "accessToken"
     private let refreshTokenAccount = "refreshToken"
+    private var authenticationTask: Task<Void, Never>?
 
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -59,11 +60,18 @@ public final class AuthStore: ObservableObject {
     }
 
     public func logout() {
+        cancelAuthentication()
         KeychainStore.delete(service: keychainService, account: accessTokenAccount)
         KeychainStore.delete(service: keychainService, account: refreshTokenAccount)
         defaults.removeObject(forKey: currentUserKey)
         currentUser = nil
         errorMessage = nil
+    }
+
+    public func cancelAuthentication() {
+        authenticationTask?.cancel()
+        authenticationTask = nil
+        isWorking = false
     }
 
     public func deleteAccount() async -> Bool {
@@ -85,6 +93,24 @@ public final class AuthStore: ObservableObject {
             errorMessage = error.localizedDescription
             return false
         }
+    }
+
+    public func validAccessToken() async throws -> String {
+        if let accessToken, !isExpiringSoon(accessToken) {
+            return accessToken
+        }
+        return try await refreshedAccessToken()
+    }
+
+    private func isExpiringSoon(_ token: String) -> Bool {
+        let parts = token.split(separator: ".")
+        guard parts.count > 1 else { return true }
+        var encoded = String(parts[1]).replacingOccurrences(of: "-", with: "+").replacingOccurrences(of: "_", with: "/")
+        encoded += String(repeating: "=", count: (4 - encoded.count % 4) % 4)
+        guard let data = Data(base64Encoded: encoded),
+              let payload = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let expiration = payload["exp"] as? TimeInterval else { return true }
+        return Date(timeIntervalSince1970: expiration).timeIntervalSinceNow < 60
     }
 
     private func refreshedAccessToken() async throws -> String {
@@ -125,15 +151,22 @@ public final class AuthStore: ObservableObject {
             return
         }
 
+        authenticationTask?.cancel()
         isWorking = true
-        Task {
+        authenticationTask = Task {
+            defer {
+                isWorking = false
+                authenticationTask = nil
+            }
             do {
                 let session = try await action(cleanEmail, cleanPassword)
+                try Task.checkCancellation()
                 signIn(session)
+            } catch is CancellationError {
+                return
             } catch {
                 errorMessage = error.localizedDescription
             }
-            isWorking = false
         }
     }
 

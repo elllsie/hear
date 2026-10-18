@@ -6,8 +6,7 @@ struct DataDebugView: View {
     var body: some View {
         VStack {
             Text("数据加载诊断")
-                .font(.title2)
-                .fontWeight(.bold)
+                .font(.system(.title2, design: .default).weight(.bold))
                 .padding()
             
             ScrollView {

@@ -21,6 +21,7 @@ public final class AudioPlayerManager: NSObject {
     public weak var delegate: AudioPlayerManagerDelegate?
 
     private var audioPlayer: AVAudioPlayer?
+    private var audioDownloadTask: URLSessionDownloadTask?
     private let tts = AVSpeechSynthesizer()
     private var queue: [PlayItem] = []
     private var currentIndex: Int = 0
@@ -36,7 +37,7 @@ public final class AudioPlayerManager: NSObject {
     public var volume: Float = 1.0
     public var audioFolderName: String?
     public var learningLanguage: LearningLanguage = .chinese
-    public var chineseMeaningFileRateMultiplier: Float = 1.5
+    public var chineseMeaningFileRateMultiplier: Float = 1.0
     public var chineseMeaningFallbackSpeechRateMultiplier: Float = 1.0
 
     private(set) public var isPlaying: Bool = false {
@@ -87,6 +88,8 @@ public final class AudioPlayerManager: NSObject {
     }
 
     private func resetCurrentPlayback() {
+        audioDownloadTask?.cancel()
+        audioDownloadTask = nil
         stopAudioPlayer()
         if tts.isSpeaking || tts.isPaused {
             suppressedSpeechCancelUtterance = activeSpeechUtterance
@@ -98,18 +101,19 @@ public final class AudioPlayerManager: NSObject {
 
     // Enqueue word repeated `repeatTimes`
     private func enqueue(word: Word, wordIndex: Int, totalWords: Int) {
+        let wordLanguage = wordSpeechLanguageCode()
         for repeatIndex in 0..<max(1, repeatTimes) {
             if let file = preferredAudioFileName(for: word) {
-                queue.append(.file(name: file, description: "file:\(file)", word: word, wordIndex: wordIndex, totalWords: totalWords))
+                queue.append(.file(name: file, description: "file:\(file)", fallbackText: word.word, fallbackLanguage: wordLanguage, word: word, wordIndex: wordIndex, totalWords: totalWords))
             } else {
-                queue.append(.text(text: word.word, language: "de-DE", description: "word:\(word.word)", word: word, wordIndex: wordIndex, totalWords: totalWords))
+                queue.append(.text(text: word.word, language: wordLanguage, description: "word:\(word.word)", word: word, wordIndex: wordIndex, totalWords: totalWords))
             }
 
             let isLastRepeat = repeatIndex == max(1, repeatTimes) - 1
             if isLastRepeat {
-                let meaning = word.meaning(for: learningLanguage)
+                let meaning = word.spokenMeaning(for: learningLanguage)
                 if let file = preferredMeaningAudioFileName(for: meaning, language: learningLanguage) {
-                    queue.append(.file(name: file, subdirectory: learningLanguage.meaningAudioSubdirectory, description: "meaning:\(meaning)", word: word, wordIndex: wordIndex, totalWords: totalWords))
+                    queue.append(.file(name: file, subdirectory: learningLanguage.meaningAudioSubdirectory, description: "meaning:\(meaning)", fallbackText: meaning, fallbackLanguage: learningLanguage.speechLanguageCode, word: word, wordIndex: wordIndex, totalWords: totalWords))
                 } else {
                     queue.append(.text(text: meaning, language: learningLanguage.speechLanguageCode, description: "meaning:\(meaning)", word: word, wordIndex: wordIndex, totalWords: totalWords))
                 }
@@ -117,26 +121,21 @@ public final class AudioPlayerManager: NSObject {
         }
     }
 
+    private func wordSpeechLanguageCode() -> String {
+        ["KaoYan_2", "IELTS_9400"].contains(audioFolderName ?? "") ? "en-US" : "de-DE"
+    }
+
     private func preferredAudioFileName(for word: Word) -> String? {
         if let fileName = word.audioFileName, !fileName.isEmpty {
             return fileName
         }
 
-        let fileName = "\(safeAudioFileName(for: word.word)).mp3"
-        if audioURL(named: fileName) != nil {
-            return fileName
-        }
-
-        return nil
+        return "\(safeAudioFileName(for: word.word)).mp3"
     }
 
     private func preferredMeaningAudioFileName(for meaning: String, language: LearningLanguage) -> String? {
         let fileName = safeMeaningAudioFileName(for: meaning)
-        if audioURL(named: fileName, preferredSubdirectory: language.meaningAudioSubdirectory) != nil {
-            return fileName
-        }
-
-        return nil
+        return fileName
     }
 
     private func safeMeaningAudioFileName(for text: String) -> String {
@@ -203,8 +202,8 @@ public final class AudioPlayerManager: NSObject {
         let item = queue[currentIndex]
         notifyProgressIfNeeded(for: item)
         switch item {
-        case .file(let name, let subdirectory, let desc, _, _, _):
-            playLocalFile(named: name, preferredSubdirectory: subdirectory, description: desc)
+        case .file(let name, let subdirectory, let desc, let fallbackText, let fallbackLanguage, _, _, _):
+            playAudioFile(named: name, preferredSubdirectory: subdirectory, description: desc, fallbackText: fallbackText, fallbackLanguage: fallbackLanguage)
         case .text(let text, let language, let desc, _, _, _):
             speakText(text: text, language: language, description: desc)
         }
@@ -216,14 +215,72 @@ public final class AudioPlayerManager: NSObject {
         delegate?.audioPlayerManager(didUpdateCurrentWord: item.word, index: item.wordIndex, total: item.totalWords)
     }
 
-    // MARK: - Local file play
-    private func playLocalFile(named name: String, preferredSubdirectory: String?, description: String) {
+    // MARK: - File play
+    private func playAudioFile(named name: String, preferredSubdirectory: String?, description: String, fallbackText: String?, fallbackLanguage: String?) {
         stopAudioPlayer()
-        guard let url = audioURL(named: name, preferredSubdirectory: preferredSubdirectory) else {
-            delegate?.audioPlayerManager(didEncounter: NSError(domain: "AudioPlayerManager", code: 2, userInfo: [NSLocalizedDescriptionKey: "Missing audio file: \(name)" ]))
-            advanceQueue()
+        if let cachedURL = cachedAudioURL(named: name, preferredSubdirectory: preferredSubdirectory),
+           FileManager.default.fileExists(atPath: cachedURL.path) {
+            playFile(at: cachedURL, preferredSubdirectory: preferredSubdirectory, description: description, fallbackText: fallbackText, fallbackLanguage: fallbackLanguage)
             return
         }
+
+        if let remoteURL = remoteAudioURL(named: name, preferredSubdirectory: preferredSubdirectory) {
+            downloadAndPlay(
+                remoteURL,
+                named: name,
+                preferredSubdirectory: preferredSubdirectory,
+                description: description,
+                fallbackText: fallbackText,
+                fallbackLanguage: fallbackLanguage
+            )
+            return
+        }
+
+        playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
+    }
+
+    private func downloadAndPlay(
+        _ remoteURL: URL,
+        named name: String,
+        preferredSubdirectory: String?,
+        description: String,
+        fallbackText: String?,
+        fallbackLanguage: String?
+    ) {
+        let generation = playbackGeneration
+        let expectedIndex = currentIndex
+        audioDownloadTask?.cancel()
+        audioDownloadTask = URLSession.shared.downloadTask(with: remoteURL) { [weak self] temporaryURL, response, error in
+            DispatchQueue.main.async {
+                guard let self,
+                      generation == self.playbackGeneration,
+                      expectedIndex == self.currentIndex else { return }
+                self.audioDownloadTask = nil
+                guard error == nil,
+                      let http = response as? HTTPURLResponse,
+                      (200..<300).contains(http.statusCode),
+                      let temporaryURL,
+                      let destination = self.cachedAudioURL(named: name, preferredSubdirectory: preferredSubdirectory, createDirectory: true) else {
+                    self.playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
+                    return
+                }
+                do {
+                    let manager = FileManager.default
+                    if manager.fileExists(atPath: destination.path) {
+                        try manager.removeItem(at: destination)
+                    }
+                    try manager.moveItem(at: temporaryURL, to: destination)
+                    self.trimDownloadedAudioCache()
+                    self.playFile(at: destination, preferredSubdirectory: preferredSubdirectory, description: description, fallbackText: fallbackText, fallbackLanguage: fallbackLanguage)
+                } catch {
+                    self.playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
+                }
+            }
+        }
+        audioDownloadTask?.resume()
+    }
+
+    private func playFile(at url: URL, preferredSubdirectory: String?, description: String, fallbackText: String?, fallbackLanguage: String?) {
         do {
             let player = try AVAudioPlayer(contentsOf: url)
             audioPlayer = player
@@ -238,7 +295,7 @@ public final class AudioPlayerManager: NSObject {
             player.play()
         } catch {
             delegate?.audioPlayerManager(didEncounter: error)
-            advanceQueue()
+            playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
         }
     }
 
@@ -249,24 +306,92 @@ public final class AudioPlayerManager: NSObject {
         activeAudioGeneration = -1
     }
 
-    private func audioURL(named name: String, preferredSubdirectory: String? = nil) -> URL? {
-        if let preferredSubdirectory, !preferredSubdirectory.isEmpty,
-           let url = Bundle.main.url(forResource: name, withExtension: nil, subdirectory: preferredSubdirectory) {
-            return url
+    private func remotePath(named name: String, preferredSubdirectory: String?) -> String {
+        let remoteName = storageSafeAudioFileName(name)
+        if let preferredSubdirectory, !preferredSubdirectory.isEmpty {
+            var path = preferredSubdirectory.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+            if path.hasPrefix("audio/") { path.removeFirst("audio/".count) }
+            return "\(path)/\(remoteName)"
+        }
+        if let audioFolderName,
+           ["KaoYan_2", "IELTS_9400"].contains(audioFolderName) {
+            return "words/\(audioFolderName)/\(remoteName)"
+        }
+        return "words/\(remoteName)"
+    }
+
+    /// Supabase Storage rejects some Unicode object keys. Keep bundled file
+    /// names unchanged, but use a stable ASCII representation for remote keys.
+    private func storageSafeAudioFileName(_ name: String) -> String {
+        let replacements: [UnicodeScalar: String] = [
+            "ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"
+        ]
+        let normalized = name
+            .precomposedStringWithCanonicalMapping
+            .lowercased()
+        var result = ""
+        var previousWasUnderscore = false
+
+        for scalar in normalized.unicodeScalars {
+            if let replacement = replacements[scalar] {
+                result.append(replacement)
+                previousWasUnderscore = false
+            } else if scalar.isASCII,
+                      (CharacterSet.alphanumerics.contains(scalar) || scalar == "_" || scalar == "-" || scalar == ".") {
+                result.unicodeScalars.append(scalar)
+                previousWasUnderscore = false
+            } else if !previousWasUnderscore {
+                result.append("_")
+                previousWasUnderscore = true
+            }
         }
 
-        if let folder = audioFolderName, !folder.isEmpty {
-            return Bundle.main.url(forResource: name, withExtension: nil, subdirectory: "audio/\(folder)") ??
-            Bundle.main.url(forResource: name, withExtension: nil, subdirectory: folder) ??
-            Bundle.main.url(forResource: name, withExtension: nil, subdirectory: "audio/words") ??
-            Bundle.main.url(forResource: name, withExtension: nil, subdirectory: "audio") ??
-            Bundle.main.url(forResource: name, withExtension: nil)
-        }
+        let trimmed = result.trimmingCharacters(in: CharacterSet(charactersIn: "_."))
+        return trimmed.isEmpty ? "audio" : trimmed
+    }
 
-        return Bundle.main.url(forResource: name, withExtension: nil, subdirectory: "audio/words") ??
-        Bundle.main.url(forResource: name, withExtension: nil, subdirectory: "audio") ??
-        Bundle.main.url(forResource: name, withExtension: nil, subdirectory: "audio/12yue") ??
-        Bundle.main.url(forResource: name, withExtension: nil)
+    private func remoteAudioURL(named name: String, preferredSubdirectory: String?) -> URL? {
+        guard var url = SupabaseConfig.learningAudioBaseURL else { return nil }
+        for component in remotePath(named: name, preferredSubdirectory: preferredSubdirectory).split(separator: "/") {
+            url.appendPathComponent(String(component))
+        }
+        return url
+    }
+
+    private func cachedAudioURL(named name: String, preferredSubdirectory: String?, createDirectory: Bool = false) -> URL? {
+        guard let cacheRoot = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return nil }
+        var url = cacheRoot.appendingPathComponent("TingHuiErAudioV2", isDirectory: true)
+        let components = remotePath(named: name, preferredSubdirectory: preferredSubdirectory).split(separator: "/")
+        for component in components.dropLast() { url.appendPathComponent(String(component), isDirectory: true) }
+        if createDirectory {
+            try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        }
+        return url.appendingPathComponent(name)
+    }
+
+    private func trimDownloadedAudioCache(maximumBytes: Int64 = 300 * 1_024 * 1_024) {
+        guard let cacheRoot = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return }
+        let root = cacheRoot.appendingPathComponent("TingHuiErAudioV2", isDirectory: true)
+        let keys: [URLResourceKey] = [.isRegularFileKey, .fileSizeKey, .contentAccessDateKey]
+        guard let enumerator = FileManager.default.enumerator(at: root, includingPropertiesForKeys: keys) else { return }
+        var files: [(url: URL, size: Int64, date: Date)] = []
+        while let url = enumerator.nextObject() as? URL {
+            guard let values = try? url.resourceValues(forKeys: Set(keys)), values.isRegularFile == true else { continue }
+            files.append((url, Int64(values.fileSize ?? 0), values.contentAccessDate ?? .distantPast))
+        }
+        var total = files.reduce(Int64(0)) { $0 + $1.size }
+        guard total > maximumBytes else { return }
+        for file in files.sorted(by: { $0.date < $1.date }) where total > maximumBytes {
+            if (try? FileManager.default.removeItem(at: file.url)) != nil { total -= file.size }
+        }
+    }
+
+    private func playFallbackOrAdvance(text: String?, language: String?, description: String) {
+        if let text, let language, !text.isEmpty {
+            speakText(text: text, language: language, description: description)
+        } else {
+            advanceQueue()
+        }
     }
 
     // MARK: - TTS
@@ -276,7 +401,7 @@ public final class AudioPlayerManager: NSObject {
             tts.stopSpeaking(at: .immediate)
         }
         let utter = AVSpeechUtterance(string: text)
-        utter.voice = AVSpeechSynthesisVoice(language: language)
+        utter.voice = preferredSpeechVoice(for: language)
         utter.rate = adjustedSpeechRate(for: language)
         utter.volume = volume
         activeSpeechUtterance = utter
@@ -294,6 +419,25 @@ public final class AudioPlayerManager: NSObject {
     private func adjustedSpeechRate(for language: String) -> Float {
         let multiplier = language.lowercased().hasPrefix("zh") ? chineseMeaningFallbackSpeechRateMultiplier : 1.0
         return min(max(rate * multiplier, AVSpeechUtteranceMinimumSpeechRate), AVSpeechUtteranceMaximumSpeechRate)
+    }
+
+    private func preferredSpeechVoice(for language: String) -> AVSpeechSynthesisVoice? {
+        let prefix = language.lowercased().hasPrefix("zh") ? "zh" :
+            (language.lowercased().hasPrefix("de") ? "de" : "en")
+        let candidates = AVSpeechSynthesisVoice.speechVoices().filter {
+            $0.language.lowercased().hasPrefix(prefix)
+        }
+        if #available(iOS 16.0, *) {
+            if let premium = candidates.first(where: { $0.quality == .premium }) {
+                return premium
+            }
+        }
+        if let enhanced = candidates.first(where: { $0.quality == .enhanced }) {
+            return enhanced
+        }
+        let preferredLocale = prefix == "zh" ? "zh-CN" : (prefix == "de" ? "de-DE" : "en-US")
+        return candidates.first(where: { $0.language == preferredLocale })
+            ?? AVSpeechSynthesisVoice(language: preferredLocale)
     }
 
     // MARK: - Controls
@@ -321,6 +465,8 @@ public final class AudioPlayerManager: NSObject {
 
     public func stop() {
         playbackGeneration += 1
+        audioDownloadTask?.cancel()
+        audioDownloadTask = nil
         stopAudioPlayer()
         if tts.isSpeaking || tts.isPaused {
             suppressedSpeechCancelUtterance = activeSpeechUtterance
@@ -387,33 +533,33 @@ public final class AudioPlayerManager: NSObject {
 
 // Helper enum representing an item to play
 private enum PlayItem {
-    case file(name: String, subdirectory: String? = nil, description: String, word: Word, wordIndex: Int, totalWords: Int)
+    case file(name: String, subdirectory: String? = nil, description: String, fallbackText: String?, fallbackLanguage: String?, word: Word, wordIndex: Int, totalWords: Int)
     case text(text: String, language: String, description: String, word: Word, wordIndex: Int, totalWords: Int)
 
     var description: String {
         switch self {
-        case .file(_, _, let d, _, _, _): return d
+        case .file(_, _, let d, _, _, _, _, _): return d
         case .text(_, _, let d, _, _, _): return d
         }
     }
 
     var word: Word {
         switch self {
-        case .file(_, _, _, let word, _, _): return word
+        case .file(_, _, _, _, _, let word, _, _): return word
         case .text(_, _, _, let word, _, _): return word
         }
     }
 
     var wordIndex: Int {
         switch self {
-        case .file(_, _, _, _, let index, _): return index
+        case .file(_, _, _, _, _, _, let index, _): return index
         case .text(_, _, _, _, let index, _): return index
         }
     }
 
     var totalWords: Int {
         switch self {
-        case .file(_, _, _, _, _, let total): return total
+        case .file(_, _, _, _, _, _, _, let total): return total
         case .text(_, _, _, _, _, let total): return total
         }
     }

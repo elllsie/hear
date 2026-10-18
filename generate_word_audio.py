@@ -8,9 +8,9 @@ Examples:
   python3 generate_word_audio.py '听会儿/data/*.json'
 
 Output:
-  听会儿/audio/words/<safe-word-name>.mp3
-  听会儿/audio/meanings/zh/<safe-meaning-name>.mp3
-  听会儿/audio/meanings/en/<safe-meaning-name>.mp3
+  听会儿/Audio.bundle/words/<safe-word-name>.mp3
+  听会儿/Audio.bundle/meanings/zh/<safe-meaning-name>.mp3
+  听会儿/Audio.bundle/meanings/en/<safe-meaning-name>.mp3
 """
 
 import argparse
@@ -20,6 +20,7 @@ import re
 import shutil
 import sys
 import unicodedata
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional
 
@@ -34,11 +35,12 @@ except ImportError:
 PROJECT_DIR = Path(__file__).resolve().parent
 APP_DIR = PROJECT_DIR / "听会儿"
 DATA_DIR = APP_DIR / "data"
-DEFAULT_AUDIO_DIR = APP_DIR / "audio"
-DEFAULT_SHARED_AUDIO_DIR = DEFAULT_AUDIO_DIR / "words"
+DEFAULT_AUDIO_DIR = APP_DIR / "Audio.bundle"
+DEFAULT_AUDIO_SOURCE_DIR = DEFAULT_AUDIO_DIR
+DEFAULT_SHARED_AUDIO_DIR = DEFAULT_AUDIO_SOURCE_DIR / "words"
 DEFAULT_MEANING_AUDIO_DIRS = {
-    "meaningZh": DEFAULT_AUDIO_DIR / "meanings" / "zh",
-    "meaningEn": DEFAULT_AUDIO_DIR / "meanings" / "en",
+    "meaningZh": DEFAULT_AUDIO_SOURCE_DIR / "meanings" / "zh",
+    "meaningEn": DEFAULT_AUDIO_SOURCE_DIR / "meanings" / "en",
 }
 DEFAULT_MEANING_LANGS = {
     "meaningZh": "zh-CN",
@@ -86,6 +88,42 @@ def filename_hash(text: str) -> str:
 def safe_meaning_filename(text: str) -> str:
     base = safe_filename(text)[:160]
     return f"{base}_{filename_hash(text)}.mp3"
+
+
+def spoken_meaning(text: str) -> str:
+    cleaned = re.sub(
+        r"(?i)(^|[；;，,、\s])\s*(n|v|vt|vi|adj|adv|prep|pron|conj|num|art|aux|abbr|int|pl|sing|interj|det|modal)\.?\s+",
+        r"\1",
+        text,
+    )
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    cleaned = re.sub(r"([；;，,、])\s+", r"\1", cleaned)
+    return cleaned.strip()
+
+
+def load_target_audio_paths(path: Optional[str]) -> Optional[set[str]]:
+    if not path:
+        return None
+
+    target_path = Path(path).expanduser()
+    if not target_path.is_absolute():
+        target_path = PROJECT_DIR / target_path
+
+    targets: set[str] = set()
+    with target_path.open("r", encoding="utf-8") as file:
+        for line in file:
+            raw = line.strip()
+            if not raw:
+                continue
+
+            normalized = raw.replace("\\", "/")
+            for prefix in ("audio_source/", "听会儿/audio/", "听会儿/Audio.bundle/"):
+                if normalized.startswith(prefix):
+                    normalized = normalized[len(prefix):]
+                    break
+            targets.add(normalized)
+
+    return targets
 
 
 def load_words(json_path: Path) -> list[dict]:
@@ -140,7 +178,7 @@ def collect_unique_field_texts(json_paths: list[Path], field_name: str) -> tuple
 
     for json_path in json_paths:
         for item in load_words(json_path):
-            text = str(item.get(field_name, "")).strip()
+            text = spoken_meaning(str(item.get(field_name, "")).strip())
             if not text:
                 continue
 
@@ -173,6 +211,14 @@ def find_existing_audio(filename: str, output_dir: Path, legacy_audio_root: Opti
     return None
 
 
+def save_tts(audio_path: Path, text: str, lang: str, slow: bool) -> tuple[str, Optional[Exception]]:
+    try:
+        gTTS(text=text, lang=lang, slow=slow).save(str(audio_path))
+        return audio_path.name, None
+    except Exception as error:
+        return audio_path.name, error
+
+
 def generate_shared_audio(
     json_paths: list[Path],
     output_dir: Path,
@@ -180,10 +226,19 @@ def generate_shared_audio(
     lang: str,
     slow: bool,
     overwrite: bool,
+    target_paths: Optional[set[str]] = None,
+    workers: int = 1,
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     words_by_filename, duplicate_count, collision_count = collect_unique_words(json_paths)
+    if target_paths is not None:
+        words_by_filename = {
+            filename: text
+            for filename, text in words_by_filename.items()
+            if f"words/{filename}" in target_paths
+        }
+
     success = 0
     reused = 0
     skipped = 0
@@ -196,6 +251,7 @@ def generate_shared_audio(
     if collision_count:
         print(f"name collisions skipped: {collision_count}")
 
+    pending: list[tuple[str, Path, str]] = []
     for filename, text in sorted(words_by_filename.items()):
         audio_path = output_dir / filename
 
@@ -214,13 +270,22 @@ def generate_shared_audio(
             except Exception as error:
                 print(f"warn  could not reuse {filename}: {error}")
 
-        try:
-            gTTS(text=text, lang=lang, slow=slow).save(str(audio_path))
-            print(f"ok    {filename}")
-            success += 1
-        except Exception as error:
-            print(f"fail  {filename}: {error}")
-            failed += 1
+        pending.append((filename, audio_path, text))
+
+    if pending:
+        with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
+            futures = {
+                executor.submit(save_tts, audio_path, text, lang, slow): filename
+                for filename, audio_path, text in pending
+            }
+            for future in as_completed(futures):
+                filename, error = future.result()
+                if error is None:
+                    print(f"ok    {filename}")
+                    success += 1
+                else:
+                    print(f"fail  {filename}: {error}")
+                    failed += 1
 
     print("-" * 40)
     print(f"success: {success}")
@@ -237,10 +302,24 @@ def generate_field_audio(
     lang: str,
     slow: bool,
     overwrite: bool,
+    target_paths: Optional[set[str]] = None,
+    workers: int = 1,
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     texts_by_filename, duplicate_count, collision_count = collect_unique_field_texts(json_paths, field_name)
+    target_prefix_by_field = {
+        "meaningZh": "meanings/zh",
+        "meaningEn": "meanings/en",
+    }
+    target_prefix = target_prefix_by_field.get(field_name)
+    if target_paths is not None and target_prefix is not None:
+        texts_by_filename = {
+            filename: text
+            for filename, text in texts_by_filename.items()
+            if f"{target_prefix}/{filename}" in target_paths
+        }
+
     success = 0
     skipped = 0
     failed = 0
@@ -252,6 +331,7 @@ def generate_field_audio(
     if collision_count:
         print(f"name collisions skipped: {collision_count}")
 
+    pending: list[tuple[str, Path, str]] = []
     for filename, text in sorted(texts_by_filename.items()):
         audio_path = output_dir / filename
 
@@ -260,13 +340,22 @@ def generate_field_audio(
             skipped += 1
             continue
 
-        try:
-            gTTS(text=text, lang=lang, slow=slow).save(str(audio_path))
-            print(f"ok    {filename}")
-            success += 1
-        except Exception as error:
-            print(f"fail  {filename}: {error}")
-            failed += 1
+        pending.append((filename, audio_path, text))
+
+    if pending:
+        with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
+            futures = {
+                executor.submit(save_tts, audio_path, text, lang, slow): filename
+                for filename, audio_path, text in pending
+            }
+            for future in as_completed(futures):
+                filename, error = future.result()
+                if error is None:
+                    print(f"ok    {filename}")
+                    success += 1
+                else:
+                    print(f"fail  {filename}: {error}")
+                    failed += 1
 
     print("-" * 40)
     print(f"success: {success}")
@@ -286,7 +375,10 @@ def main() -> int:
     parser.add_argument("--no-reuse-existing", action="store_true", help="Do not copy matching MP3 files from old audio folders")
     parser.add_argument("--include-meanings", action="store_true", help="Also generate meaningZh and meaningEn MP3 files")
     parser.add_argument("--only-meanings", action="store_true", help="Generate only meaningZh and meaningEn MP3 files")
+    parser.add_argument("--target-list", help="Only generate audio paths listed in this file")
+    parser.add_argument("--workers", type=int, default=1, help="Number of concurrent gTTS requests")
     args = parser.parse_args()
+    target_paths = load_target_audio_paths(args.target_list)
 
     json_files: list[Path] = []
     for pattern in args.json:
@@ -306,7 +398,7 @@ def main() -> int:
             audio_dir = PROJECT_DIR / audio_dir
 
         legacy_audio_root = None if args.no_reuse_existing else DEFAULT_AUDIO_DIR
-        generate_shared_audio(json_files, audio_dir, legacy_audio_root, args.lang, args.slow, args.overwrite)
+        generate_shared_audio(json_files, audio_dir, legacy_audio_root, args.lang, args.slow, args.overwrite, target_paths, args.workers)
 
     if args.include_meanings or args.only_meanings:
         for field_name, output_dir in DEFAULT_MEANING_AUDIO_DIRS.items():
@@ -317,6 +409,8 @@ def main() -> int:
                 DEFAULT_MEANING_LANGS[field_name],
                 args.slow,
                 args.overwrite,
+                target_paths,
+                args.workers,
             )
 
     return 0

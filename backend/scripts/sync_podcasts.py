@@ -151,7 +151,7 @@ def parse_feed(
         "rss_url": source["rss_url"],
         "website_url": source.get("website_url") or text(channel.get("link")) or None,
         "cover_url": image_url(channel),
-        "language": "en",
+        "language": source.get("language", "en"),
         "category": source["category"],
         "host": source.get("host"),
         "region": source.get("region"),
@@ -239,7 +239,7 @@ class SupabaseWriter:
             "/episodes",
             params={
                 "podcast_id": f"eq.{podcast_id}",
-                "select": "id,guid,audio_url",
+                "select": "id,guid,audio_url,original_audio_url,audio_storage_path,transcript_status",
                 "limit": "10000",
             },
         )
@@ -260,15 +260,26 @@ class SupabaseWriter:
             "duration_seconds",
             "publish_date",
         }
-        payload = {key: episode[key] for key in mutable_fields}
+        publisher_audio_url = episode["audio_url"]
+        previous_publisher_url = existing.get("original_audio_url") or existing["audio_url"]
+        payload = {key: episode[key] for key in mutable_fields if key != "audio_url"}
+        # Once STT has measured the downloaded audio, keep that observed duration.
+        # RSS durations can omit dynamically inserted intros or ads and would make
+        # an otherwise correct timed transcript fail validation on every sync.
+        if existing.get("transcript_status") == "ready":
+            payload.pop("duration_seconds", None)
         # An RSS feed without Podcasting 2.0 transcript metadata must not erase
         # a transcript URL previously imported by another pipeline stage.
         if episode.get("transcript_url"):
             payload["transcript_url"] = episode["transcript_url"]
             payload["transcript_format"] = episode["transcript_format"]
-        if existing.get("audio_url") != episode["audio_url"]:
+        if previous_publisher_url != publisher_audio_url:
             payload.update(
                 {
+                    "audio_url": publisher_audio_url,
+                    "original_audio_url": publisher_audio_url,
+                    "audio_storage_path": None,
+                    "audio_mirrored_at": None,
                     "audio_status": "unchecked",
                     "resolved_audio_url": None,
                     "audio_checked_at": None,
@@ -276,6 +287,9 @@ class SupabaseWriter:
                     "audio_fingerprint": None,
                 }
             )
+        elif not existing.get("audio_storage_path"):
+            payload["audio_url"] = publisher_audio_url
+            payload["original_audio_url"] = publisher_audio_url
         response = self.client.patch(
             "/episodes",
             params={"id": f"eq.{existing['id']}"},
@@ -305,6 +319,8 @@ def load_sources(path: Path, selected: Optional[str]) -> list[dict[str, Any]]:
             raise ValueError(f"Source is missing fields {sorted(missing)}: {source}")
         if source["category"] not in ALLOWED_CATEGORIES:
             raise ValueError(f"Unsupported category: {source['category']}")
+        if source.get("language", "en") not in {"en", "de"}:
+            raise ValueError(f"Unsupported language: {source['language']}")
     if selected:
         sources = [item for item in sources if item["key"] == selected]
         if not sources:
