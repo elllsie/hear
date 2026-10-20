@@ -6,3 +6,4 @@ backend/.env
 backend/.models/
 backend/.transcription-cache/
 Audio.bundle.local-backup/
+backend/.local/

@@ -125,7 +125,21 @@ public final class AudioPlayerManager: NSObject {
         ["KaoYan_2", "IELTS_9400"].contains(audioFolderName ?? "") ? "en-US" : "de-DE"
     }
 
+    private var activeNaturalWordAudioVersion: String? {
+        guard let audioFolderName else { return nil }
+        if ["KaoYan_2", "IELTS_9400"].contains(audioFolderName) {
+            return SupabaseConfig.englishWordAudioVersion
+        }
+        if ["12yue", "A1", "A2", "B1"].contains(audioFolderName) {
+            return SupabaseConfig.germanWordAudioVersion
+        }
+        return nil
+    }
+
     private func preferredAudioFileName(for word: Word) -> String? {
+        if activeNaturalWordAudioVersion != nil {
+            return "\(safeAudioFileName(for: word.word))_\(safeAudioFileName(for: word.id)).mp3"
+        }
         if let fileName = word.audioFileName, !fileName.isEmpty {
             return fileName
         }
@@ -315,7 +329,15 @@ public final class AudioPlayerManager: NSObject {
         }
         if let audioFolderName,
            ["KaoYan_2", "IELTS_9400"].contains(audioFolderName) {
+            if let version = SupabaseConfig.englishWordAudioVersion {
+                return "\(version)/words/en-US/\(audioFolderName)/\(remoteName)"
+            }
             return "words/\(audioFolderName)/\(remoteName)"
+        }
+        if let version = SupabaseConfig.germanWordAudioVersion,
+           let audioFolderName,
+           ["12yue", "A1", "A2", "B1"].contains(audioFolderName) {
+            return "\(version)/words/de-DE/\(audioFolderName)/\(remoteName)"
         }
         return "words/\(remoteName)"
     }
@@ -387,11 +409,24 @@ public final class AudioPlayerManager: NSObject {
     }
 
     private func playFallbackOrAdvance(text: String?, language: String?, description: String) {
+        // Once natural-word audio v2 is active, never silently substitute an
+        // iOS system voice for a missing or temporarily unavailable word file.
+        if activeNaturalWordAudioVersion != nil,
+           description.hasPrefix("file:"),
+           preferredAudioDescriptionIsWord(description) {
+            delegate?.audioPlayerManager(didEncounter: NaturalWordAudioError.unavailable)
+            advanceQueue()
+            return
+        }
         if let text, let language, !text.isEmpty {
             speakText(text: text, language: language, description: description)
         } else {
             advanceQueue()
         }
+    }
+
+    private func preferredAudioDescriptionIsWord(_ description: String) -> Bool {
+        !description.hasPrefix("meaning:")
     }
 
     // MARK: - TTS
@@ -562,6 +597,14 @@ private enum PlayItem {
         case .file(_, _, _, _, _, _, _, let total): return total
         case .text(_, _, _, _, _, let total): return total
         }
+    }
+}
+
+private enum NaturalWordAudioError: LocalizedError {
+    case unavailable
+
+    var errorDescription: String? {
+        "自然发音暂时无法加载，请检查网络后重试。"
     }
 }
 

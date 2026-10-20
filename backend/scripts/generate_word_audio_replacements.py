@@ -8,15 +8,15 @@ import asyncio
 import html
 import json
 import os
-import re
 import time
-import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional
 
 import httpx
 from dotenv import load_dotenv
+
+from learning_audio_catalog import BOOK_LANGUAGES, word_rows_from_book
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,32 +36,6 @@ GTTS_LANGUAGES = {
     "en-US": ("en", "com"),
     "zh-CN": ("zh-CN", "com"),
 }
-
-
-def safe_name(text: str) -> str:
-    value = unicodedata.normalize("NFC", text.strip().lower())
-    value = re.sub(r"[^\wäöüß-]", "_", value, flags=re.UNICODE)
-    return re.sub(r"_+", "_", value).strip("_") or "word"
-
-
-def word_rows_from_book(book: str) -> list[dict[str, str]]:
-    data_path = ROOT / "听会儿" / "data" / f"{book}.json"
-    data = json.loads(data_path.read_text(encoding="utf-8"))
-    language = "en-US" if book == "KaoYan_2" else "de-DE"
-    subdirectory = Path("words") / ("KaoYan_2" if book == "KaoYan_2" else "")
-    return [
-        {
-            "book": book,
-            "word_id": str(row.get("id", "")),
-            "word": str(row.get("text", "")).strip(),
-            "kind": "word",
-            "language": language,
-            "text": str(row.get("text", "")).strip(),
-            "target_path": (subdirectory / f"{safe_name(str(row.get('text', '')))}.mp3").as_posix(),
-        }
-        for row in data
-        if str(row.get("text", "")).strip()
-    ]
 
 
 def required_env(name: str) -> str:
@@ -145,11 +119,21 @@ def main() -> int:
         "--word-book",
         help="Generate every word from a bundled book instead of reading the missing-audio manifest.",
     )
+    parser.add_argument(
+        "--all-word-books",
+        action="store_true",
+        help="Generate every word from every supported bundled vocabulary book.",
+    )
     parser.add_argument("--word-prefix", help="Only generate words beginning with this text (case-insensitive).")
     parser.add_argument("--output-dir", default="backend/generated/learning-audio")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument("--provider", choices=("gtts", "edge", "azure"), default="gtts")
+    parser.add_argument(
+        "--provider",
+        choices=("gtts", "edge", "azure"),
+        default="edge",
+        help="Legacy network speech provider. Use generate_kokoro_word_audio.py for v2 natural audio.",
+    )
     parser.add_argument("--retries", type=int, default=3)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--gtts-tld", help="Google TTS domain, for example com, co.uk, com.au, or ca.")
@@ -162,11 +146,14 @@ def main() -> int:
     )
     args = parser.parse_args()
     load_dotenv(BACKEND / ".env")
-    rows = (
-        word_rows_from_book(args.word_book)
-        if args.word_book
-        else json.loads((ROOT / args.manifest).read_text(encoding="utf-8"))
-    )
+    if args.word_book and args.all_word_books:
+        parser.error("--word-book and --all-word-books cannot be used together")
+    if args.all_word_books:
+        rows = [row for book in BOOK_LANGUAGES for row in word_rows_from_book(book)]
+    elif args.word_book:
+        rows = word_rows_from_book(args.word_book)
+    else:
+        rows = json.loads((ROOT / args.manifest).read_text(encoding="utf-8"))
     if args.word_prefix:
         prefix = args.word_prefix.casefold()
         rows = [row for row in rows if str(row["word"]).casefold().startswith(prefix)]

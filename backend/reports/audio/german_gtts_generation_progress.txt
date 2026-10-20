@@ -1,0 +1,210 @@
+2026-10-19 11:22:29 German gTTS generation started
+provider=gTTS language=de tld=de slow=false workers=1
+2026-10-19 11:22:29 book=12yue started
+/Users/mimashi0000/Downloads/听会儿/backend/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+progress 12/12 completed=12 skipped=0 failed=0
+2026-10-19 11:22:46 book=12yue completed
+2026-10-19 11:22:46 book=A1 started
+/Users/mimashi0000/Downloads/听会儿/backend/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+progress 50/680 completed=50 skipped=0 failed=0
+progress 100/680 completed=100 skipped=0 failed=0
+progress 150/680 completed=150 skipped=0 failed=0
+progress 200/680 completed=200 skipped=0 failed=0
+progress 250/680 completed=250 skipped=0 failed=0
+progress 300/680 completed=300 skipped=0 failed=0
+progress 350/680 completed=350 skipped=0 failed=0
+progress 400/680 completed=400 skipped=0 failed=0
+progress 450/680 completed=450 skipped=0 failed=0
+progress 500/680 completed=500 skipped=0 failed=0
+progress 550/680 completed=550 skipped=0 failed=0
+progress 600/680 completed=600 skipped=0 failed=0
+progress 650/680 completed=650 skipped=0 failed=0
+progress 680/680 completed=680 skipped=0 failed=0
+2026-10-19 11:39:53 book=A1 completed
+2026-10-19 11:39:53 book=A2 started
+/Users/mimashi0000/Downloads/听会儿/backend/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+progress 50/1116 completed=50 skipped=0 failed=0
+progress 100/1116 completed=100 skipped=0 failed=0
+progress 150/1116 completed=150 skipped=0 failed=0
+progress 200/1116 completed=200 skipped=0 failed=0
+progress 250/1116 completed=250 skipped=0 failed=0
+progress 300/1116 completed=300 skipped=0 failed=0
+progress 350/1116 completed=350 skipped=0 failed=0
+progress 400/1116 completed=400 skipped=0 failed=0
+progress 450/1116 completed=450 skipped=0 failed=0
+progress 500/1116 completed=500 skipped=0 failed=0
+progress 550/1116 completed=550 skipped=0 failed=0
+progress 600/1116 completed=600 skipped=0 failed=0
+progress 650/1116 completed=650 skipped=0 failed=0
+progress 700/1116 completed=700 skipped=0 failed=0
+progress 750/1116 completed=750 skipped=0 failed=0
+progress 800/1116 completed=800 skipped=0 failed=0
+progress 850/1116 completed=850 skipped=0 failed=0
+progress 900/1116 completed=900 skipped=0 failed=0
+progress 950/1116 completed=950 skipped=0 failed=0
+progress 1000/1116 completed=1000 skipped=0 failed=0
+progress 1050/1116 completed=1050 skipped=0 failed=0
+progress 1100/1116 completed=1100 skipped=0 failed=0
+progress 1116/1116 completed=1116 skipped=0 failed=0
+2026-10-19 12:09:05 book=A2 completed
+2026-10-19 12:09:05 book=B1 started
+/Users/mimashi0000/Downloads/听会儿/backend/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+progress 50/2905 completed=50 skipped=0 failed=0
+progress 100/2905 completed=100 skipped=0 failed=0
+progress 150/2905 completed=150 skipped=0 failed=0
+progress 200/2905 completed=200 skipped=0 failed=0
+progress 250/2905 completed=250 skipped=0 failed=0
+progress 300/2905 completed=300 skipped=0 failed=0
+progress 350/2905 completed=350 skipped=0 failed=0
+progress 400/2905 completed=400 skipped=0 failed=0
+progress 450/2905 completed=450 skipped=0 failed=0
+progress 500/2905 completed=500 skipped=0 failed=0
+progress 550/2905 completed=550 skipped=0 failed=0
+progress 600/2905 completed=600 skipped=0 failed=0
+progress 650/2905 completed=650 skipped=0 failed=0
+progress 700/2905 completed=700 skipped=0 failed=0
+progress 750/2905 completed=750 skipped=0 failed=0
+progress 800/2905 completed=800 skipped=0 failed=0
+progress 850/2905 completed=850 skipped=0 failed=0
+progress 900/2905 completed=900 skipped=0 failed=0
+progress 950/2905 completed=950 skipped=0 failed=0
+progress 1000/2905 completed=1000 skipped=0 failed=0
+progress 1050/2905 completed=1050 skipped=0 failed=0
+progress 1100/2905 completed=1100 skipped=0 failed=0
+progress 1150/2905 completed=1150 skipped=0 failed=0
+progress 1200/2905 completed=1200 skipped=0 failed=0
+progress 1250/2905 completed=1250 skipped=0 failed=0
+progress 1300/2905 completed=1300 skipped=0 failed=0
+progress 1350/2905 completed=1350 skipped=0 failed=0
+progress 1400/2905 completed=1400 skipped=0 failed=0
+progress 1450/2905 completed=1450 skipped=0 failed=0
+progress 1500/2905 completed=1500 skipped=0 failed=0
+progress 1550/2905 completed=1550 skipped=0 failed=0
+progress 1600/2905 completed=1600 skipped=0 failed=0
+progress 1650/2905 completed=1650 skipped=0 failed=0
+progress 1700/2905 completed=1700 skipped=0 failed=0
+progress 1750/2905 completed=1750 skipped=0 failed=0
+progress 1800/2905 completed=1800 skipped=0 failed=0
+progress 1850/2905 completed=1850 skipped=0 failed=0
+progress 1900/2905 completed=1900 skipped=0 failed=0
+progress 1950/2905 completed=1950 skipped=0 failed=0
+progress 2000/2905 completed=2000 skipped=0 failed=0
+progress 2050/2905 completed=2050 skipped=0 failed=0
+progress 2100/2905 completed=2100 skipped=0 failed=0
+progress 2150/2905 completed=2150 skipped=0 failed=0
+progress 2200/2905 completed=2200 skipped=0 failed=0
+progress 2250/2905 completed=2250 skipped=0 failed=0
+2026-10-19 21:35:27 German gTTS generation started
+provider=gTTS language=de tld=de slow=false workers=1
+2026-10-19 21:35:27 book=12yue started
+progress 12/12 completed=0 skipped=12 failed=0
+2026-10-19 21:35:28 book=12yue completed
+2026-10-19 21:35:28 book=A1 started
+progress 50/680 completed=0 skipped=50 failed=0
+progress 100/680 completed=0 skipped=100 failed=0
+progress 150/680 completed=0 skipped=150 failed=0
+progress 200/680 completed=0 skipped=200 failed=0
+progress 250/680 completed=0 skipped=250 failed=0
+progress 300/680 completed=0 skipped=300 failed=0
+progress 350/680 completed=0 skipped=350 failed=0
+progress 400/680 completed=0 skipped=400 failed=0
+progress 450/680 completed=0 skipped=450 failed=0
+progress 500/680 completed=0 skipped=500 failed=0
+progress 550/680 completed=0 skipped=550 failed=0
+progress 600/680 completed=0 skipped=600 failed=0
+progress 650/680 completed=0 skipped=650 failed=0
+progress 680/680 completed=0 skipped=680 failed=0
+2026-10-19 21:35:28 book=A1 completed
+2026-10-19 21:35:28 book=A2 started
+progress 50/1116 completed=0 skipped=50 failed=0
+progress 100/1116 completed=0 skipped=100 failed=0
+progress 150/1116 completed=0 skipped=150 failed=0
+progress 200/1116 completed=0 skipped=200 failed=0
+progress 250/1116 completed=0 skipped=250 failed=0
+progress 300/1116 completed=0 skipped=300 failed=0
+progress 350/1116 completed=0 skipped=350 failed=0
+progress 400/1116 completed=0 skipped=400 failed=0
+progress 450/1116 completed=0 skipped=450 failed=0
+progress 500/1116 completed=0 skipped=500 failed=0
+progress 550/1116 completed=0 skipped=550 failed=0
+progress 600/1116 completed=0 skipped=600 failed=0
+progress 650/1116 completed=0 skipped=650 failed=0
+progress 700/1116 completed=0 skipped=700 failed=0
+progress 750/1116 completed=0 skipped=750 failed=0
+progress 800/1116 completed=0 skipped=800 failed=0
+progress 850/1116 completed=0 skipped=850 failed=0
+progress 900/1116 completed=0 skipped=900 failed=0
+progress 950/1116 completed=0 skipped=950 failed=0
+progress 1000/1116 completed=0 skipped=1000 failed=0
+progress 1050/1116 completed=0 skipped=1050 failed=0
+progress 1100/1116 completed=0 skipped=1100 failed=0
+progress 1116/1116 completed=0 skipped=1116 failed=0
+2026-10-19 21:35:28 book=A2 completed
+2026-10-19 21:35:28 book=B1 started
+progress 50/2905 completed=0 skipped=50 failed=0
+progress 100/2905 completed=0 skipped=100 failed=0
+progress 150/2905 completed=0 skipped=150 failed=0
+progress 200/2905 completed=0 skipped=200 failed=0
+progress 250/2905 completed=0 skipped=250 failed=0
+progress 300/2905 completed=0 skipped=300 failed=0
+progress 350/2905 completed=0 skipped=350 failed=0
+progress 400/2905 completed=0 skipped=400 failed=0
+progress 450/2905 completed=0 skipped=450 failed=0
+progress 500/2905 completed=0 skipped=500 failed=0
+progress 550/2905 completed=0 skipped=550 failed=0
+progress 600/2905 completed=0 skipped=600 failed=0
+progress 650/2905 completed=0 skipped=650 failed=0
+progress 700/2905 completed=0 skipped=700 failed=0
+progress 750/2905 completed=0 skipped=750 failed=0
+progress 800/2905 completed=0 skipped=800 failed=0
+progress 850/2905 completed=0 skipped=850 failed=0
+progress 900/2905 completed=0 skipped=900 failed=0
+progress 950/2905 completed=0 skipped=950 failed=0
+progress 1000/2905 completed=0 skipped=1000 failed=0
+progress 1050/2905 completed=0 skipped=1050 failed=0
+progress 1100/2905 completed=0 skipped=1100 failed=0
+progress 1150/2905 completed=0 skipped=1150 failed=0
+progress 1200/2905 completed=0 skipped=1200 failed=0
+progress 1250/2905 completed=0 skipped=1250 failed=0
+progress 1300/2905 completed=0 skipped=1300 failed=0
+progress 1350/2905 completed=0 skipped=1350 failed=0
+progress 1400/2905 completed=0 skipped=1400 failed=0
+progress 1450/2905 completed=0 skipped=1450 failed=0
+progress 1500/2905 completed=0 skipped=1500 failed=0
+progress 1550/2905 completed=0 skipped=1550 failed=0
+progress 1600/2905 completed=0 skipped=1600 failed=0
+progress 1650/2905 completed=0 skipped=1650 failed=0
+progress 1700/2905 completed=0 skipped=1700 failed=0
+progress 1750/2905 completed=0 skipped=1750 failed=0
+progress 1800/2905 completed=0 skipped=1800 failed=0
+progress 1850/2905 completed=0 skipped=1850 failed=0
+progress 1900/2905 completed=0 skipped=1900 failed=0
+progress 1950/2905 completed=0 skipped=1950 failed=0
+progress 2000/2905 completed=0 skipped=2000 failed=0
+progress 2050/2905 completed=0 skipped=2050 failed=0
+progress 2100/2905 completed=0 skipped=2100 failed=0
+progress 2150/2905 completed=0 skipped=2150 failed=0
+progress 2200/2905 completed=0 skipped=2200 failed=0
+progress 2250/2905 completed=0 skipped=2250 failed=0
+/Users/mimashi0000/Downloads/听会儿/backend/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+progress 2300/2905 completed=17 skipped=2283 failed=0
+progress 2350/2905 completed=67 skipped=2283 failed=0
+progress 2400/2905 completed=117 skipped=2283 failed=0
+progress 2450/2905 completed=167 skipped=2283 failed=0
+progress 2500/2905 completed=217 skipped=2283 failed=0
+progress 2550/2905 completed=267 skipped=2283 failed=0
+progress 2600/2905 completed=317 skipped=2283 failed=0
+progress 2650/2905 completed=367 skipped=2283 failed=0
+progress 2700/2905 completed=417 skipped=2283 failed=0
+progress 2750/2905 completed=467 skipped=2283 failed=0
+progress 2800/2905 completed=517 skipped=2283 failed=0
+progress 2850/2905 completed=567 skipped=2283 failed=0
+progress 2900/2905 completed=617 skipped=2283 failed=0
+progress 2905/2905 completed=622 skipped=2283 failed=0
+2026-10-19 22:00:54 book=B1 completed
+2026-10-19 22:00:54 German gTTS generation completed
