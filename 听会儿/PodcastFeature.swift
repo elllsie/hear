@@ -1455,7 +1455,7 @@ private struct PodcastEpisodePlayerView: View {
             .task(id: episode.id) { await loadSentences() }
             .task(id: episode.id) { await loadAIInsights() }
             .task(id: episode.podcast.language) {
-                await PodcastWordLookup.shared.prepare(for: episode.podcast.language)
+                PodcastWordLookup.shared.prepare(for: episode.podcast.language)
             }
             .onChange(of: player.playbackCompletionCount) { _ in playNextEpisodeIfAvailable() }
             .sheet(item: $activeSheet) { sheet in
@@ -1719,7 +1719,7 @@ private struct PodcastEpisodePlayerView: View {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         guard draggedWordMeaning == nil else { return }
         Task {
-            let meaning = await PodcastWordLookup.shared.meaning(
+            let meaning = PodcastWordLookup.shared.meaning(
                 for: cleaned,
                 sourceLanguage: episode.podcast.language,
                 targetLanguage: learningLanguage
@@ -2369,7 +2369,8 @@ private struct PodcastInstalledTranslationText: View {
 }
 #endif
 
-private actor PodcastWordLookup {
+@MainActor
+private final class PodcastWordLookup {
     static let shared = PodcastWordLookup()
     private var cache: [StudyLanguage: [String: Word]] = [:]
 
@@ -2560,7 +2561,7 @@ private struct PodcastWordSheet: View {
                 didFinishDictionaryLookup = true
                 return
             }
-            dictionaryMeaning = await PodcastWordLookup.shared.meaning(
+            dictionaryMeaning = PodcastWordLookup.shared.meaning(
                 for: word,
                 sourceLanguage: episode.podcast.language,
                 targetLanguage: learningLanguage

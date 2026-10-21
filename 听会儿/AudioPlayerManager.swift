@@ -21,7 +21,8 @@ public final class AudioPlayerManager: NSObject {
     public weak var delegate: AudioPlayerManagerDelegate?
 
     private var audioPlayer: AVAudioPlayer?
-    private var audioDownloadTask: URLSessionDownloadTask?
+    private var audioDownloadTask: URLSessionDataTask?
+    private var audioPrefetchTasks: [String: URLSessionDataTask] = [:]
     private let tts = AVSpeechSynthesizer()
     private var queue: [PlayItem] = []
     private var currentIndex: Int = 0
@@ -31,14 +32,22 @@ public final class AudioPlayerManager: NSObject {
     private var activeSpeechGeneration: Int = -1
     private weak var activeSpeechUtterance: AVSpeechUtterance?
     private weak var suppressedSpeechCancelUtterance: AVSpeechUtterance?
+    private var remoteRefreshAttempts: [String: Date] = [:]
+    private let remoteRefreshInterval: TimeInterval = 60 * 60
+    /// Rotates even while the app remains open, so a backend in-place audio
+    /// refresh cannot remain pinned behind a launch-scoped CDN cache key.
+    private var remoteRefreshToken: String {
+        let hourlyToken = String(Int(Date().timeIntervalSince1970 / remoteRefreshInterval))
+        return "\(SupabaseConfig.learningAudioContentRevision)-\(hourlyToken)"
+    }
     public var repeatTimes: Int = 2 // default repeat times per word
     public var rate: Float = AVSpeechUtteranceDefaultSpeechRate
     public var playbackRate: Float = 1.0
     public var volume: Float = 1.0
     public var audioFolderName: String?
     public var learningLanguage: LearningLanguage = .chinese
-    public var chineseMeaningFileRateMultiplier: Float = 1.0
-    public var chineseMeaningFallbackSpeechRateMultiplier: Float = 1.0
+    public var chineseMeaningFileRateMultiplier: Float = 1.5
+    public var chineseMeaningFallbackSpeechRateMultiplier: Float = 1.5
 
     private(set) public var isPlaying: Bool = false {
         didSet { delegate?.audioPlayerManager(didUpdateState: isPlaying) }
@@ -112,7 +121,8 @@ public final class AudioPlayerManager: NSObject {
             let isLastRepeat = repeatIndex == max(1, repeatTimes) - 1
             if isLastRepeat {
                 let meaning = word.spokenMeaning(for: learningLanguage)
-                if let file = preferredMeaningAudioFileName(for: meaning, language: learningLanguage) {
+                let meaningAudioLookupText = word.meaningAudioLookupText(for: learningLanguage)
+                if let file = preferredMeaningAudioFileName(for: meaningAudioLookupText, language: learningLanguage) {
                     queue.append(.file(name: file, subdirectory: learningLanguage.meaningAudioSubdirectory, description: "meaning:\(meaning)", fallbackText: meaning, fallbackLanguage: learningLanguage.speechLanguageCode, word: word, wordIndex: wordIndex, totalWords: totalWords))
                 } else {
                     queue.append(.text(text: meaning, language: learningLanguage.speechLanguageCode, description: "meaning:\(meaning)", word: word, wordIndex: wordIndex, totalWords: totalWords))
@@ -127,8 +137,11 @@ public final class AudioPlayerManager: NSObject {
 
     private var activeNaturalWordAudioVersion: String? {
         guard let audioFolderName else { return nil }
-        if ["KaoYan_2", "IELTS_9400"].contains(audioFolderName) {
-            return SupabaseConfig.englishWordAudioVersion
+        if audioFolderName == "KaoYan_2" {
+            return SupabaseConfig.kaoYanEnglishWordAudioVersion
+        }
+        if audioFolderName == "IELTS_9400" {
+            return SupabaseConfig.ieltsEnglishWordAudioVersion
         }
         if ["12yue", "A1", "A2", "B1"].contains(audioFolderName) {
             return SupabaseConfig.germanWordAudioVersion
@@ -232,15 +245,20 @@ public final class AudioPlayerManager: NSObject {
     // MARK: - File play
     private func playAudioFile(named name: String, preferredSubdirectory: String?, description: String, fallbackText: String?, fallbackLanguage: String?) {
         stopAudioPlayer()
-        if let cachedURL = cachedAudioURL(named: name, preferredSubdirectory: preferredSubdirectory),
-           FileManager.default.fileExists(atPath: cachedURL.path) {
-            playFile(at: cachedURL, preferredSubdirectory: preferredSubdirectory, description: description, fallbackText: fallbackText, fallbackLanguage: fallbackLanguage)
-            return
+        let cachedURL = cachedAudioURL(named: name, preferredSubdirectory: preferredSubdirectory)
+        let availableCachedURL = cachedURL.flatMap {
+            FileManager.default.fileExists(atPath: $0.path) ? $0 : nil
         }
-
-        if let remoteURL = remoteAudioURL(named: name, preferredSubdirectory: preferredSubdirectory) {
+        let remoteURLs = remoteAudioURLs(named: name, preferredSubdirectory: preferredSubdirectory)
+        let refreshKey = remotePath(named: name, preferredSubdirectory: preferredSubdirectory)
+        if let remoteURL = remoteURLs.first,
+           shouldRefreshRemoteAudio(for: refreshKey) {
+            remoteRefreshAttempts[refreshKey] = Date()
+            audioDiagnostic("download \(description) url=\(remoteURL.absoluteString)")
             downloadAndPlay(
                 remoteURL,
+                remainingRemoteURLs: Array(remoteURLs.dropFirst()),
+                cachedFallbackURL: availableCachedURL,
                 named: name,
                 preferredSubdirectory: preferredSubdirectory,
                 description: description,
@@ -250,11 +268,25 @@ public final class AudioPlayerManager: NSObject {
             return
         }
 
+        if let availableCachedURL {
+            audioDiagnostic("cache hit \(description) path=\(availableCachedURL.path)")
+            playFile(at: availableCachedURL, preferredSubdirectory: preferredSubdirectory, description: description, fallbackText: fallbackText, fallbackLanguage: fallbackLanguage)
+            return
+        }
+
         playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
+    }
+
+    private func shouldRefreshRemoteAudio(for key: String) -> Bool {
+        guard let lastAttempt = remoteRefreshAttempts[key] else { return true }
+        return Date().timeIntervalSince(lastAttempt) >= remoteRefreshInterval
     }
 
     private func downloadAndPlay(
         _ remoteURL: URL,
+        remainingRemoteURLs: [URL] = [],
+        retryCount: Int = 1,
+        cachedFallbackURL: URL?,
         named name: String,
         preferredSubdirectory: String?,
         description: String,
@@ -264,29 +296,93 @@ public final class AudioPlayerManager: NSObject {
         let generation = playbackGeneration
         let expectedIndex = currentIndex
         audioDownloadTask?.cancel()
-        audioDownloadTask = URLSession.shared.downloadTask(with: remoteURL) { [weak self] temporaryURL, response, error in
+        var request = URLRequest(url: remoteURL)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.timeoutInterval = 15
+        request.setValue("no-cache", forHTTPHeaderField: "Cache-Control")
+        audioDownloadTask = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             DispatchQueue.main.async {
                 guard let self,
                       generation == self.playbackGeneration,
                       expectedIndex == self.currentIndex else { return }
                 self.audioDownloadTask = nil
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let errorDescription = error?.localizedDescription ?? "none"
+                self.audioDiagnostic(
+                    "response \(description) status=\(statusCode) " +
+                    "bytes=\((response as? HTTPURLResponse)?.expectedContentLength ?? -1) " +
+                    "error=\(errorDescription) url=\(remoteURL.absoluteString)"
+                )
                 guard error == nil,
                       let http = response as? HTTPURLResponse,
                       (200..<300).contains(http.statusCode),
-                      let temporaryURL,
+                      let data,
+                      data.count >= 512,
+                      self.isPlayableAudioData(data),
                       let destination = self.cachedAudioURL(named: name, preferredSubdirectory: preferredSubdirectory, createDirectory: true) else {
+                    if retryCount > 0 {
+                        self.audioDiagnostic("retrying remote audio \(description)")
+                        self.downloadAndPlay(
+                            remoteURL,
+                            remainingRemoteURLs: remainingRemoteURLs,
+                            retryCount: retryCount - 1,
+                            cachedFallbackURL: cachedFallbackURL,
+                            named: name,
+                            preferredSubdirectory: preferredSubdirectory,
+                            description: description,
+                            fallbackText: fallbackText,
+                            fallbackLanguage: fallbackLanguage
+                        )
+                        return
+                    }
+                    if error == nil,
+                       response is HTTPURLResponse,
+                       let nextURL = remainingRemoteURLs.first {
+                        self.audioDiagnostic("trying alternate url=\(nextURL.absoluteString)")
+                        self.downloadAndPlay(
+                            nextURL,
+                            remainingRemoteURLs: Array(remainingRemoteURLs.dropFirst()),
+                            cachedFallbackURL: cachedFallbackURL,
+                            named: name,
+                            preferredSubdirectory: preferredSubdirectory,
+                            description: description,
+                            fallbackText: fallbackText,
+                            fallbackLanguage: fallbackLanguage
+                        )
+                        return
+                    }
+                    if let cachedFallbackURL,
+                       FileManager.default.fileExists(atPath: cachedFallbackURL.path) {
+                        self.audioDiagnostic("network unavailable; using cache \(description)")
+                        self.playFile(
+                            at: cachedFallbackURL,
+                            preferredSubdirectory: preferredSubdirectory,
+                            description: description,
+                            fallbackText: fallbackText,
+                            fallbackLanguage: fallbackLanguage
+                        )
+                        return
+                    }
                     self.playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
                     return
                 }
                 do {
-                    let manager = FileManager.default
-                    if manager.fileExists(atPath: destination.path) {
-                        try manager.removeItem(at: destination)
-                    }
-                    try manager.moveItem(at: temporaryURL, to: destination)
+                    try data.write(to: destination, options: .atomic)
                     self.trimDownloadedAudioCache()
                     self.playFile(at: destination, preferredSubdirectory: preferredSubdirectory, description: description, fallbackText: fallbackText, fallbackLanguage: fallbackLanguage)
                 } catch {
+                    self.audioDiagnostic("cache write failed \(description): \(error.localizedDescription)")
+                    if let cachedFallbackURL,
+                       FileManager.default.fileExists(atPath: cachedFallbackURL.path) {
+                        self.playFile(
+                            at: cachedFallbackURL,
+                            preferredSubdirectory: preferredSubdirectory,
+                            description: description,
+                            fallbackText: fallbackText,
+                            fallbackLanguage: fallbackLanguage
+                        )
+                        return
+                    }
                     self.playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
                 }
             }
@@ -294,7 +390,74 @@ public final class AudioPlayerManager: NSObject {
         audioDownloadTask?.resume()
     }
 
+    private func isPlayableAudioData(_ data: Data) -> Bool {
+        guard let player = try? AVAudioPlayer(data: data) else { return false }
+        return player.duration > 0
+    }
+
+    private func prefetchUpcomingAudio() {
+        guard currentIndex + 1 < queue.count else { return }
+
+        for item in queue.dropFirst(currentIndex + 1) {
+            guard case .file(let name, let subdirectory, _, _, _, _, _, _) = item else {
+                continue
+            }
+
+            let refreshKey = remotePath(named: name, preferredSubdirectory: subdirectory)
+            guard shouldRefreshRemoteAudio(for: refreshKey),
+                  audioPrefetchTasks[refreshKey] == nil,
+                  let remoteURL = remoteAudioURLs(named: name, preferredSubdirectory: subdirectory).first,
+                  let destination = cachedAudioURL(named: name, preferredSubdirectory: subdirectory, createDirectory: true) else {
+                continue
+            }
+
+            remoteRefreshAttempts[refreshKey] = Date()
+            var request = URLRequest(url: remoteURL)
+            request.cachePolicy = .reloadIgnoringLocalCacheData
+            request.timeoutInterval = 8
+            request.setValue("no-cache", forHTTPHeaderField: "Cache-Control")
+
+            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    defer { self.audioPrefetchTasks[refreshKey] = nil }
+                    guard error == nil,
+                          let http = response as? HTTPURLResponse,
+                          (200..<300).contains(http.statusCode),
+                          let data,
+                          data.count >= 512,
+                          self.isPlayableAudioData(data) else {
+                        self.audioDiagnostic("prefetch unavailable path=\(refreshKey)")
+                        return
+                    }
+
+                    do {
+                        try data.write(to: destination, options: .atomic)
+                        self.trimDownloadedAudioCache()
+                        self.audioDiagnostic("prefetch ready path=\(refreshKey)")
+                    } catch {
+                        self.audioDiagnostic("prefetch write failed path=\(refreshKey): \(error.localizedDescription)")
+                    }
+                }
+            }
+            audioPrefetchTasks[refreshKey] = task
+            task.resume()
+            return
+        }
+    }
+
     private func playFile(at url: URL, preferredSubdirectory: String?, description: String, fallbackText: String?, fallbackLanguage: String?) {
+        // Audio-session activation can transiently fail during route changes,
+        // interruptions, or when speech synthesis has just stopped. That must
+        // not discard a valid downloaded MP3 and switch the whole library to
+        // the system voice; AVAudioPlayer can still start once the route is
+        // available.
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            audioDiagnostic("audio session activation warning \(description): \(error.localizedDescription)")
+        }
+
         do {
             let player = try AVAudioPlayer(contentsOf: url)
             audioPlayer = player
@@ -303,14 +466,30 @@ public final class AudioPlayerManager: NSObject {
             player.volume = volume
             player.enableRate = true
             player.rate = adjustedPlaybackRate(for: preferredSubdirectory)
-            player.prepareToPlay()
+            let prepared = player.prepareToPlay()
             delegate?.audioPlayerManager(didStartPlaying: description)
+            let started = player.play()
+            audioDiagnostic(
+                "player \(description) prepared=\(prepared) started=\(started) " +
+                "duration=\(player.duration) path=\(url.path)"
+            )
+            guard started else {
+                playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
+                return
+            }
             isPlaying = true
-            player.play()
+            prefetchUpcomingAudio()
         } catch {
+            audioDiagnostic("player error \(description): \(error.localizedDescription)")
             delegate?.audioPlayerManager(didEncounter: error)
             playFallbackOrAdvance(text: fallbackText, language: fallbackLanguage, description: description)
         }
+    }
+
+    private func audioDiagnostic(_ message: String) {
+#if DEBUG
+        print("[WordAudio] \(message)")
+#endif
     }
 
     private func stopAudioPlayer() {
@@ -329,15 +508,15 @@ public final class AudioPlayerManager: NSObject {
         }
         if let audioFolderName,
            ["KaoYan_2", "IELTS_9400"].contains(audioFolderName) {
-            if let version = SupabaseConfig.englishWordAudioVersion {
-                return "\(version)/words/en-US/\(audioFolderName)/\(remoteName)"
+            if let version = activeNaturalWordAudioVersion {
+                return "\(version)/words/en-us/\(audioFolderName.lowercased())/\(remoteName)"
             }
             return "words/\(audioFolderName)/\(remoteName)"
         }
         if let version = SupabaseConfig.germanWordAudioVersion,
            let audioFolderName,
            ["12yue", "A1", "A2", "B1"].contains(audioFolderName) {
-            return "\(version)/words/de-DE/\(audioFolderName)/\(remoteName)"
+            return "\(version)/words/de-de/\(audioFolderName.lowercased())/\(remoteName)"
         }
         return "words/\(remoteName)"
     }
@@ -360,8 +539,15 @@ public final class AudioPlayerManager: NSObject {
                 previousWasUnderscore = false
             } else if scalar.isASCII,
                       (CharacterSet.alphanumerics.contains(scalar) || scalar == "_" || scalar == "-" || scalar == ".") {
-                result.unicodeScalars.append(scalar)
-                previousWasUnderscore = false
+                if scalar == "_" {
+                    if !previousWasUnderscore {
+                        result.unicodeScalars.append(scalar)
+                    }
+                    previousWasUnderscore = true
+                } else {
+                    result.unicodeScalars.append(scalar)
+                    previousWasUnderscore = false
+                }
             } else if !previousWasUnderscore {
                 result.append("_")
                 previousWasUnderscore = true
@@ -372,17 +558,37 @@ public final class AudioPlayerManager: NSObject {
         return trimmed.isEmpty ? "audio" : trimmed
     }
 
-    private func remoteAudioURL(named name: String, preferredSubdirectory: String?) -> URL? {
+    private func remoteAudioURLs(named name: String, preferredSubdirectory: String?) -> [URL] {
+        let primaryPath = remotePath(named: name, preferredSubdirectory: preferredSubdirectory)
+        var paths = [primaryPath]
+        if preferredSubdirectory == nil,
+           SupabaseConfig.germanWordAudioVersion != nil,
+           let currentBook = audioFolderName,
+           ["12yue", "A1", "A2", "B1"].contains(currentBook) {
+            let remoteName = storageSafeAudioFileName(name)
+            let version = SupabaseConfig.germanWordAudioVersion ?? "v2"
+            for book in ["12yue", "A1", "A2", "B1"] where book != currentBook {
+                paths.append("\(version)/words/de-de/\(book.lowercased())/\(remoteName)")
+            }
+        }
+        return paths.compactMap(remoteAudioURL(forPath:))
+    }
+
+    private func remoteAudioURL(forPath path: String) -> URL? {
         guard var url = SupabaseConfig.learningAudioBaseURL else { return nil }
-        for component in remotePath(named: name, preferredSubdirectory: preferredSubdirectory).split(separator: "/") {
+        for component in path.split(separator: "/") {
             url.appendPathComponent(String(component))
         }
-        return url
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return url
+        }
+        components.queryItems = [URLQueryItem(name: "audioVersion", value: remoteRefreshToken)]
+        return components.url
     }
 
     private func cachedAudioURL(named name: String, preferredSubdirectory: String?, createDirectory: Bool = false) -> URL? {
         guard let cacheRoot = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return nil }
-        var url = cacheRoot.appendingPathComponent("TingHuiErAudioV2", isDirectory: true)
+        var url = cacheRoot.appendingPathComponent("TingHuiErAudioV4", isDirectory: true)
         let components = remotePath(named: name, preferredSubdirectory: preferredSubdirectory).split(separator: "/")
         for component in components.dropLast() { url.appendPathComponent(String(component), isDirectory: true) }
         if createDirectory {
@@ -393,7 +599,7 @@ public final class AudioPlayerManager: NSObject {
 
     private func trimDownloadedAudioCache(maximumBytes: Int64 = 300 * 1_024 * 1_024) {
         guard let cacheRoot = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return }
-        let root = cacheRoot.appendingPathComponent("TingHuiErAudioV2", isDirectory: true)
+        let root = cacheRoot.appendingPathComponent("TingHuiErAudioV4", isDirectory: true)
         let keys: [URLResourceKey] = [.isRegularFileKey, .fileSizeKey, .contentAccessDateKey]
         guard let enumerator = FileManager.default.enumerator(at: root, includingPropertiesForKeys: keys) else { return }
         var files: [(url: URL, size: Int64, date: Date)] = []
@@ -409,24 +615,12 @@ public final class AudioPlayerManager: NSObject {
     }
 
     private func playFallbackOrAdvance(text: String?, language: String?, description: String) {
-        // Once natural-word audio v2 is active, never silently substitute an
-        // iOS system voice for a missing or temporarily unavailable word file.
-        if activeNaturalWordAudioVersion != nil,
-           description.hasPrefix("file:"),
-           preferredAudioDescriptionIsWord(description) {
-            delegate?.audioPlayerManager(didEncounter: NaturalWordAudioError.unavailable)
-            advanceQueue()
-            return
-        }
         if let text, let language, !text.isEmpty {
+            audioDiagnostic("using system speech fallback \(description) language=\(language)")
             speakText(text: text, language: language, description: description)
         } else {
             advanceQueue()
         }
-    }
-
-    private func preferredAudioDescriptionIsWord(_ description: String) -> Bool {
-        !description.hasPrefix("meaning:")
     }
 
     // MARK: - TTS
@@ -444,6 +638,7 @@ public final class AudioPlayerManager: NSObject {
         delegate?.audioPlayerManager(didStartPlaying: description)
         isPlaying = true
         tts.speak(utter)
+        prefetchUpcomingAudio()
     }
 
     private func adjustedPlaybackRate(for preferredSubdirectory: String?) -> Float {
@@ -597,14 +792,6 @@ private enum PlayItem {
         case .file(_, _, _, _, _, _, _, let total): return total
         case .text(_, _, _, _, _, let total): return total
         }
-    }
-}
-
-private enum NaturalWordAudioError: LocalizedError {
-    case unavailable
-
-    var errorDescription: String? {
-        "自然发音暂时无法加载，请检查网络后重试。"
     }
 }
 

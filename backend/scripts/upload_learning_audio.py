@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import mimetypes
 import os
 import time
@@ -42,6 +43,7 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--prefix", help="Only upload paths under this prefix, for example words/KaoYan_2")
     parser.add_argument("--only-list", help="Only upload object keys listed in this UTF-8 text file.")
+    parser.add_argument("--manifest", help="Only upload target_path values from a JSON manifest.")
     parser.add_argument(
         "--list-first",
         action="store_true",
@@ -58,6 +60,17 @@ def main() -> int:
         listed = {
             line.strip() for line in (ROOT / args.only_list).read_text(encoding="utf-8").splitlines()
             if line.strip()
+        }
+        files = [
+            path for path in files
+            if storage_key(path.relative_to(source).as_posix()) in listed
+        ]
+    if args.manifest:
+        manifest_rows = json.loads((ROOT / args.manifest).read_text(encoding="utf-8"))
+        listed = {
+            storage_key(str(row["target_path"]))
+            for row in manifest_rows
+            if str(row.get("target_path", "")).strip()
         }
         files = [
             path for path in files
@@ -156,11 +169,12 @@ def main() -> int:
         url = f"{base}/storage/v1/object/{quote(args.bucket)}/{quote(object_key, safe='/')}"
         public_url = f"{base}/storage/v1/object/public/{quote(args.bucket)}/{quote(object_key, safe='/')}"
         last_error = "upload was not attempted"
-        try:
-            if transfer_client.head(public_url, timeout=20).status_code == 200:
-                return object_key, "skipped", None
-        except httpx.HTTPError:
-            pass
+        if not args.overwrite:
+            try:
+                if transfer_client.head(public_url, timeout=20).status_code == 200:
+                    return object_key, "skipped", None
+            except httpx.HTTPError:
+                pass
         for attempt in range(1, 4):
             try:
                 response = transfer_client.post(url, headers={**headers, "Content-Type": content_type}, content=path.read_bytes())

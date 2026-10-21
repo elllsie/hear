@@ -315,7 +315,13 @@ public extension Word {
     }
 
     func spokenMeaning(for language: LearningLanguage) -> String {
-        meaning(for: language).strippingSpeechPartLabels()
+        meaning(for: language).strippingSpeechPartLabels(allowMissingWhitespace: true)
+    }
+
+    /// Keep the original lookup text so refreshed speech can overwrite the
+    /// existing Storage object instead of creating a duplicate object name.
+    func meaningAudioLookupText(for language: LearningLanguage) -> String {
+        meaning(for: language).strippingSpeechPartLabels(allowMissingWhitespace: false)
     }
 
     func exampleText(for language: LearningLanguage) -> String {
@@ -336,13 +342,38 @@ public extension Word {
 }
 
 private extension String {
-    func strippingSpeechPartLabels() -> String {
-        let labelPattern = #"(?i)(^|[；;，,、\s])\s*(n|v|vt|vi|adj|adv|prep|pron|conj|num|art|aux|abbr|int|pl|sing|interj|det|modal)\.?\s+"#
-        var cleaned = replacingOccurrences(
-            of: labelPattern,
-            with: "$1",
-            options: .regularExpression
-        )
+    func strippingSpeechPartLabels(allowMissingWhitespace: Bool) -> String {
+        let labelPattern: String
+        if allowMissingWhitespace {
+            let labels = #"interj|modal|prep|pron|conj|abbr|sing|vbl|adj|adv|num|art|aux|det|vt|vi|pl|int|ad|n|v|a"#
+            labelPattern = #"(?i)(^|[^A-Za-z])\s*("# + labels + #")(?:\.\s*|\s+|(?=[\u3400-\u9fff]))"#
+        } else {
+            labelPattern = #"(?i)(^|[；;，,、\s])\s*(n|v|vt|vi|adj|adv|prep|pron|conj|num|art|aux|abbr|int|pl|sing|interj|det|modal)\.?\s+"#
+        }
+
+        var cleaned = self
+        repeat {
+            let previous = cleaned
+            cleaned = cleaned.replacingOccurrences(
+                of: labelPattern,
+                with: allowMissingWhitespace ? "$1；" : "$1",
+                options: .regularExpression
+            )
+            if !allowMissingWhitespace || cleaned == previous { break }
+        } while true
+        if allowMissingWhitespace {
+            cleaned = cleaned.replacingOccurrences(
+                of: #"\s*/\s*"#,
+                with: "；",
+                options: .regularExpression
+            )
+            cleaned = cleaned.replacingOccurrences(
+                of: #"[；;]+"#,
+                with: "；",
+                options: .regularExpression
+            )
+            cleaned = cleaned.trimmingCharacters(in: CharacterSet(charactersIn: "；; "))
+        }
         cleaned = cleaned.replacingOccurrences(
             of: #"\s+"#,
             with: " ",

@@ -153,7 +153,13 @@ def main() -> int:
     elif args.word_book:
         rows = word_rows_from_book(args.word_book)
     else:
-        rows = json.loads((ROOT / args.manifest).read_text(encoding="utf-8"))
+        manifest = json.loads((ROOT / args.manifest).read_text(encoding="utf-8"))
+        if isinstance(manifest, dict) and isinstance(manifest.get("items"), list):
+            rows = manifest["items"]
+        elif isinstance(manifest, list):
+            rows = manifest
+        else:
+            raise RuntimeError("manifest must be a JSON array or an object containing an items array")
     if args.word_prefix:
         prefix = args.word_prefix.casefold()
         rows = [row for row in rows if str(row["word"]).casefold().startswith(prefix)]

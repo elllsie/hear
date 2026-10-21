@@ -70,10 +70,10 @@ class KokoroSynthesizer:
             device="cpu",
         )
 
-    def render_mp3(self, text: str, output: Path, bitrate: int) -> None:
+    def render_mp3(self, text: str, output: Path, bitrate: int, speed: float = 1.0) -> None:
         chunks = [
             result.audio.detach().cpu()
-            for result in self.pipeline(text, voice=self.voice, speed=1.0)
+            for result in self.pipeline(text, voice=self.voice, speed=speed)
             if result.audio is not None and result.audio.numel() > 0
         ]
         if not chunks:
@@ -108,19 +108,35 @@ def main() -> int:
     selection = parser.add_mutually_exclusive_group(required=True)
     selection.add_argument("--book", choices=tuple(BOOK_LANGUAGES))
     selection.add_argument("--all-word-books", action="store_true")
+    selection.add_argument("--manifest", help="Generate only rows from a JSON manifest/report.")
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_ROOT.relative_to(ROOT)))
     parser.add_argument("--model-dir", default=str(DEFAULT_MODEL_ROOT.relative_to(ROOT)))
     parser.add_argument("--failure-report", default=str(DEFAULT_FAILURE_REPORT.relative_to(ROOT)))
     parser.add_argument("--bitrate", type=int, default=48, choices=(32, 40, 48, 56, 64, 80, 96))
+    parser.add_argument("--speed", type=float, default=1.0)
+    parser.add_argument(
+        "--append-period",
+        action="store_true",
+        help="Add sentence-final punctuation to isolated words for a complete release and tail.",
+    )
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--retries", type=int, default=2)
     parser.add_argument("--progress-every", type=int, default=25)
     args = parser.parse_args()
 
-    books = list(BOOK_LANGUAGES) if args.all_word_books else [args.book]
-    rows = selected_rows(books, args.offset, args.limit)
+    if args.manifest:
+        manifest = json.loads((ROOT / args.manifest).read_text(encoding="utf-8"))
+        rows = manifest.get("items") if isinstance(manifest, dict) else manifest
+        if not isinstance(rows, list):
+            raise RuntimeError("manifest must be a JSON array or an object containing an items array")
+        rows = rows[max(0, args.offset):]
+        if args.limit is not None:
+            rows = rows[:max(0, args.limit)]
+    else:
+        books = list(BOOK_LANGUAGES) if args.all_word_books else [args.book]
+        rows = selected_rows(books, args.offset, args.limit)
     output_root = ROOT / args.output_dir
     model_root = ROOT / args.model_dir
     report_path = ROOT / args.failure_report
@@ -143,7 +159,10 @@ def main() -> int:
                 error: Exception | None = None
                 for attempt in range(1, max(1, args.retries) + 1):
                     try:
-                        engine.render_mp3(row["text"], output, args.bitrate)
+                        speech_text = str(row["text"])
+                        if args.append_period and speech_text and speech_text[-1] not in ".!?":
+                            speech_text += "."
+                        engine.render_mp3(speech_text, output, args.bitrate, speed=args.speed)
                         completed += 1
                         error = None
                         break

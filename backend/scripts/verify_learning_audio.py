@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -25,14 +26,40 @@ def main() -> int:
     parser.add_argument("--bucket", default="learning-audio")
     parser.add_argument("--workers", type=int, default=16)
     parser.add_argument("--prefix")
+    parser.add_argument("--only-list", help="Only verify object keys listed in this UTF-8 text file.")
+    parser.add_argument("--manifest", help="Only verify target_path values from a JSON manifest.")
+    parser.add_argument(
+        "--compare-content",
+        action="store_true",
+        help="GET each object with a cache-busting query and compare its bytes with the local file.",
+    )
     parser.add_argument("--missing-output", default="backend/reports/audio/supabase_missing.txt")
     args = parser.parse_args()
     load_dotenv(ROOT / "backend" / ".env")
     source = ROOT / args.source
-    paths = [path.relative_to(source).as_posix() for path in source.rglob("*") if path.is_file() and path.suffix.lower() in {".mp3", ".m4a", ".aac"}]
+    if args.only_list:
+        only_list = ROOT / args.only_list
+        paths = [line.strip() for line in only_list.read_text(encoding="utf-8").splitlines() if line.strip()]
+    elif args.manifest:
+        manifest_rows = json.loads((ROOT / args.manifest).read_text(encoding="utf-8"))
+        paths = [str(row["target_path"]).strip() for row in manifest_rows if str(row.get("target_path", "")).strip()]
+    else:
+        paths = [path.relative_to(source).as_posix() for path in source.rglob("*") if path.is_file() and path.suffix.lower() in {".mp3", ".m4a", ".aac"}]
     if args.prefix:
         prefix = args.prefix.strip("/") + "/"
         paths = [path for path in paths if path.startswith(prefix)]
+    local_paths_by_key: dict[str, str] = {}
+    if args.compare_content:
+        # `--only-list` is documented as accepting Storage object keys. Chinese
+        # filenames are converted to ASCII-only keys before upload, so an
+        # object key such as `meanings/zh/04242931.mp3` is not itself a local
+        # filename. Build the reverse lookup once so a mismatch report can be
+        # passed straight back into this command for a strict byte comparison.
+        local_paths_by_key = {
+            storage_key(path.relative_to(source).as_posix()): path.relative_to(source).as_posix()
+            for path in source.rglob("*")
+            if path.is_file() and path.suffix.lower() in {".mp3", ".m4a", ".aac"}
+        }
     base = (os.getenv("SUPABASE_URL") or "").rstrip("/")
     if not base:
         raise RuntimeError("missing SUPABASE_URL")
@@ -44,10 +71,16 @@ def main() -> int:
     def exists(path: str) -> tuple[str, bool]:
         object_key = storage_key(path)
         url = f"{base}/storage/v1/object/public/{quote(args.bucket)}/{quote(object_key, safe='/')}"
+        if args.compare_content:
+            url = f"{url}?audioVersion={time.time_ns()}"
         for attempt in range(1, 4):
             try:
-                response = client.head(url)
-                return object_key, response.status_code == 200
+                response = client.get(url) if args.compare_content else client.head(url)
+                found = response.status_code == 200
+                if found and args.compare_content:
+                    local_path = source / local_paths_by_key.get(object_key, path)
+                    found = local_path.is_file() and response.content == local_path.read_bytes()
+                return object_key, found
             except httpx.HTTPError:
                 if attempt < 3:
                     time.sleep(attempt)

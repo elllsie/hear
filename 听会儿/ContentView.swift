@@ -188,6 +188,7 @@ struct ContentView: View {
                                     currentWord: currentWord ?? selectedBook.words.first,
                                     isPlaying: isPlaying,
                                     learningLanguage: learningLanguage,
+                                    showsPhonetic: AppPolicy.shouldShowPhonetic(for: studyLanguage),
                                     isCurrentFavorite: isWordInDefaultBook(currentWord ?? selectedBook.words.first),
                                     requiresLoginForFavorite: isGuestMode,
                                     onBack: {
@@ -2383,6 +2384,43 @@ private struct SettingSlider: View {
     }
 }
 
+private func normalizedWordSearchText(_ value: String) -> String {
+    value
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+        .lowercased()
+}
+
+/// Prefer matches in the word spelling. Meaning matches are useful for reverse
+/// lookup, but mixing them into a successful spelling search makes unrelated
+/// initial letters appear before the word the user typed.
+private func prioritizedWordSearch(in words: [Word], query rawQuery: String) -> [Word] {
+    let query = normalizedWordSearchText(rawQuery)
+    guard !query.isEmpty else { return words }
+
+    let spellingMatches = words.filter {
+        normalizedWordSearchText($0.word).contains(query)
+    }
+    if !spellingMatches.isEmpty {
+        return spellingMatches.sorted { lhs, rhs in
+            let left = normalizedWordSearchText(lhs.word)
+            let right = normalizedWordSearchText(rhs.word)
+            let leftExact = left == query
+            let rightExact = right == query
+            if leftExact != rightExact { return leftExact }
+            let leftPrefix = left.hasPrefix(query)
+            let rightPrefix = right.hasPrefix(query)
+            if leftPrefix != rightPrefix { return leftPrefix }
+            return lhs.word.localizedCaseInsensitiveCompare(rhs.word) == .orderedAscending
+        }
+    }
+
+    return words.filter { word in
+        [word.translation, word.meaningZh ?? "", word.meaningEn ?? ""]
+            .contains { normalizedWordSearchText($0).contains(query) }
+    }
+}
+
 private struct ReadOnlyWordBookListView: View {
     let book: WordBook
     let destinationBooks: [UserWordBook]
@@ -2400,12 +2438,7 @@ private struct ReadOnlyWordBookListView: View {
     @State private var searchText = ""
 
     private var visibleWords: [Word] {
-        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !query.isEmpty else { return book.words }
-        return book.words.filter {
-            [$0.word, $0.translation, $0.meaningZh ?? "", $0.meaningEn ?? ""]
-                .contains { $0.localizedCaseInsensitiveContains(query) }
-        }
+        prioritizedWordSearch(in: book.words, query: searchText)
     }
 
     private var visibleWordIDs: Set<String> {
@@ -2667,12 +2700,7 @@ private struct UserWordBookDetailView: View {
     @State private var searchText = ""
 
     private var visibleWords: [Word] {
-        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !query.isEmpty else { return book.words }
-        return book.words.filter {
-            [$0.word, $0.translation, $0.meaningZh ?? "", $0.meaningEn ?? ""]
-                .contains { $0.localizedCaseInsensitiveContains(query) }
-        }
+        prioritizedWordSearch(in: book.words, query: searchText)
     }
 
     private var visibleWordIDs: Set<String> {
@@ -2792,7 +2820,7 @@ private struct UserWordSelectionRow: View {
                     if let phoneticText {
                         Text(phoneticText)
                             .font(.subheadline.weight(.medium))
-                            .foregroundColor(.orange)
+                            .foregroundColor(.mint)
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -2880,6 +2908,7 @@ private struct PlayerView: View {
     let currentWord: Word?
     let isPlaying: Bool
     let learningLanguage: LearningLanguage
+    let showsPhonetic: Bool
     let isCurrentFavorite: Bool
     let requiresLoginForFavorite: Bool
     let onBack: () -> Void
@@ -2893,7 +2922,7 @@ private struct PlayerView: View {
 
     @State private var isSearchVisible = false
     @State private var searchText = ""
-    @State private var isDetailVisible = false
+    @State private var isExampleVisible = false
     @State private var isPlaybackSettingsVisible = false
     @State private var draftSpeed: Double = 1.0
     @State private var draftRepeatCount: Double = 2.0
@@ -2922,7 +2951,8 @@ private struct PlayerView: View {
         let query = normalizedSearchText(searchText)
         guard !query.isEmpty else { return [] }
 
-        return book.words.enumerated().compactMap { index, word -> (index: Int, word: Word, startsWithQuery: Bool)? in
+        let matches = book.words.enumerated().compactMap { index, word -> (index: Int, word: Word, wordMatch: Bool, startsWithQuery: Bool)? in
+            let normalizedWord = normalizedSearchText(word.word)
             let searchableText = [
                 word.word,
                 word.meaning(for: learningLanguage),
@@ -2931,8 +2961,12 @@ private struct PlayerView: View {
                 .joined(separator: " ")
 
             guard normalizedSearchText(searchableText).contains(query) else { return nil }
-            return (index, word, normalizedSearchText(word.word).hasPrefix(query))
+            return (index, word, normalizedWord.contains(query), normalizedWord.hasPrefix(query))
         }
+        let wordMatches = matches.filter(\.wordMatch)
+        let preferredMatches = wordMatches.isEmpty ? matches : wordMatches
+
+        return preferredMatches
         .sorted { lhs, rhs in
             if lhs.startsWithQuery != rhs.startsWithQuery { return lhs.startsWithQuery }
             return lhs.word.word.localizedCaseInsensitiveCompare(rhs.word.word) == .orderedAscending
@@ -3011,11 +3045,9 @@ private struct PlayerView: View {
                         showsPhonetic: !["A1", "A2", "B1"].contains(book.bookId),
                         maxResultsHeight: isCompactHeight ? 170 : 280,
                         onPreview: { index in
-                            isDetailVisible = true
                             onPreviewIndex(index)
                         },
                         onPlay: { index in
-                            isDetailVisible = false
                             isSearchVisible = false
                             searchText = ""
                             onJumpToIndex(index)
@@ -3080,28 +3112,50 @@ private struct PlayerView: View {
                             Spacer(minLength: 0)
                         }
 
-                        Text(currentWord?.meaning(for: learningLanguage) ?? "")
-                            .font(.system(size: isCompactHeight ? 26 : 32, weight: .bold))
-                            .foregroundColor(AppColors.muted)
-                            .lineLimit(isDetailVisible ? 4 : 2)
-                            .multilineTextAlignment(.center)
-                            .minimumScaleFactor(0.65)
+                        if showsPhonetic,
+                           let value = currentWord?.phonetic?.trimmingCharacters(in: .whitespacesAndNewlines),
+                           !value.isEmpty {
+                            Text(value.hasPrefix("/") || value.hasPrefix("[") ? value : "/\(value)/")
+                                .font(.system(size: isCompactHeight ? 15 : 17, weight: .medium, design: .rounded))
+                                .foregroundColor(.mint)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.75)
+                        }
 
-                        if isDetailVisible, let currentWord {
-                            ScrollView {
+                        ScrollView(.vertical, showsIndicators: true) {
+                            Text(currentWord?.meaning(for: learningLanguage) ?? "")
+                                .font(.system(size: isCompactHeight ? 26 : 32, weight: .bold))
+                                .foregroundColor(AppColors.muted)
+                                .lineLimit(nil)
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .minimumScaleFactor(0.65)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(maxHeight: isExampleVisible
+                            ? (isCompactHeight ? 105 : 160)
+                            : (isCompactHeight ? 190 : 270))
+                        .visibleScrollIndicatorsIfAvailable()
+
+                        if isExampleVisible, let currentWord {
+                            ScrollView(.vertical, showsIndicators: true) {
                                 DetailExampleView(
                                     word: currentWord,
                                     learningLanguage: learningLanguage,
                                     isCompactHeight: isCompactHeight
                                 )
                             }
-                            .frame(maxHeight: isCompactHeight ? 150 : 220)
+                            .frame(maxWidth: .infinity)
+                            .frame(maxHeight: isCompactHeight ? 90 : 130)
                             .visibleScrollIndicatorsIfAvailable()
+                            .transition(.opacity.combined(with: .move(edge: .top)))
                         }
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        isDetailVisible.toggle()
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isExampleVisible.toggle()
+                        }
                     }
                     .frame(maxWidth: .infinity)
 
@@ -3378,7 +3432,7 @@ private struct SearchResultRow: View {
                     if let phoneticText {
                         Text(phoneticText)
                             .font(.system(size: 15, weight: .semibold, design: .rounded))
-                            .foregroundColor(.orange)
+                            .foregroundColor(.mint)
                             .lineLimit(2)
                     }
                 }

@@ -1,0 +1,137 @@
+[
+  {
+    "book": "KaoYan_2",
+    "word_id": "112",
+    "word": "cover",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "包括；采访，报导；涉及；封面，封皮；盖子；掩蔽物；幌子，借口",
+    "target_path": "meanings/zh/包括_采访_报导_涉及_封面_封皮_盖子_掩蔽物_幌子_借口_7e780c7b.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "271",
+    "word": "identify",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "确定；鉴定；识别，辨认出；使参与；把…看成一样；确定；认同；一致",
+    "target_path": "meanings/zh/确定_鉴定_识别_辨认出_使参与_把_看成一样_vi确定_认同_一致_d1b894c6.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "289",
+    "word": "reflect",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "反映；反射，照出；表达；显示；反省",
+    "target_path": "meanings/zh/反映_反射_照出_表达_显示_反省_bbe5eb48.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "336",
+    "word": "separate",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "使分离；使分开；使分居；单独的；分开的；不同的；各自的；分开；抽印本",
+    "target_path": "meanings/zh/使分离_使分开_使分居_单独的_分开的_不同的_各自的_分开_抽印本_c20c641e.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1393",
+    "word": "confine",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "界限，边界；约束；限制；限制；禁闭",
+    "target_path": "meanings/zh/界限_边界_约束_限制_限制_禁闭_37fb2b02.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1815",
+    "word": "crowd",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "群众,一伙；一堆,许多,大众；拥挤,挤满,挤进",
+    "target_path": "meanings/zh/群众_一伙_一堆_许多_大众_拥挤_挤满_挤进_2e29bffe.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1876",
+    "word": "dimension",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "方面；[数] 维；尺寸；次元；容积；标出尺寸；规格的",
+    "target_path": "meanings/zh/方面_数_维_尺寸_次元_容积_vt标出尺寸_规格的_133d2ddc.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1963",
+    "word": "stretch",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "伸展,张开；（大量地）使用，消耗（金钱，时间）；使竭尽所能；使全力以赴；伸展，延伸",
+    "target_path": "meanings/zh/伸展_张开_大量地_使用_消耗_金钱_时间_使竭尽所能_使全力以赴_伸展_延伸_383d3f19.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2407",
+    "word": "chip",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "削，凿；削成碎片；[电子] 芯片；筹码；碎片；(食物的) 小片；薄片",
+    "target_path": "meanings/zh/削_凿_削成碎片_电子_芯片_筹码_碎片_食物的_小片_薄片_19568355.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2621",
+    "word": "premium",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "额外费用；奖金；保险费；(商)溢价；高价的；优质的",
+    "target_path": "meanings/zh/额外费用_奖金_保险费_商_溢价_高价的_优质的_a177ab33.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2686",
+    "word": "relish",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "滋味；风味；食欲；开胃小菜；含义；调味品；盼望；期待；享受；品味；喜爱；给…加佐料",
+    "target_path": "meanings/zh/滋味_风味_食欲_开胃小菜_含义_调味品_盼望_期待_享受_品味_喜爱_给_加佐料_6f7c07a7.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2737",
+    "word": "bolt",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "螺栓，螺钉；闪电，雷电；门闩；弩箭；（布的）一匹，一卷；筛选；囫囵吞下；（把门、窗等）闩上；突然说出，脱口说出；突然地；像箭似地；直立地",
+    "target_path": "meanings/zh/螺栓_螺钉_闪电_雷电_门闩_弩箭_布的_一匹_一卷_筛选_囫囵吞下_把门_窗等_闩上_突然说出_脱口说出_突然地_像箭似地_直立地_2d29b695.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2855",
+    "word": "sensible",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "明智的；通情达理的；合乎情理的；意识到的，能感觉到的；可感觉到的东西；敏感的人",
+    "target_path": "meanings/zh/明智的_通情达理的_合乎情理的_意识到的_能感觉到的_可感觉到的东西_敏感的人_7dba6db4.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3239",
+    "word": "knot",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "（绳等的）结；节瘤，疙瘩；海里；小时（航速单位）；打结",
+    "target_path": "meanings/zh/绳等的_结_节瘤_疙瘩_海里_小时_航速单位_打结_082c35df.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4429",
+    "word": "inlet",
+    "kind": "meaningZh",
+    "language": "zh-CN",
+    "text": "入口，进口；插入物；水湾；引进；嵌入；插入",
+    "target_path": "meanings/zh/入口_进口_插入物_水湾_引进_嵌入_插入_8fd1cef1.mp3"
+  }
+]

@@ -264,6 +264,7 @@ struct WordCardPlayerView: View {
         // 持有 delegate 以防被释放
         self.playbackDelegate = newDelegate
         AudioPlayerManager.shared.delegate = newDelegate
+        AudioPlayerManager.shared.audioFolderName = audioFolder
         AudioPlayerManager.shared.play(word: word)
         isPlaying = true
     }

@@ -1,0 +1,6032 @@
+[
+  {
+    "book": "KaoYan_2",
+    "word_id": "2",
+    "word": "influence",
+    "kind": "word",
+    "language": "en-US",
+    "text": "influence",
+    "target_path": "v2/words/en-US/KaoYan_2/influence_2.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3",
+    "word": "intellectual",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intellectual",
+    "target_path": "v2/words/en-US/KaoYan_2/intellectual_3.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "8",
+    "word": "increase",
+    "kind": "word",
+    "language": "en-US",
+    "text": "increase",
+    "target_path": "v2/words/en-US/KaoYan_2/increase_8.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "17",
+    "word": "group",
+    "kind": "word",
+    "language": "en-US",
+    "text": "group",
+    "target_path": "v2/words/en-US/KaoYan_2/group_17.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "19",
+    "word": "include",
+    "kind": "word",
+    "language": "en-US",
+    "text": "include",
+    "target_path": "v2/words/en-US/KaoYan_2/include_19.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "26",
+    "word": "individual",
+    "kind": "word",
+    "language": "en-US",
+    "text": "individual",
+    "target_path": "v2/words/en-US/KaoYan_2/individual_26.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "29",
+    "word": "influential",
+    "kind": "word",
+    "language": "en-US",
+    "text": "influential",
+    "target_path": "v2/words/en-US/KaoYan_2/influential_29.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "32",
+    "word": "federal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "federal",
+    "target_path": "v2/words/en-US/KaoYan_2/federal_32.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "39",
+    "word": "financial",
+    "kind": "word",
+    "language": "en-US",
+    "text": "financial",
+    "target_path": "v2/words/en-US/KaoYan_2/financial_39.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "41",
+    "word": "issue",
+    "kind": "word",
+    "language": "en-US",
+    "text": "issue",
+    "target_path": "v2/words/en-US/KaoYan_2/issue_41.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "46",
+    "word": "future",
+    "kind": "word",
+    "language": "en-US",
+    "text": "future",
+    "target_path": "v2/words/en-US/KaoYan_2/future_46.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "47",
+    "word": "function",
+    "kind": "word",
+    "language": "en-US",
+    "text": "function",
+    "target_path": "v2/words/en-US/KaoYan_2/function_47.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "55",
+    "word": "history",
+    "kind": "word",
+    "language": "en-US",
+    "text": "history",
+    "target_path": "v2/words/en-US/KaoYan_2/history_55.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "69",
+    "word": "feeling",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feeling",
+    "target_path": "v2/words/en-US/KaoYan_2/feeling_69.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "70",
+    "word": "gamble",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gamble",
+    "target_path": "v2/words/en-US/KaoYan_2/gamble_70.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "84",
+    "word": "genetic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "genetic",
+    "target_path": "v2/words/en-US/KaoYan_2/genetic_84.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "99",
+    "word": "institution",
+    "kind": "word",
+    "language": "en-US",
+    "text": "institution",
+    "target_path": "v2/words/en-US/KaoYan_2/institution_99.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "103",
+    "word": "generation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "generation",
+    "target_path": "v2/words/en-US/KaoYan_2/generation_103.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "109",
+    "word": "infer",
+    "kind": "word",
+    "language": "en-US",
+    "text": "infer",
+    "target_path": "v2/words/en-US/KaoYan_2/infer_109.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "111",
+    "word": "happy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "happy",
+    "target_path": "v2/words/en-US/KaoYan_2/happy_111.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "117",
+    "word": "internet",
+    "kind": "word",
+    "language": "en-US",
+    "text": "internet",
+    "target_path": "v2/words/en-US/KaoYan_2/internet_117.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "119",
+    "word": "fund",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fund",
+    "target_path": "v2/words/en-US/KaoYan_2/fund_119.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "134",
+    "word": "humanity",
+    "kind": "word",
+    "language": "en-US",
+    "text": "humanity",
+    "target_path": "v2/words/en-US/KaoYan_2/humanity_134.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "137",
+    "word": "immigrant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "immigrant",
+    "target_path": "v2/words/en-US/KaoYan_2/immigrant_137.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "159",
+    "word": "involve",
+    "kind": "word",
+    "language": "en-US",
+    "text": "involve",
+    "target_path": "v2/words/en-US/KaoYan_2/involve_159.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "164",
+    "word": "general",
+    "kind": "word",
+    "language": "en-US",
+    "text": "general",
+    "target_path": "v2/words/en-US/KaoYan_2/general_164.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "177",
+    "word": "feature",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feature",
+    "target_path": "v2/words/en-US/KaoYan_2/feature_177.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "183",
+    "word": "formal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "formal",
+    "target_path": "v2/words/en-US/KaoYan_2/formal_183.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "203",
+    "word": "focus",
+    "kind": "word",
+    "language": "en-US",
+    "text": "focus",
+    "target_path": "v2/words/en-US/KaoYan_2/focus_203.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "209",
+    "word": "finding",
+    "kind": "word",
+    "language": "en-US",
+    "text": "finding",
+    "target_path": "v2/words/en-US/KaoYan_2/finding_209.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "215",
+    "word": "growth",
+    "kind": "word",
+    "language": "en-US",
+    "text": "growth",
+    "target_path": "v2/words/en-US/KaoYan_2/growth_215.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "227",
+    "word": "ignore",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ignore",
+    "target_path": "v2/words/en-US/KaoYan_2/ignore_227.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "228",
+    "word": "flow",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flow",
+    "target_path": "v2/words/en-US/KaoYan_2/flow_228.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "232",
+    "word": "force",
+    "kind": "word",
+    "language": "en-US",
+    "text": "force",
+    "target_path": "v2/words/en-US/KaoYan_2/force_232.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "233",
+    "word": "introduce",
+    "kind": "word",
+    "language": "en-US",
+    "text": "introduce",
+    "target_path": "v2/words/en-US/KaoYan_2/introduce_233.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "237",
+    "word": "investment",
+    "kind": "word",
+    "language": "en-US",
+    "text": "investment",
+    "target_path": "v2/words/en-US/KaoYan_2/investment_237.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "253",
+    "word": "guide",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guide",
+    "target_path": "v2/words/en-US/KaoYan_2/guide_253.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "262",
+    "word": "firm",
+    "kind": "word",
+    "language": "en-US",
+    "text": "firm",
+    "target_path": "v2/words/en-US/KaoYan_2/firm_262.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "267",
+    "word": "goal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "goal",
+    "target_path": "v2/words/en-US/KaoYan_2/goal_267.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "271",
+    "word": "identify",
+    "kind": "word",
+    "language": "en-US",
+    "text": "identify",
+    "target_path": "v2/words/en-US/KaoYan_2/identify_271.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "285",
+    "word": "increasingly",
+    "kind": "word",
+    "language": "en-US",
+    "text": "increasingly",
+    "target_path": "v2/words/en-US/KaoYan_2/increasingly_285.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "291",
+    "word": "global",
+    "kind": "word",
+    "language": "en-US",
+    "text": "global",
+    "target_path": "v2/words/en-US/KaoYan_2/global_291.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "299",
+    "word": "figure",
+    "kind": "word",
+    "language": "en-US",
+    "text": "figure",
+    "target_path": "v2/words/en-US/KaoYan_2/figure_299.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "325",
+    "word": "female",
+    "kind": "word",
+    "language": "en-US",
+    "text": "female",
+    "target_path": "v2/words/en-US/KaoYan_2/female_325.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "334",
+    "word": "game",
+    "kind": "word",
+    "language": "en-US",
+    "text": "game",
+    "target_path": "v2/words/en-US/KaoYan_2/game_334.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "344",
+    "word": "fair",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fair",
+    "target_path": "v2/words/en-US/KaoYan_2/fair_344.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "350",
+    "word": "insurance",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insurance",
+    "target_path": "v2/words/en-US/KaoYan_2/insurance_350.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "351",
+    "word": "inevitable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inevitable",
+    "target_path": "v2/words/en-US/KaoYan_2/inevitable_351.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "358",
+    "word": "favor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "favor",
+    "target_path": "v2/words/en-US/KaoYan_2/favor_358.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "374",
+    "word": "indicate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indicate",
+    "target_path": "v2/words/en-US/KaoYan_2/indicate_374.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "377",
+    "word": "importance",
+    "kind": "word",
+    "language": "en-US",
+    "text": "importance",
+    "target_path": "v2/words/en-US/KaoYan_2/importance_377.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "390",
+    "word": "generate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "generate",
+    "target_path": "v2/words/en-US/KaoYan_2/generate_390.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "402",
+    "word": "freedom",
+    "kind": "word",
+    "language": "en-US",
+    "text": "freedom",
+    "target_path": "v2/words/en-US/KaoYan_2/freedom_402.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "411",
+    "word": "hijack",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hijack",
+    "target_path": "v2/words/en-US/KaoYan_2/hijack_411.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "414",
+    "word": "innovation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "innovation",
+    "target_path": "v2/words/en-US/KaoYan_2/innovation_414.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "416",
+    "word": "image",
+    "kind": "word",
+    "language": "en-US",
+    "text": "image",
+    "target_path": "v2/words/en-US/KaoYan_2/image_416.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "422",
+    "word": "international",
+    "kind": "word",
+    "language": "en-US",
+    "text": "international",
+    "target_path": "v2/words/en-US/KaoYan_2/international_422.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "427",
+    "word": "folk",
+    "kind": "word",
+    "language": "en-US",
+    "text": "folk",
+    "target_path": "v2/words/en-US/KaoYan_2/folk_427.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "436",
+    "word": "factor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "factor",
+    "target_path": "v2/words/en-US/KaoYan_2/factor_436.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "438",
+    "word": "fall",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fall",
+    "target_path": "v2/words/en-US/KaoYan_2/fall_438.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "463",
+    "word": "fight",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fight",
+    "target_path": "v2/words/en-US/KaoYan_2/fight_463.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "468",
+    "word": "imagine",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imagine",
+    "target_path": "v2/words/en-US/KaoYan_2/imagine_468.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "471",
+    "word": "forget",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forget",
+    "target_path": "v2/words/en-US/KaoYan_2/forget_471.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "491",
+    "word": "gap",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gap",
+    "target_path": "v2/words/en-US/KaoYan_2/gap_491.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "497",
+    "word": "grape",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grape",
+    "target_path": "v2/words/en-US/KaoYan_2/grape_497.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "502",
+    "word": "failure",
+    "kind": "word",
+    "language": "en-US",
+    "text": "failure",
+    "target_path": "v2/words/en-US/KaoYan_2/failure_502.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "506",
+    "word": "hotel",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hotel",
+    "target_path": "v2/words/en-US/KaoYan_2/hotel_506.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "507",
+    "word": "intelligent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intelligent",
+    "target_path": "v2/words/en-US/KaoYan_2/intelligent_507.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "516",
+    "word": "historian",
+    "kind": "word",
+    "language": "en-US",
+    "text": "historian",
+    "target_path": "v2/words/en-US/KaoYan_2/historian_516.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "525",
+    "word": "gain",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gain",
+    "target_path": "v2/words/en-US/KaoYan_2/gain_525.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "543",
+    "word": "ideal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ideal",
+    "target_path": "v2/words/en-US/KaoYan_2/ideal_543.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "544",
+    "word": "initial",
+    "kind": "word",
+    "language": "en-US",
+    "text": "initial",
+    "target_path": "v2/words/en-US/KaoYan_2/initial_544.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "561",
+    "word": "invention",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invention",
+    "target_path": "v2/words/en-US/KaoYan_2/invention_561.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "563",
+    "word": "gather",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gather",
+    "target_path": "v2/words/en-US/KaoYan_2/gather_563.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "571",
+    "word": "interesting",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interesting",
+    "target_path": "v2/words/en-US/KaoYan_2/interesting_571.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "577",
+    "word": "goods",
+    "kind": "word",
+    "language": "en-US",
+    "text": "goods",
+    "target_path": "v2/words/en-US/KaoYan_2/goods_577.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "586",
+    "word": "gift",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gift",
+    "target_path": "v2/words/en-US/KaoYan_2/gift_586.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "590",
+    "word": "insist",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insist",
+    "target_path": "v2/words/en-US/KaoYan_2/insist_590.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "594",
+    "word": "gradual",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gradual",
+    "target_path": "v2/words/en-US/KaoYan_2/gradual_594.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "597",
+    "word": "grammar",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grammar",
+    "target_path": "v2/words/en-US/KaoYan_2/grammar_597.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "610",
+    "word": "forward",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forward",
+    "target_path": "v2/words/en-US/KaoYan_2/forward_610.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "612",
+    "word": "fun",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fun",
+    "target_path": "v2/words/en-US/KaoYan_2/fun_612.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "613",
+    "word": "fortune",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fortune",
+    "target_path": "v2/words/en-US/KaoYan_2/fortune_613.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "619",
+    "word": "fulfill",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fulfill",
+    "target_path": "v2/words/en-US/KaoYan_2/fulfill_619.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "627",
+    "word": "immune",
+    "kind": "word",
+    "language": "en-US",
+    "text": "immune",
+    "target_path": "v2/words/en-US/KaoYan_2/immune_627.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "643",
+    "word": "imply",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imply",
+    "target_path": "v2/words/en-US/KaoYan_2/imply_643.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "653",
+    "word": "instance",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instance",
+    "target_path": "v2/words/en-US/KaoYan_2/instance_653.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "662",
+    "word": "furthermore",
+    "kind": "word",
+    "language": "en-US",
+    "text": "furthermore",
+    "target_path": "v2/words/en-US/KaoYan_2/furthermore_662.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "689",
+    "word": "highly",
+    "kind": "word",
+    "language": "en-US",
+    "text": "highly",
+    "target_path": "v2/words/en-US/KaoYan_2/highly_689.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "735",
+    "word": "feed",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feed",
+    "target_path": "v2/words/en-US/KaoYan_2/feed_735.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "750",
+    "word": "govern",
+    "kind": "word",
+    "language": "en-US",
+    "text": "govern",
+    "target_path": "v2/words/en-US/KaoYan_2/govern_750.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "772",
+    "word": "hostile",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hostile",
+    "target_path": "v2/words/en-US/KaoYan_2/hostile_772.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "773",
+    "word": "hot",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hot",
+    "target_path": "v2/words/en-US/KaoYan_2/hot_773.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "783",
+    "word": "fat",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fat",
+    "target_path": "v2/words/en-US/KaoYan_2/fat_783.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "795",
+    "word": "famous",
+    "kind": "word",
+    "language": "en-US",
+    "text": "famous",
+    "target_path": "v2/words/en-US/KaoYan_2/famous_795.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "797",
+    "word": "historical",
+    "kind": "word",
+    "language": "en-US",
+    "text": "historical",
+    "target_path": "v2/words/en-US/KaoYan_2/historical_797.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "802",
+    "word": "fundamental",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fundamental",
+    "target_path": "v2/words/en-US/KaoYan_2/fundamental_802.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "806",
+    "word": "flexible",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flexible",
+    "target_path": "v2/words/en-US/KaoYan_2/flexible_806.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "812",
+    "word": "impulse",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impulse",
+    "target_path": "v2/words/en-US/KaoYan_2/impulse_812.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "813",
+    "word": "file",
+    "kind": "word",
+    "language": "en-US",
+    "text": "file",
+    "target_path": "v2/words/en-US/KaoYan_2/file_813.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "816",
+    "word": "host",
+    "kind": "word",
+    "language": "en-US",
+    "text": "host",
+    "target_path": "v2/words/en-US/KaoYan_2/host_816.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "822",
+    "word": "heading",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heading",
+    "target_path": "v2/words/en-US/KaoYan_2/heading_822.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "832",
+    "word": "invite",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invite",
+    "target_path": "v2/words/en-US/KaoYan_2/invite_832.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "839",
+    "word": "flaw",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flaw",
+    "target_path": "v2/words/en-US/KaoYan_2/flaw_839.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "846",
+    "word": "illusion",
+    "kind": "word",
+    "language": "en-US",
+    "text": "illusion",
+    "target_path": "v2/words/en-US/KaoYan_2/illusion_846.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "859",
+    "word": "graduate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "graduate",
+    "target_path": "v2/words/en-US/KaoYan_2/graduate_859.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "876",
+    "word": "fruit",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fruit",
+    "target_path": "v2/words/en-US/KaoYan_2/fruit_876.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "877",
+    "word": "household",
+    "kind": "word",
+    "language": "en-US",
+    "text": "household",
+    "target_path": "v2/words/en-US/KaoYan_2/household_877.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "885",
+    "word": "integrate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "integrate",
+    "target_path": "v2/words/en-US/KaoYan_2/integrate_885.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "886",
+    "word": "gold",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gold",
+    "target_path": "v2/words/en-US/KaoYan_2/gold_886.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "903",
+    "word": "fold",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fold",
+    "target_path": "v2/words/en-US/KaoYan_2/fold_903.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "909",
+    "word": "feedback",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feedback",
+    "target_path": "v2/words/en-US/KaoYan_2/feedback_909.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "934",
+    "word": "inform",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inform",
+    "target_path": "v2/words/en-US/KaoYan_2/inform_934.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "951",
+    "word": "holder",
+    "kind": "word",
+    "language": "en-US",
+    "text": "holder",
+    "target_path": "v2/words/en-US/KaoYan_2/holder_951.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "955",
+    "word": "huge",
+    "kind": "word",
+    "language": "en-US",
+    "text": "huge",
+    "target_path": "v2/words/en-US/KaoYan_2/huge_955.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "969",
+    "word": "indignation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indignation",
+    "target_path": "v2/words/en-US/KaoYan_2/indignation_969.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "973",
+    "word": "generous",
+    "kind": "word",
+    "language": "en-US",
+    "text": "generous",
+    "target_path": "v2/words/en-US/KaoYan_2/generous_973.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "983",
+    "word": "formulate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "formulate",
+    "target_path": "v2/words/en-US/KaoYan_2/formulate_983.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "986",
+    "word": "incidence",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incidence",
+    "target_path": "v2/words/en-US/KaoYan_2/incidence_986.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1006",
+    "word": "forever",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forever",
+    "target_path": "v2/words/en-US/KaoYan_2/forever_1006.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1007",
+    "word": "fell",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fell",
+    "target_path": "v2/words/en-US/KaoYan_2/fell_1007.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1012",
+    "word": "indifferent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indifferent",
+    "target_path": "v2/words/en-US/KaoYan_2/indifferent_1012.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1021",
+    "word": "intimate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intimate",
+    "target_path": "v2/words/en-US/KaoYan_2/intimate_1021.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1025",
+    "word": "implication",
+    "kind": "word",
+    "language": "en-US",
+    "text": "implication",
+    "target_path": "v2/words/en-US/KaoYan_2/implication_1025.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1035",
+    "word": "hip",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hip",
+    "target_path": "v2/words/en-US/KaoYan_2/hip_1035.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1042",
+    "word": "god",
+    "kind": "word",
+    "language": "en-US",
+    "text": "god",
+    "target_path": "v2/words/en-US/KaoYan_2/god_1042.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1057",
+    "word": "holiday",
+    "kind": "word",
+    "language": "en-US",
+    "text": "holiday",
+    "target_path": "v2/words/en-US/KaoYan_2/holiday_1057.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1070",
+    "word": "initiative",
+    "kind": "word",
+    "language": "en-US",
+    "text": "initiative",
+    "target_path": "v2/words/en-US/KaoYan_2/initiative_1070.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1072",
+    "word": "impressive",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impressive",
+    "target_path": "v2/words/en-US/KaoYan_2/impressive_1072.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1075",
+    "word": "impression",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impression",
+    "target_path": "v2/words/en-US/KaoYan_2/impression_1075.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1084",
+    "word": "fee",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fee",
+    "target_path": "v2/words/en-US/KaoYan_2/fee_1084.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1085",
+    "word": "guess",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guess",
+    "target_path": "v2/words/en-US/KaoYan_2/guess_1085.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1090",
+    "word": "fan",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fan",
+    "target_path": "v2/words/en-US/KaoYan_2/fan_1090.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1102",
+    "word": "implicit",
+    "kind": "word",
+    "language": "en-US",
+    "text": "implicit",
+    "target_path": "v2/words/en-US/KaoYan_2/implicit_1102.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1112",
+    "word": "inch",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inch",
+    "target_path": "v2/words/en-US/KaoYan_2/inch_1112.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1116",
+    "word": "hypothesis",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hypothesis",
+    "target_path": "v2/words/en-US/KaoYan_2/hypothesis_1116.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1130",
+    "word": "familiar",
+    "kind": "word",
+    "language": "en-US",
+    "text": "familiar",
+    "target_path": "v2/words/en-US/KaoYan_2/familiar_1130.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1131",
+    "word": "gender",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gender",
+    "target_path": "v2/words/en-US/KaoYan_2/gender_1131.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1134",
+    "word": "grasp",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grasp",
+    "target_path": "v2/words/en-US/KaoYan_2/grasp_1134.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1141",
+    "word": "hook",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hook",
+    "target_path": "v2/words/en-US/KaoYan_2/hook_1141.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1142",
+    "word": "factory",
+    "kind": "word",
+    "language": "en-US",
+    "text": "factory",
+    "target_path": "v2/words/en-US/KaoYan_2/factory_1142.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1144",
+    "word": "guidance",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guidance",
+    "target_path": "v2/words/en-US/KaoYan_2/guidance_1144.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1151",
+    "word": "intense",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intense",
+    "target_path": "v2/words/en-US/KaoYan_2/intense_1151.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1159",
+    "word": "inspire",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inspire",
+    "target_path": "v2/words/en-US/KaoYan_2/inspire_1159.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1164",
+    "word": "format",
+    "kind": "word",
+    "language": "en-US",
+    "text": "format",
+    "target_path": "v2/words/en-US/KaoYan_2/format_1164.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1204",
+    "word": "hero",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hero",
+    "target_path": "v2/words/en-US/KaoYan_2/hero_1204.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1205",
+    "word": "imitate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imitate",
+    "target_path": "v2/words/en-US/KaoYan_2/imitate_1205.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1206",
+    "word": "grip",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grip",
+    "target_path": "v2/words/en-US/KaoYan_2/grip_1206.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1219",
+    "word": "impossible",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impossible",
+    "target_path": "v2/words/en-US/KaoYan_2/impossible_1219.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1234",
+    "word": "horizon",
+    "kind": "word",
+    "language": "en-US",
+    "text": "horizon",
+    "target_path": "v2/words/en-US/KaoYan_2/horizon_1234.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1241",
+    "word": "invert",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invert",
+    "target_path": "v2/words/en-US/KaoYan_2/invert_1241.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1242",
+    "word": "invest",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invest",
+    "target_path": "v2/words/en-US/KaoYan_2/invest_1242.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1246",
+    "word": "highlight",
+    "kind": "word",
+    "language": "en-US",
+    "text": "highlight",
+    "target_path": "v2/words/en-US/KaoYan_2/highlight_1246.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1248",
+    "word": "final",
+    "kind": "word",
+    "language": "en-US",
+    "text": "final",
+    "target_path": "v2/words/en-US/KaoYan_2/final_1248.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1251",
+    "word": "ideology",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ideology",
+    "target_path": "v2/words/en-US/KaoYan_2/ideology_1251.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1265",
+    "word": "gate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gate",
+    "target_path": "v2/words/en-US/KaoYan_2/gate_1265.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1267",
+    "word": "gasp",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gasp",
+    "target_path": "v2/words/en-US/KaoYan_2/gasp_1267.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1269",
+    "word": "incredible",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incredible",
+    "target_path": "v2/words/en-US/KaoYan_2/incredible_1269.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1284",
+    "word": "frustrate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frustrate",
+    "target_path": "v2/words/en-US/KaoYan_2/frustrate_1284.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1285",
+    "word": "fierce",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fierce",
+    "target_path": "v2/words/en-US/KaoYan_2/fierce_1285.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1286",
+    "word": "incline",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incline",
+    "target_path": "v2/words/en-US/KaoYan_2/incline_1286.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1289",
+    "word": "hall",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hall",
+    "target_path": "v2/words/en-US/KaoYan_2/hall_1289.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1293",
+    "word": "governor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "governor",
+    "target_path": "v2/words/en-US/KaoYan_2/governor_1293.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1296",
+    "word": "foot",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foot",
+    "target_path": "v2/words/en-US/KaoYan_2/foot_1296.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1299",
+    "word": "fresh",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fresh",
+    "target_path": "v2/words/en-US/KaoYan_2/fresh_1299.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1304",
+    "word": "faith",
+    "kind": "word",
+    "language": "en-US",
+    "text": "faith",
+    "target_path": "v2/words/en-US/KaoYan_2/faith_1304.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1305",
+    "word": "hire",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hire",
+    "target_path": "v2/words/en-US/KaoYan_2/hire_1305.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1310",
+    "word": "forest",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forest",
+    "target_path": "v2/words/en-US/KaoYan_2/forest_1310.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1328",
+    "word": "heavy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heavy",
+    "target_path": "v2/words/en-US/KaoYan_2/heavy_1328.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1332",
+    "word": "honor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "honor",
+    "target_path": "v2/words/en-US/KaoYan_2/honor_1332.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1334",
+    "word": "index",
+    "kind": "word",
+    "language": "en-US",
+    "text": "index",
+    "target_path": "v2/words/en-US/KaoYan_2/index_1334.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1335",
+    "word": "foreign",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foreign",
+    "target_path": "v2/words/en-US/KaoYan_2/foreign_1335.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1342",
+    "word": "housing",
+    "kind": "word",
+    "language": "en-US",
+    "text": "housing",
+    "target_path": "v2/words/en-US/KaoYan_2/housing_1342.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1359",
+    "word": "feeble",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feeble",
+    "target_path": "v2/words/en-US/KaoYan_2/feeble_1359.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1368",
+    "word": "fitting",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fitting",
+    "target_path": "v2/words/en-US/KaoYan_2/fitting_1368.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1380",
+    "word": "hospital",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hospital",
+    "target_path": "v2/words/en-US/KaoYan_2/hospital_1380.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1384",
+    "word": "fashion",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fashion",
+    "target_path": "v2/words/en-US/KaoYan_2/fashion_1384.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1391",
+    "word": "institute",
+    "kind": "word",
+    "language": "en-US",
+    "text": "institute",
+    "target_path": "v2/words/en-US/KaoYan_2/institute_1391.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1394",
+    "word": "frame",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frame",
+    "target_path": "v2/words/en-US/KaoYan_2/frame_1394.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1399",
+    "word": "identity",
+    "kind": "word",
+    "language": "en-US",
+    "text": "identity",
+    "target_path": "v2/words/en-US/KaoYan_2/identity_1399.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1406",
+    "word": "ignorance",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ignorance",
+    "target_path": "v2/words/en-US/KaoYan_2/ignorance_1406.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1407",
+    "word": "invisible",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invisible",
+    "target_path": "v2/words/en-US/KaoYan_2/invisible_1407.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1410",
+    "word": "infant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "infant",
+    "target_path": "v2/words/en-US/KaoYan_2/infant_1410.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1414",
+    "word": "fuel",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fuel",
+    "target_path": "v2/words/en-US/KaoYan_2/fuel_1414.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1417",
+    "word": "hamburger",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hamburger",
+    "target_path": "v2/words/en-US/KaoYan_2/hamburger_1417.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1427",
+    "word": "interference",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interference",
+    "target_path": "v2/words/en-US/KaoYan_2/interference_1427.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1429",
+    "word": "instrument",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instrument",
+    "target_path": "v2/words/en-US/KaoYan_2/instrument_1429.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1444",
+    "word": "garment",
+    "kind": "word",
+    "language": "en-US",
+    "text": "garment",
+    "target_path": "v2/words/en-US/KaoYan_2/garment_1444.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1458",
+    "word": "hearing",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hearing",
+    "target_path": "v2/words/en-US/KaoYan_2/hearing_1458.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1462",
+    "word": "glare",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glare",
+    "target_path": "v2/words/en-US/KaoYan_2/glare_1462.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1464",
+    "word": "fume",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fume",
+    "target_path": "v2/words/en-US/KaoYan_2/fume_1464.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1473",
+    "word": "fleet",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fleet",
+    "target_path": "v2/words/en-US/KaoYan_2/fleet_1473.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1475",
+    "word": "imitation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imitation",
+    "target_path": "v2/words/en-US/KaoYan_2/imitation_1475.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1479",
+    "word": "instruct",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instruct",
+    "target_path": "v2/words/en-US/KaoYan_2/instruct_1479.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1486",
+    "word": "invitation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invitation",
+    "target_path": "v2/words/en-US/KaoYan_2/invitation_1486.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1488",
+    "word": "intrinsic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intrinsic",
+    "target_path": "v2/words/en-US/KaoYan_2/intrinsic_1488.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1496",
+    "word": "illiterate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "illiterate",
+    "target_path": "v2/words/en-US/KaoYan_2/illiterate_1496.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1503",
+    "word": "flesh",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flesh",
+    "target_path": "v2/words/en-US/KaoYan_2/flesh_1503.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1520",
+    "word": "gallery",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gallery",
+    "target_path": "v2/words/en-US/KaoYan_2/gallery_1520.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1521",
+    "word": "finance",
+    "kind": "word",
+    "language": "en-US",
+    "text": "finance",
+    "target_path": "v2/words/en-US/KaoYan_2/finance_1521.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1522",
+    "word": "fatal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fatal",
+    "target_path": "v2/words/en-US/KaoYan_2/fatal_1522.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1523",
+    "word": "incidentally",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incidentally",
+    "target_path": "v2/words/en-US/KaoYan_2/incidentally_1523.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1530",
+    "word": "fashionable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fashionable",
+    "target_path": "v2/words/en-US/KaoYan_2/fashionable_1530.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1534",
+    "word": "formation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "formation",
+    "target_path": "v2/words/en-US/KaoYan_2/formation_1534.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1536",
+    "word": "initiate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "initiate",
+    "target_path": "v2/words/en-US/KaoYan_2/initiate_1536.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1551",
+    "word": "grandmother",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grandmother",
+    "target_path": "v2/words/en-US/KaoYan_2/grandmother_1551.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1558",
+    "word": "favorable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "favorable",
+    "target_path": "v2/words/en-US/KaoYan_2/favorable_1558.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1559",
+    "word": "harness",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harness",
+    "target_path": "v2/words/en-US/KaoYan_2/harness_1559.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1562",
+    "word": "handsome",
+    "kind": "word",
+    "language": "en-US",
+    "text": "handsome",
+    "target_path": "v2/words/en-US/KaoYan_2/handsome_1562.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1582",
+    "word": "glance",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glance",
+    "target_path": "v2/words/en-US/KaoYan_2/glance_1582.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1584",
+    "word": "insight",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insight",
+    "target_path": "v2/words/en-US/KaoYan_2/insight_1584.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1590",
+    "word": "hop",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hop",
+    "target_path": "v2/words/en-US/KaoYan_2/hop_1590.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1594",
+    "word": "facilitate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "facilitate",
+    "target_path": "v2/words/en-US/KaoYan_2/facilitate_1594.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1617",
+    "word": "incentive",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incentive",
+    "target_path": "v2/words/en-US/KaoYan_2/incentive_1617.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1623",
+    "word": "fascinate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fascinate",
+    "target_path": "v2/words/en-US/KaoYan_2/fascinate_1623.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1625",
+    "word": "inside",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inside",
+    "target_path": "v2/words/en-US/KaoYan_2/inside_1625.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1628",
+    "word": "formidable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "formidable",
+    "target_path": "v2/words/en-US/KaoYan_2/formidable_1628.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1643",
+    "word": "foresee",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foresee",
+    "target_path": "v2/words/en-US/KaoYan_2/foresee_1643.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1645",
+    "word": "glue",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glue",
+    "target_path": "v2/words/en-US/KaoYan_2/glue_1645.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1649",
+    "word": "grateful",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grateful",
+    "target_path": "v2/words/en-US/KaoYan_2/grateful_1649.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1653",
+    "word": "ferry",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ferry",
+    "target_path": "v2/words/en-US/KaoYan_2/ferry_1653.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1675",
+    "word": "grave",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grave",
+    "target_path": "v2/words/en-US/KaoYan_2/grave_1675.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1678",
+    "word": "fragment",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fragment",
+    "target_path": "v2/words/en-US/KaoYan_2/fragment_1678.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1680",
+    "word": "impose",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impose",
+    "target_path": "v2/words/en-US/KaoYan_2/impose_1680.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1685",
+    "word": "fabricate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fabricate",
+    "target_path": "v2/words/en-US/KaoYan_2/fabricate_1685.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1693",
+    "word": "instinct",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instinct",
+    "target_path": "v2/words/en-US/KaoYan_2/instinct_1693.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1697",
+    "word": "fur",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fur",
+    "target_path": "v2/words/en-US/KaoYan_2/fur_1697.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1698",
+    "word": "hair",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hair",
+    "target_path": "v2/words/en-US/KaoYan_2/hair_1698.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1702",
+    "word": "geography",
+    "kind": "word",
+    "language": "en-US",
+    "text": "geography",
+    "target_path": "v2/words/en-US/KaoYan_2/geography_1702.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1704",
+    "word": "indispensable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indispensable",
+    "target_path": "v2/words/en-US/KaoYan_2/indispensable_1704.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1706",
+    "word": "grain",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grain",
+    "target_path": "v2/words/en-US/KaoYan_2/grain_1706.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1707",
+    "word": "guilty",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guilty",
+    "target_path": "v2/words/en-US/KaoYan_2/guilty_1707.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1710",
+    "word": "fog",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fog",
+    "target_path": "v2/words/en-US/KaoYan_2/fog_1710.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1716",
+    "word": "film",
+    "kind": "word",
+    "language": "en-US",
+    "text": "film",
+    "target_path": "v2/words/en-US/KaoYan_2/film_1716.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1720",
+    "word": "float",
+    "kind": "word",
+    "language": "en-US",
+    "text": "float",
+    "target_path": "v2/words/en-US/KaoYan_2/float_1720.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1738",
+    "word": "hole",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hole",
+    "target_path": "v2/words/en-US/KaoYan_2/hole_1738.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1742",
+    "word": "frequent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frequent",
+    "target_path": "v2/words/en-US/KaoYan_2/frequent_1742.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1753",
+    "word": "hamper",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hamper",
+    "target_path": "v2/words/en-US/KaoYan_2/hamper_1753.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1756",
+    "word": "goodness",
+    "kind": "word",
+    "language": "en-US",
+    "text": "goodness",
+    "target_path": "v2/words/en-US/KaoYan_2/goodness_1756.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1770",
+    "word": "genius",
+    "kind": "word",
+    "language": "en-US",
+    "text": "genius",
+    "target_path": "v2/words/en-US/KaoYan_2/genius_1770.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1788",
+    "word": "investigate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "investigate",
+    "target_path": "v2/words/en-US/KaoYan_2/investigate_1788.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1789",
+    "word": "floor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "floor",
+    "target_path": "v2/words/en-US/KaoYan_2/floor_1789.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1791",
+    "word": "infrastructure",
+    "kind": "word",
+    "language": "en-US",
+    "text": "infrastructure",
+    "target_path": "v2/words/en-US/KaoYan_2/infrastructure_1791.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1797",
+    "word": "instruction",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instruction",
+    "target_path": "v2/words/en-US/KaoYan_2/instruction_1797.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1799",
+    "word": "insect",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insect",
+    "target_path": "v2/words/en-US/KaoYan_2/insect_1799.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1807",
+    "word": "impair",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impair",
+    "target_path": "v2/words/en-US/KaoYan_2/impair_1807.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1821",
+    "word": "illegal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "illegal",
+    "target_path": "v2/words/en-US/KaoYan_2/illegal_1821.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1823",
+    "word": "fancy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fancy",
+    "target_path": "v2/words/en-US/KaoYan_2/fancy_1823.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1825",
+    "word": "invalid",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invalid",
+    "target_path": "v2/words/en-US/KaoYan_2/invalid_1825.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1830",
+    "word": "hinder",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hinder",
+    "target_path": "v2/words/en-US/KaoYan_2/hinder_1830.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1837",
+    "word": "foster",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foster",
+    "target_path": "v2/words/en-US/KaoYan_2/foster_1837.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1841",
+    "word": "groan",
+    "kind": "word",
+    "language": "en-US",
+    "text": "groan",
+    "target_path": "v2/words/en-US/KaoYan_2/groan_1841.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1842",
+    "word": "herd",
+    "kind": "word",
+    "language": "en-US",
+    "text": "herd",
+    "target_path": "v2/words/en-US/KaoYan_2/herd_1842.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1862",
+    "word": "indignant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indignant",
+    "target_path": "v2/words/en-US/KaoYan_2/indignant_1862.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1864",
+    "word": "formula",
+    "kind": "word",
+    "language": "en-US",
+    "text": "formula",
+    "target_path": "v2/words/en-US/KaoYan_2/formula_1864.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1882",
+    "word": "heighten",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heighten",
+    "target_path": "v2/words/en-US/KaoYan_2/heighten_1882.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1886",
+    "word": "interview",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interview",
+    "target_path": "v2/words/en-US/KaoYan_2/interview_1886.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1896",
+    "word": "fellow",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fellow",
+    "target_path": "v2/words/en-US/KaoYan_2/fellow_1896.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1902",
+    "word": "humble",
+    "kind": "word",
+    "language": "en-US",
+    "text": "humble",
+    "target_path": "v2/words/en-US/KaoYan_2/humble_1902.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1905",
+    "word": "farmer",
+    "kind": "word",
+    "language": "en-US",
+    "text": "farmer",
+    "target_path": "v2/words/en-US/KaoYan_2/farmer_1905.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1907",
+    "word": "false",
+    "kind": "word",
+    "language": "en-US",
+    "text": "false",
+    "target_path": "v2/words/en-US/KaoYan_2/false_1907.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1920",
+    "word": "interact",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interact",
+    "target_path": "v2/words/en-US/KaoYan_2/interact_1920.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1925",
+    "word": "forge",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forge",
+    "target_path": "v2/words/en-US/KaoYan_2/forge_1925.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1929",
+    "word": "hitherto",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hitherto",
+    "target_path": "v2/words/en-US/KaoYan_2/hitherto_1929.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1933",
+    "word": "gossip",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gossip",
+    "target_path": "v2/words/en-US/KaoYan_2/gossip_1933.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1937",
+    "word": "fantastic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fantastic",
+    "target_path": "v2/words/en-US/KaoYan_2/fantastic_1937.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1940",
+    "word": "innocent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "innocent",
+    "target_path": "v2/words/en-US/KaoYan_2/innocent_1940.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1946",
+    "word": "feasible",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feasible",
+    "target_path": "v2/words/en-US/KaoYan_2/feasible_1946.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1948",
+    "word": "heroin",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heroin",
+    "target_path": "v2/words/en-US/KaoYan_2/heroin_1948.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1951",
+    "word": "freight",
+    "kind": "word",
+    "language": "en-US",
+    "text": "freight",
+    "target_path": "v2/words/en-US/KaoYan_2/freight_1951.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1955",
+    "word": "ingredient",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ingredient",
+    "target_path": "v2/words/en-US/KaoYan_2/ingredient_1955.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1966",
+    "word": "foremost",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foremost",
+    "target_path": "v2/words/en-US/KaoYan_2/foremost_1966.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1967",
+    "word": "immense",
+    "kind": "word",
+    "language": "en-US",
+    "text": "immense",
+    "target_path": "v2/words/en-US/KaoYan_2/immense_1967.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1978",
+    "word": "hostage",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hostage",
+    "target_path": "v2/words/en-US/KaoYan_2/hostage_1978.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1990",
+    "word": "harm",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harm",
+    "target_path": "v2/words/en-US/KaoYan_2/harm_1990.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1991",
+    "word": "induce",
+    "kind": "word",
+    "language": "en-US",
+    "text": "induce",
+    "target_path": "v2/words/en-US/KaoYan_2/induce_1991.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1992",
+    "word": "frighten",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frighten",
+    "target_path": "v2/words/en-US/KaoYan_2/frighten_1992.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1995",
+    "word": "forum",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forum",
+    "target_path": "v2/words/en-US/KaoYan_2/forum_1995.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1996",
+    "word": "interpret",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interpret",
+    "target_path": "v2/words/en-US/KaoYan_2/interpret_1996.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1997",
+    "word": "hang",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hang",
+    "target_path": "v2/words/en-US/KaoYan_2/hang_1997.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2002",
+    "word": "fork",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fork",
+    "target_path": "v2/words/en-US/KaoYan_2/fork_2002.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2003",
+    "word": "hawk",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hawk",
+    "target_path": "v2/words/en-US/KaoYan_2/hawk_2003.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2004",
+    "word": "harden",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harden",
+    "target_path": "v2/words/en-US/KaoYan_2/harden_2004.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2008",
+    "word": "hate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hate",
+    "target_path": "v2/words/en-US/KaoYan_2/hate_2008.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2011",
+    "word": "identical",
+    "kind": "word",
+    "language": "en-US",
+    "text": "identical",
+    "target_path": "v2/words/en-US/KaoYan_2/identical_2011.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2016",
+    "word": "inquiry",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inquiry",
+    "target_path": "v2/words/en-US/KaoYan_2/inquiry_2016.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2031",
+    "word": "faint",
+    "kind": "word",
+    "language": "en-US",
+    "text": "faint",
+    "target_path": "v2/words/en-US/KaoYan_2/faint_2031.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2063",
+    "word": "integrity",
+    "kind": "word",
+    "language": "en-US",
+    "text": "integrity",
+    "target_path": "v2/words/en-US/KaoYan_2/integrity_2063.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2064",
+    "word": "fragile",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fragile",
+    "target_path": "v2/words/en-US/KaoYan_2/fragile_2064.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2072",
+    "word": "fade",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fade",
+    "target_path": "v2/words/en-US/KaoYan_2/fade_2072.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2078",
+    "word": "inherent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inherent",
+    "target_path": "v2/words/en-US/KaoYan_2/inherent_2078.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2085",
+    "word": "farther",
+    "kind": "word",
+    "language": "en-US",
+    "text": "farther",
+    "target_path": "v2/words/en-US/KaoYan_2/farther_2085.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2089",
+    "word": "grieve",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grieve",
+    "target_path": "v2/words/en-US/KaoYan_2/grieve_2089.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2092",
+    "word": "fame",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fame",
+    "target_path": "v2/words/en-US/KaoYan_2/fame_2092.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2100",
+    "word": "faculty",
+    "kind": "word",
+    "language": "en-US",
+    "text": "faculty",
+    "target_path": "v2/words/en-US/KaoYan_2/faculty_2100.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2104",
+    "word": "incur",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incur",
+    "target_path": "v2/words/en-US/KaoYan_2/incur_2104.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2107",
+    "word": "fate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fate",
+    "target_path": "v2/words/en-US/KaoYan_2/fate_2107.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2109",
+    "word": "farm",
+    "kind": "word",
+    "language": "en-US",
+    "text": "farm",
+    "target_path": "v2/words/en-US/KaoYan_2/farm_2109.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2126",
+    "word": "intricate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intricate",
+    "target_path": "v2/words/en-US/KaoYan_2/intricate_2126.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2131",
+    "word": "inhabitant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inhabitant",
+    "target_path": "v2/words/en-US/KaoYan_2/inhabitant_2131.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2135",
+    "word": "fabric",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fabric",
+    "target_path": "v2/words/en-US/KaoYan_2/fabric_2135.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2146",
+    "word": "introduction",
+    "kind": "word",
+    "language": "en-US",
+    "text": "introduction",
+    "target_path": "v2/words/en-US/KaoYan_2/introduction_2146.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2151",
+    "word": "inferior",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inferior",
+    "target_path": "v2/words/en-US/KaoYan_2/inferior_2151.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2154",
+    "word": "heritage",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heritage",
+    "target_path": "v2/words/en-US/KaoYan_2/heritage_2154.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2155",
+    "word": "gene",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gene",
+    "target_path": "v2/words/en-US/KaoYan_2/gene_2155.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2158",
+    "word": "internal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "internal",
+    "target_path": "v2/words/en-US/KaoYan_2/internal_2158.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2160",
+    "word": "humiliate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "humiliate",
+    "target_path": "v2/words/en-US/KaoYan_2/humiliate_2160.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2161",
+    "word": "inherit",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inherit",
+    "target_path": "v2/words/en-US/KaoYan_2/inherit_2161.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2165",
+    "word": "frank",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frank",
+    "target_path": "v2/words/en-US/KaoYan_2/frank_2165.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2170",
+    "word": "harsh",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harsh",
+    "target_path": "v2/words/en-US/KaoYan_2/harsh_2170.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2174",
+    "word": "globe",
+    "kind": "word",
+    "language": "en-US",
+    "text": "globe",
+    "target_path": "v2/words/en-US/KaoYan_2/globe_2174.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2181",
+    "word": "filter",
+    "kind": "word",
+    "language": "en-US",
+    "text": "filter",
+    "target_path": "v2/words/en-US/KaoYan_2/filter_2181.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2186",
+    "word": "hedge",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hedge",
+    "target_path": "v2/words/en-US/KaoYan_2/hedge_2186.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2192",
+    "word": "fertilizer",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fertilizer",
+    "target_path": "v2/words/en-US/KaoYan_2/fertilizer_2192.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2200",
+    "word": "gasoline",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gasoline",
+    "target_path": "v2/words/en-US/KaoYan_2/gasoline_2200.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2201",
+    "word": "heel",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heel",
+    "target_path": "v2/words/en-US/KaoYan_2/heel_2201.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2206",
+    "word": "forbid",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forbid",
+    "target_path": "v2/words/en-US/KaoYan_2/forbid_2206.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2208",
+    "word": "irrespective",
+    "kind": "word",
+    "language": "en-US",
+    "text": "irrespective",
+    "target_path": "v2/words/en-US/KaoYan_2/irrespective_2208.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2211",
+    "word": "imaginary",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imaginary",
+    "target_path": "v2/words/en-US/KaoYan_2/imaginary_2211.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2216",
+    "word": "grey",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grey",
+    "target_path": "v2/words/en-US/KaoYan_2/grey_2216.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2218",
+    "word": "grope",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grope",
+    "target_path": "v2/words/en-US/KaoYan_2/grope_2218.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2235",
+    "word": "guilt",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guilt",
+    "target_path": "v2/words/en-US/KaoYan_2/guilt_2235.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2242",
+    "word": "heir",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heir",
+    "target_path": "v2/words/en-US/KaoYan_2/heir_2242.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2271",
+    "word": "flush",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flush",
+    "target_path": "v2/words/en-US/KaoYan_2/flush_2271.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2273",
+    "word": "intermittent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intermittent",
+    "target_path": "v2/words/en-US/KaoYan_2/intermittent_2273.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2277",
+    "word": "inference",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inference",
+    "target_path": "v2/words/en-US/KaoYan_2/inference_2277.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2279",
+    "word": "hasty",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hasty",
+    "target_path": "v2/words/en-US/KaoYan_2/hasty_2279.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2281",
+    "word": "haste",
+    "kind": "word",
+    "language": "en-US",
+    "text": "haste",
+    "target_path": "v2/words/en-US/KaoYan_2/haste_2281.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2304",
+    "word": "hell",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hell",
+    "target_path": "v2/words/en-US/KaoYan_2/hell_2304.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2313",
+    "word": "innumerable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "innumerable",
+    "target_path": "v2/words/en-US/KaoYan_2/innumerable_2313.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2321",
+    "word": "finger",
+    "kind": "word",
+    "language": "en-US",
+    "text": "finger",
+    "target_path": "v2/words/en-US/KaoYan_2/finger_2321.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2325",
+    "word": "herb",
+    "kind": "word",
+    "language": "en-US",
+    "text": "herb",
+    "target_path": "v2/words/en-US/KaoYan_2/herb_2325.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2330",
+    "word": "grin",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grin",
+    "target_path": "v2/words/en-US/KaoYan_2/grin_2330.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2332",
+    "word": "grim",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grim",
+    "target_path": "v2/words/en-US/KaoYan_2/grim_2332.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2335",
+    "word": "gorgeous",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gorgeous",
+    "target_path": "v2/words/en-US/KaoYan_2/gorgeous_2335.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2351",
+    "word": "fluid",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fluid",
+    "target_path": "v2/words/en-US/KaoYan_2/fluid_2351.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2354",
+    "word": "futile",
+    "kind": "word",
+    "language": "en-US",
+    "text": "futile",
+    "target_path": "v2/words/en-US/KaoYan_2/futile_2354.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2355",
+    "word": "fuse",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fuse",
+    "target_path": "v2/words/en-US/KaoYan_2/fuse_2355.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2356",
+    "word": "fuss",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fuss",
+    "target_path": "v2/words/en-US/KaoYan_2/fuss_2356.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2367",
+    "word": "iron",
+    "kind": "word",
+    "language": "en-US",
+    "text": "iron",
+    "target_path": "v2/words/en-US/KaoYan_2/iron_2367.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2373",
+    "word": "insult",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insult",
+    "target_path": "v2/words/en-US/KaoYan_2/insult_2373.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2384",
+    "word": "friction",
+    "kind": "word",
+    "language": "en-US",
+    "text": "friction",
+    "target_path": "v2/words/en-US/KaoYan_2/friction_2384.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2394",
+    "word": "gallop",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gallop",
+    "target_path": "v2/words/en-US/KaoYan_2/gallop_2394.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2396",
+    "word": "gallon",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gallon",
+    "target_path": "v2/words/en-US/KaoYan_2/gallon_2396.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2397",
+    "word": "insure",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insure",
+    "target_path": "v2/words/en-US/KaoYan_2/insure_2397.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2415",
+    "word": "gloomy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gloomy",
+    "target_path": "v2/words/en-US/KaoYan_2/gloomy_2415.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2416",
+    "word": "giant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "giant",
+    "target_path": "v2/words/en-US/KaoYan_2/giant_2416.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2417",
+    "word": "feather",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feather",
+    "target_path": "v2/words/en-US/KaoYan_2/feather_2417.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2434",
+    "word": "inhabit",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inhabit",
+    "target_path": "v2/words/en-US/KaoYan_2/inhabit_2434.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2443",
+    "word": "hoist",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hoist",
+    "target_path": "v2/words/en-US/KaoYan_2/hoist_2443.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2446",
+    "word": "injure",
+    "kind": "word",
+    "language": "en-US",
+    "text": "injure",
+    "target_path": "v2/words/en-US/KaoYan_2/injure_2446.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2447",
+    "word": "gracious",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gracious",
+    "target_path": "v2/words/en-US/KaoYan_2/gracious_2447.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2451",
+    "word": "horror",
+    "kind": "word",
+    "language": "en-US",
+    "text": "horror",
+    "target_path": "v2/words/en-US/KaoYan_2/horror_2451.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2455",
+    "word": "heat",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heat",
+    "target_path": "v2/words/en-US/KaoYan_2/heat_2455.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2457",
+    "word": "heap",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heap",
+    "target_path": "v2/words/en-US/KaoYan_2/heap_2457.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2458",
+    "word": "heal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heal",
+    "target_path": "v2/words/en-US/KaoYan_2/heal_2458.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2473",
+    "word": "golden",
+    "kind": "word",
+    "language": "en-US",
+    "text": "golden",
+    "target_path": "v2/words/en-US/KaoYan_2/golden_2473.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2476",
+    "word": "gross",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gross",
+    "target_path": "v2/words/en-US/KaoYan_2/gross_2476.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2478",
+    "word": "interfere",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interfere",
+    "target_path": "v2/words/en-US/KaoYan_2/interfere_2478.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2480",
+    "word": "glass",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glass",
+    "target_path": "v2/words/en-US/KaoYan_2/glass_2480.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2483",
+    "word": "immerse",
+    "kind": "word",
+    "language": "en-US",
+    "text": "immerse",
+    "target_path": "v2/words/en-US/KaoYan_2/immerse_2483.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2486",
+    "word": "furious",
+    "kind": "word",
+    "language": "en-US",
+    "text": "furious",
+    "target_path": "v2/words/en-US/KaoYan_2/furious_2486.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2491",
+    "word": "ingenious",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ingenious",
+    "target_path": "v2/words/en-US/KaoYan_2/ingenious_2491.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2495",
+    "word": "intact",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intact",
+    "target_path": "v2/words/en-US/KaoYan_2/intact_2495.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2498",
+    "word": "impress",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impress",
+    "target_path": "v2/words/en-US/KaoYan_2/impress_2498.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2506",
+    "word": "honorable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "honorable",
+    "target_path": "v2/words/en-US/KaoYan_2/honorable_2506.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2512",
+    "word": "foreigner",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foreigner",
+    "target_path": "v2/words/en-US/KaoYan_2/foreigner_2512.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2515",
+    "word": "glimpse",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glimpse",
+    "target_path": "v2/words/en-US/KaoYan_2/glimpse_2515.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2542",
+    "word": "instantaneous",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instantaneous",
+    "target_path": "v2/words/en-US/KaoYan_2/instantaneous_2542.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2555",
+    "word": "fringe",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fringe",
+    "target_path": "v2/words/en-US/KaoYan_2/fringe_2555.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2558",
+    "word": "glide",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glide",
+    "target_path": "v2/words/en-US/KaoYan_2/glide_2558.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2566",
+    "word": "inhibit",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inhibit",
+    "target_path": "v2/words/en-US/KaoYan_2/inhibit_2566.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2578",
+    "word": "hammer",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hammer",
+    "target_path": "v2/words/en-US/KaoYan_2/hammer_2578.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2579",
+    "word": "highland",
+    "kind": "word",
+    "language": "en-US",
+    "text": "highland",
+    "target_path": "v2/words/en-US/KaoYan_2/highland_2579.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2598",
+    "word": "faulty",
+    "kind": "word",
+    "language": "en-US",
+    "text": "faulty",
+    "target_path": "v2/words/en-US/KaoYan_2/faulty_2598.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2604",
+    "word": "indulge",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indulge",
+    "target_path": "v2/words/en-US/KaoYan_2/indulge_2604.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2613",
+    "word": "heroine",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heroine",
+    "target_path": "v2/words/en-US/KaoYan_2/heroine_2613.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2618",
+    "word": "generator",
+    "kind": "word",
+    "language": "en-US",
+    "text": "generator",
+    "target_path": "v2/words/en-US/KaoYan_2/generator_2618.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2624",
+    "word": "fossil",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fossil",
+    "target_path": "v2/words/en-US/KaoYan_2/fossil_2624.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2626",
+    "word": "intrude",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intrude",
+    "target_path": "v2/words/en-US/KaoYan_2/intrude_2626.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2628",
+    "word": "imperative",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imperative",
+    "target_path": "v2/words/en-US/KaoYan_2/imperative_2628.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2629",
+    "word": "inspiration",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inspiration",
+    "target_path": "v2/words/en-US/KaoYan_2/inspiration_2629.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2633",
+    "word": "homogeneous",
+    "kind": "word",
+    "language": "en-US",
+    "text": "homogeneous",
+    "target_path": "v2/words/en-US/KaoYan_2/homogeneous_2633.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2647",
+    "word": "fault",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fault",
+    "target_path": "v2/words/en-US/KaoYan_2/fault_2647.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2648",
+    "word": "feat",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feat",
+    "target_path": "v2/words/en-US/KaoYan_2/feat_2648.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2670",
+    "word": "fearful",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fearful",
+    "target_path": "v2/words/en-US/KaoYan_2/fearful_2670.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2683",
+    "word": "infinite",
+    "kind": "word",
+    "language": "en-US",
+    "text": "infinite",
+    "target_path": "v2/words/en-US/KaoYan_2/infinite_2683.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2711",
+    "word": "humidity",
+    "kind": "word",
+    "language": "en-US",
+    "text": "humidity",
+    "target_path": "v2/words/en-US/KaoYan_2/humidity_2711.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2724",
+    "word": "heaven",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heaven",
+    "target_path": "v2/words/en-US/KaoYan_2/heaven_2724.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2736",
+    "word": "goose",
+    "kind": "word",
+    "language": "en-US",
+    "text": "goose",
+    "target_path": "v2/words/en-US/KaoYan_2/goose_2736.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2754",
+    "word": "hatch",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hatch",
+    "target_path": "v2/words/en-US/KaoYan_2/hatch_2754.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2769",
+    "word": "gesture",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gesture",
+    "target_path": "v2/words/en-US/KaoYan_2/gesture_2769.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2791",
+    "word": "goodby",
+    "kind": "word",
+    "language": "en-US",
+    "text": "goodby",
+    "target_path": "v2/words/en-US/KaoYan_2/goodby_2791.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2793",
+    "word": "grind",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grind",
+    "target_path": "v2/words/en-US/KaoYan_2/grind_2793.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2798",
+    "word": "ham",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ham",
+    "target_path": "v2/words/en-US/KaoYan_2/ham_2798.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2805",
+    "word": "friday",
+    "kind": "word",
+    "language": "en-US",
+    "text": "friday",
+    "target_path": "v2/words/en-US/KaoYan_2/friday_2805.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2806",
+    "word": "fireplace",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fireplace",
+    "target_path": "v2/words/en-US/KaoYan_2/fireplace_2806.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2815",
+    "word": "hay",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hay",
+    "target_path": "v2/words/en-US/KaoYan_2/hay_2815.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2827",
+    "word": "invent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invent",
+    "target_path": "v2/words/en-US/KaoYan_2/invent_2827.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2842",
+    "word": "harbor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harbor",
+    "target_path": "v2/words/en-US/KaoYan_2/harbor_2842.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2850",
+    "word": "hen",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hen",
+    "target_path": "v2/words/en-US/KaoYan_2/hen_2850.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2851",
+    "word": "isolate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "isolate",
+    "target_path": "v2/words/en-US/KaoYan_2/isolate_2851.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2857",
+    "word": "horizontal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "horizontal",
+    "target_path": "v2/words/en-US/KaoYan_2/horizontal_2857.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2861",
+    "word": "foam",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foam",
+    "target_path": "v2/words/en-US/KaoYan_2/foam_2861.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2862",
+    "word": "huddle",
+    "kind": "word",
+    "language": "en-US",
+    "text": "huddle",
+    "target_path": "v2/words/en-US/KaoYan_2/huddle_2862.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2865",
+    "word": "feminine",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feminine",
+    "target_path": "v2/words/en-US/KaoYan_2/feminine_2865.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2866",
+    "word": "hierarchy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hierarchy",
+    "target_path": "v2/words/en-US/KaoYan_2/hierarchy_2866.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2874",
+    "word": "headmaster",
+    "kind": "word",
+    "language": "en-US",
+    "text": "headmaster",
+    "target_path": "v2/words/en-US/KaoYan_2/headmaster_2874.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2880",
+    "word": "interior",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interior",
+    "target_path": "v2/words/en-US/KaoYan_2/interior_2880.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2883",
+    "word": "helmet",
+    "kind": "word",
+    "language": "en-US",
+    "text": "helmet",
+    "target_path": "v2/words/en-US/KaoYan_2/helmet_2883.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2897",
+    "word": "grease",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grease",
+    "target_path": "v2/words/en-US/KaoYan_2/grease_2897.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2908",
+    "word": "inject",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inject",
+    "target_path": "v2/words/en-US/KaoYan_2/inject_2908.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2913",
+    "word": "illuminate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "illuminate",
+    "target_path": "v2/words/en-US/KaoYan_2/illuminate_2913.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2914",
+    "word": "football",
+    "kind": "word",
+    "language": "en-US",
+    "text": "football",
+    "target_path": "v2/words/en-US/KaoYan_2/football_2914.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2917",
+    "word": "hardship",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hardship",
+    "target_path": "v2/words/en-US/KaoYan_2/hardship_2917.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2919",
+    "word": "glorious",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glorious",
+    "target_path": "v2/words/en-US/KaoYan_2/glorious_2919.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2927",
+    "word": "intermediate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intermediate",
+    "target_path": "v2/words/en-US/KaoYan_2/intermediate_2927.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2934",
+    "word": "guideline",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guideline",
+    "target_path": "v2/words/en-US/KaoYan_2/guideline_2934.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2956",
+    "word": "grief",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grief",
+    "target_path": "v2/words/en-US/KaoYan_2/grief_2956.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2973",
+    "word": "heroic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heroic",
+    "target_path": "v2/words/en-US/KaoYan_2/heroic_2973.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2985",
+    "word": "interrupt",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interrupt",
+    "target_path": "v2/words/en-US/KaoYan_2/interrupt_2985.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2989",
+    "word": "gaze",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gaze",
+    "target_path": "v2/words/en-US/KaoYan_2/gaze_2989.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2992",
+    "word": "imperial",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imperial",
+    "target_path": "v2/words/en-US/KaoYan_2/imperial_2992.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2993",
+    "word": "infectious",
+    "kind": "word",
+    "language": "en-US",
+    "text": "infectious",
+    "target_path": "v2/words/en-US/KaoYan_2/infectious_2993.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2995",
+    "word": "gum",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gum",
+    "target_path": "v2/words/en-US/KaoYan_2/gum_2995.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2997",
+    "word": "housework",
+    "kind": "word",
+    "language": "en-US",
+    "text": "housework",
+    "target_path": "v2/words/en-US/KaoYan_2/housework_2997.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "2998",
+    "word": "fifty",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fifty",
+    "target_path": "v2/words/en-US/KaoYan_2/fifty_2998.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3001",
+    "word": "hobby",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hobby",
+    "target_path": "v2/words/en-US/KaoYan_2/hobby_3001.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3005",
+    "word": "inspect",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inspect",
+    "target_path": "v2/words/en-US/KaoYan_2/inspect_3005.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3009",
+    "word": "fluctuate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fluctuate",
+    "target_path": "v2/words/en-US/KaoYan_2/fluctuate_3009.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3012",
+    "word": "farewell",
+    "kind": "word",
+    "language": "en-US",
+    "text": "farewell",
+    "target_path": "v2/words/en-US/KaoYan_2/farewell_3012.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3015",
+    "word": "gaol",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gaol",
+    "target_path": "v2/words/en-US/KaoYan_2/gaol_3015.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3020",
+    "word": "guy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guy",
+    "target_path": "v2/words/en-US/KaoYan_2/guy_3020.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3022",
+    "word": "gut",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gut",
+    "target_path": "v2/words/en-US/KaoYan_2/gut_3022.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3024",
+    "word": "friendly",
+    "kind": "word",
+    "language": "en-US",
+    "text": "friendly",
+    "target_path": "v2/words/en-US/KaoYan_2/friendly_3024.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3026",
+    "word": "gun",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gun",
+    "target_path": "v2/words/en-US/KaoYan_2/gun_3026.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3033",
+    "word": "gang",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gang",
+    "target_path": "v2/words/en-US/KaoYan_2/gang_3033.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3042",
+    "word": "geology",
+    "kind": "word",
+    "language": "en-US",
+    "text": "geology",
+    "target_path": "v2/words/en-US/KaoYan_2/geology_3042.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3044",
+    "word": "hurry",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hurry",
+    "target_path": "v2/words/en-US/KaoYan_2/hurry_3044.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3046",
+    "word": "gown",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gown",
+    "target_path": "v2/words/en-US/KaoYan_2/gown_3046.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3061",
+    "word": "hopeful",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hopeful",
+    "target_path": "v2/words/en-US/KaoYan_2/hopeful_3061.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3066",
+    "word": "fridge",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fridge",
+    "target_path": "v2/words/en-US/KaoYan_2/fridge_3066.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3073",
+    "word": "intensity",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intensity",
+    "target_path": "v2/words/en-US/KaoYan_2/intensity_3073.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3076",
+    "word": "ghost",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ghost",
+    "target_path": "v2/words/en-US/KaoYan_2/ghost_3076.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3082",
+    "word": "instant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instant",
+    "target_path": "v2/words/en-US/KaoYan_2/instant_3082.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3086",
+    "word": "forgive",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forgive",
+    "target_path": "v2/words/en-US/KaoYan_2/forgive_3086.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3108",
+    "word": "fasten",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fasten",
+    "target_path": "v2/words/en-US/KaoYan_2/fasten_3108.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3109",
+    "word": "install",
+    "kind": "word",
+    "language": "en-US",
+    "text": "install",
+    "target_path": "v2/words/en-US/KaoYan_2/install_3109.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3110",
+    "word": "intensive",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intensive",
+    "target_path": "v2/words/en-US/KaoYan_2/intensive_3110.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3127",
+    "word": "installment",
+    "kind": "word",
+    "language": "en-US",
+    "text": "installment",
+    "target_path": "v2/words/en-US/KaoYan_2/installment_3127.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3135",
+    "word": "flavor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flavor",
+    "target_path": "v2/words/en-US/KaoYan_2/flavor_3135.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3138",
+    "word": "interim",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interim",
+    "target_path": "v2/words/en-US/KaoYan_2/interim_3138.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3144",
+    "word": "galaxy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "galaxy",
+    "target_path": "v2/words/en-US/KaoYan_2/galaxy_3144.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3149",
+    "word": "garage",
+    "kind": "word",
+    "language": "en-US",
+    "text": "garage",
+    "target_path": "v2/words/en-US/KaoYan_2/garage_3149.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3152",
+    "word": "frequency",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frequency",
+    "target_path": "v2/words/en-US/KaoYan_2/frequency_3152.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3153",
+    "word": "husband",
+    "kind": "word",
+    "language": "en-US",
+    "text": "husband",
+    "target_path": "v2/words/en-US/KaoYan_2/husband_3153.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3160",
+    "word": "handy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "handy",
+    "target_path": "v2/words/en-US/KaoYan_2/handy_3160.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3168",
+    "word": "idiom",
+    "kind": "word",
+    "language": "en-US",
+    "text": "idiom",
+    "target_path": "v2/words/en-US/KaoYan_2/idiom_3168.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3171",
+    "word": "inclusive",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inclusive",
+    "target_path": "v2/words/en-US/KaoYan_2/inclusive_3171.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3175",
+    "word": "feast",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feast",
+    "target_path": "v2/words/en-US/KaoYan_2/feast_3175.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3177",
+    "word": "idiot",
+    "kind": "word",
+    "language": "en-US",
+    "text": "idiot",
+    "target_path": "v2/words/en-US/KaoYan_2/idiot_3177.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3184",
+    "word": "inertia",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inertia",
+    "target_path": "v2/words/en-US/KaoYan_2/inertia_3184.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3186",
+    "word": "gramme",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gramme",
+    "target_path": "v2/words/en-US/KaoYan_2/gramme_3186.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3187",
+    "word": "fireman",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fireman",
+    "target_path": "v2/words/en-US/KaoYan_2/fireman_3187.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3188",
+    "word": "industrialize",
+    "kind": "word",
+    "language": "en-US",
+    "text": "industrialize",
+    "target_path": "v2/words/en-US/KaoYan_2/industrialize_3188.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3199",
+    "word": "inhale",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inhale",
+    "target_path": "v2/words/en-US/KaoYan_2/inhale_3199.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3207",
+    "word": "item",
+    "kind": "word",
+    "language": "en-US",
+    "text": "item",
+    "target_path": "v2/words/en-US/KaoYan_2/item_3207.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3211",
+    "word": "fatigue",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fatigue",
+    "target_path": "v2/words/en-US/KaoYan_2/fatigue_3211.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3217",
+    "word": "ink",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ink",
+    "target_path": "v2/words/en-US/KaoYan_2/ink_3217.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3238",
+    "word": "insulate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insulate",
+    "target_path": "v2/words/en-US/KaoYan_2/insulate_3238.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3253",
+    "word": "grace",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grace",
+    "target_path": "v2/words/en-US/KaoYan_2/grace_3253.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3261",
+    "word": "irritate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "irritate",
+    "target_path": "v2/words/en-US/KaoYan_2/irritate_3261.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3264",
+    "word": "grade",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grade",
+    "target_path": "v2/words/en-US/KaoYan_2/grade_3264.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3275",
+    "word": "isle",
+    "kind": "word",
+    "language": "en-US",
+    "text": "isle",
+    "target_path": "v2/words/en-US/KaoYan_2/isle_3275.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3284",
+    "word": "hug",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hug",
+    "target_path": "v2/words/en-US/KaoYan_2/hug_3284.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3285",
+    "word": "frost",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frost",
+    "target_path": "v2/words/en-US/KaoYan_2/frost_3285.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3290",
+    "word": "handbook",
+    "kind": "word",
+    "language": "en-US",
+    "text": "handbook",
+    "target_path": "v2/words/en-US/KaoYan_2/handbook_3290.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3296",
+    "word": "input",
+    "kind": "word",
+    "language": "en-US",
+    "text": "input",
+    "target_path": "v2/words/en-US/KaoYan_2/input_3296.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3297",
+    "word": "handwriting",
+    "kind": "word",
+    "language": "en-US",
+    "text": "handwriting",
+    "target_path": "v2/words/en-US/KaoYan_2/handwriting_3297.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3299",
+    "word": "forthcoming",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forthcoming",
+    "target_path": "v2/words/en-US/KaoYan_2/forthcoming_3299.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3302",
+    "word": "implement",
+    "kind": "word",
+    "language": "en-US",
+    "text": "implement",
+    "target_path": "v2/words/en-US/KaoYan_2/implement_3302.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3305",
+    "word": "foul",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foul",
+    "target_path": "v2/words/en-US/KaoYan_2/foul_3305.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3310",
+    "word": "halt",
+    "kind": "word",
+    "language": "en-US",
+    "text": "halt",
+    "target_path": "v2/words/en-US/KaoYan_2/halt_3310.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3313",
+    "word": "generalize",
+    "kind": "word",
+    "language": "en-US",
+    "text": "generalize",
+    "target_path": "v2/words/en-US/KaoYan_2/generalize_3313.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3332",
+    "word": "glamor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glamor",
+    "target_path": "v2/words/en-US/KaoYan_2/glamor_3332.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3337",
+    "word": "fore",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fore",
+    "target_path": "v2/words/en-US/KaoYan_2/fore_3337.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3338",
+    "word": "hum",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hum",
+    "target_path": "v2/words/en-US/KaoYan_2/hum_3338.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3340",
+    "word": "hut",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hut",
+    "target_path": "v2/words/en-US/KaoYan_2/hut_3340.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3343",
+    "word": "frown",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frown",
+    "target_path": "v2/words/en-US/KaoYan_2/frown_3343.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3355",
+    "word": "fool",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fool",
+    "target_path": "v2/words/en-US/KaoYan_2/fool_3355.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3369",
+    "word": "fond",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fond",
+    "target_path": "v2/words/en-US/KaoYan_2/fond_3369.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3371",
+    "word": "intrigue",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intrigue",
+    "target_path": "v2/words/en-US/KaoYan_2/intrigue_3371.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3372",
+    "word": "intuition",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intuition",
+    "target_path": "v2/words/en-US/KaoYan_2/intuition_3372.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3380",
+    "word": "gauge",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gauge",
+    "target_path": "v2/words/en-US/KaoYan_2/gauge_3380.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3382",
+    "word": "haul",
+    "kind": "word",
+    "language": "en-US",
+    "text": "haul",
+    "target_path": "v2/words/en-US/KaoYan_2/haul_3382.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3385",
+    "word": "furnish",
+    "kind": "word",
+    "language": "en-US",
+    "text": "furnish",
+    "target_path": "v2/words/en-US/KaoYan_2/furnish_3385.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3401",
+    "word": "fantasy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fantasy",
+    "target_path": "v2/words/en-US/KaoYan_2/fantasy_3401.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3404",
+    "word": "foundation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foundation",
+    "target_path": "v2/words/en-US/KaoYan_2/foundation_3404.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3412",
+    "word": "hazard",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hazard",
+    "target_path": "v2/words/en-US/KaoYan_2/hazard_3412.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3416",
+    "word": "hinge",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hinge",
+    "target_path": "v2/words/en-US/KaoYan_2/hinge_3416.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3417",
+    "word": "guest",
+    "kind": "word",
+    "language": "en-US",
+    "text": "guest",
+    "target_path": "v2/words/en-US/KaoYan_2/guest_3417.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3425",
+    "word": "fax",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fax",
+    "target_path": "v2/words/en-US/KaoYan_2/fax_3425.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3439",
+    "word": "indoor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indoor",
+    "target_path": "v2/words/en-US/KaoYan_2/indoor_3439.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3441",
+    "word": "indication",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indication",
+    "target_path": "v2/words/en-US/KaoYan_2/indication_3441.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3450",
+    "word": "freeze",
+    "kind": "word",
+    "language": "en-US",
+    "text": "freeze",
+    "target_path": "v2/words/en-US/KaoYan_2/freeze_3450.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3457",
+    "word": "glow",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glow",
+    "target_path": "v2/words/en-US/KaoYan_2/glow_3457.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3458",
+    "word": "honey",
+    "kind": "word",
+    "language": "en-US",
+    "text": "honey",
+    "target_path": "v2/words/en-US/KaoYan_2/honey_3458.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3461",
+    "word": "hill",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hill",
+    "target_path": "v2/words/en-US/KaoYan_2/hill_3461.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3462",
+    "word": "forehead",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forehead",
+    "target_path": "v2/words/en-US/KaoYan_2/forehead_3462.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3474",
+    "word": "fiction",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fiction",
+    "target_path": "v2/words/en-US/KaoYan_2/fiction_3474.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3482",
+    "word": "improvement",
+    "kind": "word",
+    "language": "en-US",
+    "text": "improvement",
+    "target_path": "v2/words/en-US/KaoYan_2/improvement_3482.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3484",
+    "word": "hike",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hike",
+    "target_path": "v2/words/en-US/KaoYan_2/hike_3484.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3492",
+    "word": "fable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fable",
+    "target_path": "v2/words/en-US/KaoYan_2/fable_3492.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3495",
+    "word": "gentle",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gentle",
+    "target_path": "v2/words/en-US/KaoYan_2/gentle_3495.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3505",
+    "word": "gently",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gently",
+    "target_path": "v2/words/en-US/KaoYan_2/gently_3505.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3515",
+    "word": "hint",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hint",
+    "target_path": "v2/words/en-US/KaoYan_2/hint_3515.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3517",
+    "word": "interface",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interface",
+    "target_path": "v2/words/en-US/KaoYan_2/interface_3517.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3523",
+    "word": "identification",
+    "kind": "word",
+    "language": "en-US",
+    "text": "identification",
+    "target_path": "v2/words/en-US/KaoYan_2/identification_3523.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3535",
+    "word": "hysterical",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hysterical",
+    "target_path": "v2/words/en-US/KaoYan_2/hysterical_3535.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3544",
+    "word": "furnace",
+    "kind": "word",
+    "language": "en-US",
+    "text": "furnace",
+    "target_path": "v2/words/en-US/KaoYan_2/furnace_3544.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3554",
+    "word": "garden",
+    "kind": "word",
+    "language": "en-US",
+    "text": "garden",
+    "target_path": "v2/words/en-US/KaoYan_2/garden_3554.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3558",
+    "word": "fairy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fairy",
+    "target_path": "v2/words/en-US/KaoYan_2/fairy_3558.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3560",
+    "word": "ignorant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ignorant",
+    "target_path": "v2/words/en-US/KaoYan_2/ignorant_3560.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3561",
+    "word": "glitter",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glitter",
+    "target_path": "v2/words/en-US/KaoYan_2/glitter_3561.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3567",
+    "word": "housewife",
+    "kind": "word",
+    "language": "en-US",
+    "text": "housewife",
+    "target_path": "v2/words/en-US/KaoYan_2/housewife_3567.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3584",
+    "word": "forecast",
+    "kind": "word",
+    "language": "en-US",
+    "text": "forecast",
+    "target_path": "v2/words/en-US/KaoYan_2/forecast_3584.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3585",
+    "word": "infrared",
+    "kind": "word",
+    "language": "en-US",
+    "text": "infrared",
+    "target_path": "v2/words/en-US/KaoYan_2/infrared_3585.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3596",
+    "word": "graceful",
+    "kind": "word",
+    "language": "en-US",
+    "text": "graceful",
+    "target_path": "v2/words/en-US/KaoYan_2/graceful_3596.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3615",
+    "word": "foolish",
+    "kind": "word",
+    "language": "en-US",
+    "text": "foolish",
+    "target_path": "v2/words/en-US/KaoYan_2/foolish_3615.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3617",
+    "word": "irrigate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "irrigate",
+    "target_path": "v2/words/en-US/KaoYan_2/irrigate_3617.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3619",
+    "word": "genuine",
+    "kind": "word",
+    "language": "en-US",
+    "text": "genuine",
+    "target_path": "v2/words/en-US/KaoYan_2/genuine_3619.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3623",
+    "word": "fortnight",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fortnight",
+    "target_path": "v2/words/en-US/KaoYan_2/fortnight_3623.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3629",
+    "word": "indicative",
+    "kind": "word",
+    "language": "en-US",
+    "text": "indicative",
+    "target_path": "v2/words/en-US/KaoYan_2/indicative_3629.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3642",
+    "word": "fountain",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fountain",
+    "target_path": "v2/words/en-US/KaoYan_2/fountain_3642.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3650",
+    "word": "intelligible",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intelligible",
+    "target_path": "v2/words/en-US/KaoYan_2/intelligible_3650.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3652",
+    "word": "flatter",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flatter",
+    "target_path": "v2/words/en-US/KaoYan_2/flatter_3652.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3656",
+    "word": "infect",
+    "kind": "word",
+    "language": "en-US",
+    "text": "infect",
+    "target_path": "v2/words/en-US/KaoYan_2/infect_3656.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3666",
+    "word": "hypocrisy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hypocrisy",
+    "target_path": "v2/words/en-US/KaoYan_2/hypocrisy_3666.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3671",
+    "word": "graze",
+    "kind": "word",
+    "language": "en-US",
+    "text": "graze",
+    "target_path": "v2/words/en-US/KaoYan_2/graze_3671.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3674",
+    "word": "february",
+    "kind": "word",
+    "language": "en-US",
+    "text": "february",
+    "target_path": "v2/words/en-US/KaoYan_2/february_3674.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3676",
+    "word": "instrumental",
+    "kind": "word",
+    "language": "en-US",
+    "text": "instrumental",
+    "target_path": "v2/words/en-US/KaoYan_2/instrumental_3676.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3677",
+    "word": "fist",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fist",
+    "target_path": "v2/words/en-US/KaoYan_2/fist_3677.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3681",
+    "word": "horrible",
+    "kind": "word",
+    "language": "en-US",
+    "text": "horrible",
+    "target_path": "v2/words/en-US/KaoYan_2/horrible_3681.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3691",
+    "word": "inland",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inland",
+    "target_path": "v2/words/en-US/KaoYan_2/inland_3691.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3692",
+    "word": "hydrogen",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hydrogen",
+    "target_path": "v2/words/en-US/KaoYan_2/hydrogen_3692.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3695",
+    "word": "invariably",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invariably",
+    "target_path": "v2/words/en-US/KaoYan_2/invariably_3695.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3707",
+    "word": "handicap",
+    "kind": "word",
+    "language": "en-US",
+    "text": "handicap",
+    "target_path": "v2/words/en-US/KaoYan_2/handicap_3707.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3722",
+    "word": "fraction",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fraction",
+    "target_path": "v2/words/en-US/KaoYan_2/fraction_3722.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3726",
+    "word": "headquarters",
+    "kind": "word",
+    "language": "en-US",
+    "text": "headquarters",
+    "target_path": "v2/words/en-US/KaoYan_2/headquarters_3726.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3728",
+    "word": "handkerchief",
+    "kind": "word",
+    "language": "en-US",
+    "text": "handkerchief",
+    "target_path": "v2/words/en-US/KaoYan_2/handkerchief_3728.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3736",
+    "word": "integral",
+    "kind": "word",
+    "language": "en-US",
+    "text": "integral",
+    "target_path": "v2/words/en-US/KaoYan_2/integral_3736.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3738",
+    "word": "import",
+    "kind": "word",
+    "language": "en-US",
+    "text": "import",
+    "target_path": "v2/words/en-US/KaoYan_2/import_3738.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3747",
+    "word": "gas",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gas",
+    "target_path": "v2/words/en-US/KaoYan_2/gas_3747.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3748",
+    "word": "gay",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gay",
+    "target_path": "v2/words/en-US/KaoYan_2/gay_3748.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3760",
+    "word": "flight",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flight",
+    "target_path": "v2/words/en-US/KaoYan_2/flight_3760.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3766",
+    "word": "illustration",
+    "kind": "word",
+    "language": "en-US",
+    "text": "illustration",
+    "target_path": "v2/words/en-US/KaoYan_2/illustration_3766.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3776",
+    "word": "fling",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fling",
+    "target_path": "v2/words/en-US/KaoYan_2/fling_3776.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3783",
+    "word": "fixture",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fixture",
+    "target_path": "v2/words/en-US/KaoYan_2/fixture_3783.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3784",
+    "word": "frog",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frog",
+    "target_path": "v2/words/en-US/KaoYan_2/frog_3784.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3794",
+    "word": "heave",
+    "kind": "word",
+    "language": "en-US",
+    "text": "heave",
+    "target_path": "v2/words/en-US/KaoYan_2/heave_3794.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3801",
+    "word": "hover",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hover",
+    "target_path": "v2/words/en-US/KaoYan_2/hover_3801.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3808",
+    "word": "installation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "installation",
+    "target_path": "v2/words/en-US/KaoYan_2/installation_3808.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3811",
+    "word": "intercourse",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intercourse",
+    "target_path": "v2/words/en-US/KaoYan_2/intercourse_3811.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3834",
+    "word": "festival",
+    "kind": "word",
+    "language": "en-US",
+    "text": "festival",
+    "target_path": "v2/words/en-US/KaoYan_2/festival_3834.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3836",
+    "word": "hail",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hail",
+    "target_path": "v2/words/en-US/KaoYan_2/hail_3836.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3840",
+    "word": "intervene",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intervene",
+    "target_path": "v2/words/en-US/KaoYan_2/intervene_3840.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3843",
+    "word": "irony",
+    "kind": "word",
+    "language": "en-US",
+    "text": "irony",
+    "target_path": "v2/words/en-US/KaoYan_2/irony_3843.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3851",
+    "word": "hemisphere",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hemisphere",
+    "target_path": "v2/words/en-US/KaoYan_2/hemisphere_3851.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3873",
+    "word": "facility",
+    "kind": "word",
+    "language": "en-US",
+    "text": "facility",
+    "target_path": "v2/words/en-US/KaoYan_2/facility_3873.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3881",
+    "word": "harvest",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harvest",
+    "target_path": "v2/words/en-US/KaoYan_2/harvest_3881.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3882",
+    "word": "fry",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fry",
+    "target_path": "v2/words/en-US/KaoYan_2/fry_3882.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3885",
+    "word": "flash",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flash",
+    "target_path": "v2/words/en-US/KaoYan_2/flash_3885.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3892",
+    "word": "glad",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glad",
+    "target_path": "v2/words/en-US/KaoYan_2/glad_3892.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3893",
+    "word": "grass",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grass",
+    "target_path": "v2/words/en-US/KaoYan_2/grass_3893.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3897",
+    "word": "hunger",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hunger",
+    "target_path": "v2/words/en-US/KaoYan_2/hunger_3897.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3902",
+    "word": "flare",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flare",
+    "target_path": "v2/words/en-US/KaoYan_2/flare_3902.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3907",
+    "word": "feudal",
+    "kind": "word",
+    "language": "en-US",
+    "text": "feudal",
+    "target_path": "v2/words/en-US/KaoYan_2/feudal_3907.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3910",
+    "word": "gigantic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gigantic",
+    "target_path": "v2/words/en-US/KaoYan_2/gigantic_3910.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3925",
+    "word": "grand",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grand",
+    "target_path": "v2/words/en-US/KaoYan_2/grand_3925.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3927",
+    "word": "flu",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flu",
+    "target_path": "v2/words/en-US/KaoYan_2/flu_3927.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3937",
+    "word": "intention",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intention",
+    "target_path": "v2/words/en-US/KaoYan_2/intention_3937.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3940",
+    "word": "fix",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fix",
+    "target_path": "v2/words/en-US/KaoYan_2/fix_3940.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3942",
+    "word": "fine",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fine",
+    "target_path": "v2/words/en-US/KaoYan_2/fine_3942.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3953",
+    "word": "horn",
+    "kind": "word",
+    "language": "en-US",
+    "text": "horn",
+    "target_path": "v2/words/en-US/KaoYan_2/horn_3953.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3954",
+    "word": "incorporate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incorporate",
+    "target_path": "v2/words/en-US/KaoYan_2/incorporate_3954.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3955",
+    "word": "hose",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hose",
+    "target_path": "v2/words/en-US/KaoYan_2/hose_3955.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3985",
+    "word": "gratitude",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gratitude",
+    "target_path": "v2/words/en-US/KaoYan_2/gratitude_3985.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3998",
+    "word": "friendship",
+    "kind": "word",
+    "language": "en-US",
+    "text": "friendship",
+    "target_path": "v2/words/en-US/KaoYan_2/friendship_3998.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "3999",
+    "word": "invasion",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invasion",
+    "target_path": "v2/words/en-US/KaoYan_2/invasion_3999.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4013",
+    "word": "fare",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fare",
+    "target_path": "v2/words/en-US/KaoYan_2/fare_4013.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4015",
+    "word": "flock",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flock",
+    "target_path": "v2/words/en-US/KaoYan_2/flock_4015.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4035",
+    "word": "fruitful",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fruitful",
+    "target_path": "v2/words/en-US/KaoYan_2/fruitful_4035.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4040",
+    "word": "historic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "historic",
+    "target_path": "v2/words/en-US/KaoYan_2/historic_4040.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4041",
+    "word": "hatred",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hatred",
+    "target_path": "v2/words/en-US/KaoYan_2/hatred_4041.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4051",
+    "word": "inflation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inflation",
+    "target_path": "v2/words/en-US/KaoYan_2/inflation_4051.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4053",
+    "word": "incident",
+    "kind": "word",
+    "language": "en-US",
+    "text": "incident",
+    "target_path": "v2/words/en-US/KaoYan_2/incident_4053.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4059",
+    "word": "holy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "holy",
+    "target_path": "v2/words/en-US/KaoYan_2/holy_4059.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4060",
+    "word": "fiber",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fiber",
+    "target_path": "v2/words/en-US/KaoYan_2/fiber_4060.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4063",
+    "word": "fertile",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fertile",
+    "target_path": "v2/words/en-US/KaoYan_2/fertile_4063.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4066",
+    "word": "green",
+    "kind": "word",
+    "language": "en-US",
+    "text": "green",
+    "target_path": "v2/words/en-US/KaoYan_2/green_4066.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4067",
+    "word": "greet",
+    "kind": "word",
+    "language": "en-US",
+    "text": "greet",
+    "target_path": "v2/words/en-US/KaoYan_2/greet_4067.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4068",
+    "word": "famine",
+    "kind": "word",
+    "language": "en-US",
+    "text": "famine",
+    "target_path": "v2/words/en-US/KaoYan_2/famine_4068.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4069",
+    "word": "hollow",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hollow",
+    "target_path": "v2/words/en-US/KaoYan_2/hollow_4069.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4076",
+    "word": "honest",
+    "kind": "word",
+    "language": "en-US",
+    "text": "honest",
+    "target_path": "v2/words/en-US/KaoYan_2/honest_4076.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4080",
+    "word": "flood",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flood",
+    "target_path": "v2/words/en-US/KaoYan_2/flood_4080.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4083",
+    "word": "invade",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invade",
+    "target_path": "v2/words/en-US/KaoYan_2/invade_4083.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4088",
+    "word": "giggle",
+    "kind": "word",
+    "language": "en-US",
+    "text": "giggle",
+    "target_path": "v2/words/en-US/KaoYan_2/giggle_4088.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4108",
+    "word": "horsepower",
+    "kind": "word",
+    "language": "en-US",
+    "text": "horsepower",
+    "target_path": "v2/words/en-US/KaoYan_2/horsepower_4108.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4110",
+    "word": "garbage",
+    "kind": "word",
+    "language": "en-US",
+    "text": "garbage",
+    "target_path": "v2/words/en-US/KaoYan_2/garbage_4110.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4112",
+    "word": "fourteen",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fourteen",
+    "target_path": "v2/words/en-US/KaoYan_2/fourteen_4112.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4127",
+    "word": "graphic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "graphic",
+    "target_path": "v2/words/en-US/KaoYan_2/graphic_4127.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4142",
+    "word": "handful",
+    "kind": "word",
+    "language": "en-US",
+    "text": "handful",
+    "target_path": "v2/words/en-US/KaoYan_2/handful_4142.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4146",
+    "word": "fisherman",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fisherman",
+    "target_path": "v2/words/en-US/KaoYan_2/fisherman_4146.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4152",
+    "word": "frontier",
+    "kind": "word",
+    "language": "en-US",
+    "text": "frontier",
+    "target_path": "v2/words/en-US/KaoYan_2/frontier_4152.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4157",
+    "word": "hound",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hound",
+    "target_path": "v2/words/en-US/KaoYan_2/hound_4157.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4158",
+    "word": "hurricane",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hurricane",
+    "target_path": "v2/words/en-US/KaoYan_2/hurricane_4158.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4161",
+    "word": "federation",
+    "kind": "word",
+    "language": "en-US",
+    "text": "federation",
+    "target_path": "v2/words/en-US/KaoYan_2/federation_4161.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4166",
+    "word": "fluent",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fluent",
+    "target_path": "v2/words/en-US/KaoYan_2/fluent_4166.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4168",
+    "word": "harassment",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harassment",
+    "target_path": "v2/words/en-US/KaoYan_2/harassment_4168.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4178",
+    "word": "fracture",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fracture",
+    "target_path": "v2/words/en-US/KaoYan_2/fracture_4178.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4183",
+    "word": "goat",
+    "kind": "word",
+    "language": "en-US",
+    "text": "goat",
+    "target_path": "v2/words/en-US/KaoYan_2/goat_4183.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4184",
+    "word": "greedy",
+    "kind": "word",
+    "language": "en-US",
+    "text": "greedy",
+    "target_path": "v2/words/en-US/KaoYan_2/greedy_4184.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4192",
+    "word": "funeral",
+    "kind": "word",
+    "language": "en-US",
+    "text": "funeral",
+    "target_path": "v2/words/en-US/KaoYan_2/funeral_4192.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4194",
+    "word": "glove",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glove",
+    "target_path": "v2/words/en-US/KaoYan_2/glove_4194.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4211",
+    "word": "framework",
+    "kind": "word",
+    "language": "en-US",
+    "text": "framework",
+    "target_path": "v2/words/en-US/KaoYan_2/framework_4211.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4223",
+    "word": "ignite",
+    "kind": "word",
+    "language": "en-US",
+    "text": "ignite",
+    "target_path": "v2/words/en-US/KaoYan_2/ignite_4223.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4227",
+    "word": "greeting",
+    "kind": "word",
+    "language": "en-US",
+    "text": "greeting",
+    "target_path": "v2/words/en-US/KaoYan_2/greeting_4227.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4229",
+    "word": "howl",
+    "kind": "word",
+    "language": "en-US",
+    "text": "howl",
+    "target_path": "v2/words/en-US/KaoYan_2/howl_4229.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4272",
+    "word": "imagination",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imagination",
+    "target_path": "v2/words/en-US/KaoYan_2/imagination_4272.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4289",
+    "word": "hostess",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hostess",
+    "target_path": "v2/words/en-US/KaoYan_2/hostess_4289.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4308",
+    "word": "island",
+    "kind": "word",
+    "language": "en-US",
+    "text": "island",
+    "target_path": "v2/words/en-US/KaoYan_2/island_4308.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4319",
+    "word": "glory",
+    "kind": "word",
+    "language": "en-US",
+    "text": "glory",
+    "target_path": "v2/words/en-US/KaoYan_2/glory_4319.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4334",
+    "word": "geometry",
+    "kind": "word",
+    "language": "en-US",
+    "text": "geometry",
+    "target_path": "v2/words/en-US/KaoYan_2/geometry_4334.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4335",
+    "word": "impetus",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impetus",
+    "target_path": "v2/words/en-US/KaoYan_2/impetus_4335.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4336",
+    "word": "flee",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flee",
+    "target_path": "v2/words/en-US/KaoYan_2/flee_4336.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4341",
+    "word": "hardware",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hardware",
+    "target_path": "v2/words/en-US/KaoYan_2/hardware_4341.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4342",
+    "word": "interval",
+    "kind": "word",
+    "language": "en-US",
+    "text": "interval",
+    "target_path": "v2/words/en-US/KaoYan_2/interval_4342.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4347",
+    "word": "harmony",
+    "kind": "word",
+    "language": "en-US",
+    "text": "harmony",
+    "target_path": "v2/words/en-US/KaoYan_2/harmony_4347.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4348",
+    "word": "henceforth",
+    "kind": "word",
+    "language": "en-US",
+    "text": "henceforth",
+    "target_path": "v2/words/en-US/KaoYan_2/henceforth_4348.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4353",
+    "word": "insert",
+    "kind": "word",
+    "language": "en-US",
+    "text": "insert",
+    "target_path": "v2/words/en-US/KaoYan_2/insert_4353.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4359",
+    "word": "fraud",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fraud",
+    "target_path": "v2/words/en-US/KaoYan_2/fraud_4359.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4360",
+    "word": "fever",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fever",
+    "target_path": "v2/words/en-US/KaoYan_2/fever_4360.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4361",
+    "word": "gulf",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gulf",
+    "target_path": "v2/words/en-US/KaoYan_2/gulf_4361.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4364",
+    "word": "germ",
+    "kind": "word",
+    "language": "en-US",
+    "text": "germ",
+    "target_path": "v2/words/en-US/KaoYan_2/germ_4364.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4365",
+    "word": "flat",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flat",
+    "target_path": "v2/words/en-US/KaoYan_2/flat_4365.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4367",
+    "word": "flap",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flap",
+    "target_path": "v2/words/en-US/KaoYan_2/flap_4367.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4369",
+    "word": "flag",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flag",
+    "target_path": "v2/words/en-US/KaoYan_2/flag_4369.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4375",
+    "word": "highway",
+    "kind": "word",
+    "language": "en-US",
+    "text": "highway",
+    "target_path": "v2/words/en-US/KaoYan_2/highway_4375.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4382",
+    "word": "illness",
+    "kind": "word",
+    "language": "en-US",
+    "text": "illness",
+    "target_path": "v2/words/en-US/KaoYan_2/illness_4382.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4385",
+    "word": "fright",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fright",
+    "target_path": "v2/words/en-US/KaoYan_2/fright_4385.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4390",
+    "word": "hurl",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hurl",
+    "target_path": "v2/words/en-US/KaoYan_2/hurl_4390.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4391",
+    "word": "impart",
+    "kind": "word",
+    "language": "en-US",
+    "text": "impart",
+    "target_path": "v2/words/en-US/KaoYan_2/impart_4391.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4395",
+    "word": "humor",
+    "kind": "word",
+    "language": "en-US",
+    "text": "humor",
+    "target_path": "v2/words/en-US/KaoYan_2/humor_4395.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4408",
+    "word": "footstep",
+    "kind": "word",
+    "language": "en-US",
+    "text": "footstep",
+    "target_path": "v2/words/en-US/KaoYan_2/footstep_4408.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4411",
+    "word": "intersection",
+    "kind": "word",
+    "language": "en-US",
+    "text": "intersection",
+    "target_path": "v2/words/en-US/KaoYan_2/intersection_4411.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4413",
+    "word": "grocer",
+    "kind": "word",
+    "language": "en-US",
+    "text": "grocer",
+    "target_path": "v2/words/en-US/KaoYan_2/grocer_4413.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4417",
+    "word": "inventory",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inventory",
+    "target_path": "v2/words/en-US/KaoYan_2/inventory_4417.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4429",
+    "word": "inlet",
+    "kind": "word",
+    "language": "en-US",
+    "text": "inlet",
+    "target_path": "v2/words/en-US/KaoYan_2/inlet_4429.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4447",
+    "word": "fellowship",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fellowship",
+    "target_path": "v2/words/en-US/KaoYan_2/fellowship_4447.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4449",
+    "word": "humid",
+    "kind": "word",
+    "language": "en-US",
+    "text": "humid",
+    "target_path": "v2/words/en-US/KaoYan_2/humid_4449.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4452",
+    "word": "flour",
+    "kind": "word",
+    "language": "en-US",
+    "text": "flour",
+    "target_path": "v2/words/en-US/KaoYan_2/flour_4452.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4457",
+    "word": "garlic",
+    "kind": "word",
+    "language": "en-US",
+    "text": "garlic",
+    "target_path": "v2/words/en-US/KaoYan_2/garlic_4457.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4472",
+    "word": "imaginative",
+    "kind": "word",
+    "language": "en-US",
+    "text": "imaginative",
+    "target_path": "v2/words/en-US/KaoYan_2/imaginative_4472.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4474",
+    "word": "fence",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fence",
+    "target_path": "v2/words/en-US/KaoYan_2/fence_4474.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4478",
+    "word": "hesitate",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hesitate",
+    "target_path": "v2/words/en-US/KaoYan_2/hesitate_4478.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4480",
+    "word": "hospitality",
+    "kind": "word",
+    "language": "en-US",
+    "text": "hospitality",
+    "target_path": "v2/words/en-US/KaoYan_2/hospitality_4480.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4500",
+    "word": "fragrant",
+    "kind": "word",
+    "language": "en-US",
+    "text": "fragrant",
+    "target_path": "v2/words/en-US/KaoYan_2/fragrant_4500.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4501",
+    "word": "gear",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gear",
+    "target_path": "v2/words/en-US/KaoYan_2/gear_4501.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4514",
+    "word": "invaluable",
+    "kind": "word",
+    "language": "en-US",
+    "text": "invaluable",
+    "target_path": "v2/words/en-US/KaoYan_2/invaluable_4514.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "4525",
+    "word": "gymnasium",
+    "kind": "word",
+    "language": "en-US",
+    "text": "gymnasium",
+    "target_path": "v2/words/en-US/KaoYan_2/gymnasium_4525.mp3"
+  }
+]

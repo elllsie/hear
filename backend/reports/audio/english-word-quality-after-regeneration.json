@@ -1,0 +1,111 @@
+{
+  "checked": 13922,
+  "candidates": 7,
+  "thresholds": {
+    "minimum_trailing_seconds": 0.08,
+    "minimum_seconds_per_letter": 0.05
+  },
+  "items": [
+    {
+      "book": "KaoYan_2",
+      "word_id": "1324",
+      "word": "abandon",
+      "kind": "word",
+      "language": "en-US",
+      "text": "abandon",
+      "target_path": "v2/words/en-US/KaoYan_2/abandon_1324.mp3",
+      "active_seconds": 0.658,
+      "trailing_seconds": 0.6278,
+      "seconds_per_letter": 0.094,
+      "reasons": [
+        "user_reported"
+      ]
+    },
+    {
+      "book": "KaoYan_2",
+      "word_id": "3070",
+      "word": "storage",
+      "kind": "word",
+      "language": "en-US",
+      "text": "storage",
+      "target_path": "v2/words/en-US/KaoYan_2/storage_3070.mp3",
+      "active_seconds": 0.6282,
+      "trailing_seconds": 0.5984,
+      "seconds_per_letter": 0.0897,
+      "reasons": [
+        "user_reported"
+      ]
+    },
+    {
+      "book": "IELTS_9400",
+      "word_id": "3",
+      "word": "abandon",
+      "kind": "word",
+      "language": "en-US",
+      "text": "abandon",
+      "target_path": "v2/words/en-US/IELTS_9400/abandon_3.mp3",
+      "active_seconds": 0.6579,
+      "trailing_seconds": 0.6278,
+      "seconds_per_letter": 0.094,
+      "reasons": [
+        "user_reported"
+      ]
+    },
+    {
+      "book": "IELTS_9400",
+      "word_id": "4687",
+      "word": "knowledgeable",
+      "kind": "word",
+      "language": "en-US",
+      "text": "knowledgeable",
+      "target_path": "v2/words/en-US/IELTS_9400/knowledgeable_4687.mp3",
+      "active_seconds": 0.6337,
+      "trailing_seconds": 0.5921,
+      "seconds_per_letter": 0.0487,
+      "reasons": [
+        "compressed_speech"
+      ]
+    },
+    {
+      "book": "IELTS_9400",
+      "word_id": "8052",
+      "word": "storage",
+      "kind": "word",
+      "language": "en-US",
+      "text": "storage",
+      "target_path": "v2/words/en-US/IELTS_9400/storage_8052.mp3",
+      "active_seconds": 0.6282,
+      "trailing_seconds": 0.5984,
+      "seconds_per_letter": 0.0897,
+      "reasons": [
+        "user_reported"
+      ]
+    },
+    {
+      "book": "IELTS_9400",
+      "word_id": "8476",
+      "word": "they",
+      "kind": "word",
+      "language": "en-US",
+      "text": "they",
+      "target_path": "v2/words/en-US/IELTS_9400/they_8476.mp3",
+      "problem": "missing",
+      "reasons": [
+        "missing"
+      ]
+    },
+    {
+      "book": "IELTS_9400",
+      "word_id": "8619",
+      "word": "toward",
+      "kind": "word",
+      "language": "en-US",
+      "text": "toward",
+      "target_path": "v2/words/en-US/IELTS_9400/toward_8619.mp3",
+      "problem": "missing",
+      "reasons": [
+        "missing"
+      ]
+    }
+  ]
+}
