@@ -265,6 +265,8 @@ struct WordCardPlayerView: View {
         self.playbackDelegate = newDelegate
         AudioPlayerManager.shared.delegate = newDelegate
         AudioPlayerManager.shared.audioFolderName = audioFolder
+        AudioPlayerManager.shared.wordAudioPathPrefix = nil
+        AudioPlayerManager.shared.wordAudioLanguage = ["KaoYan_2", "IELTS_9400"].contains(audioFolder) ? .english : .german
         AudioPlayerManager.shared.play(word: word)
         isPlaying = true
     }

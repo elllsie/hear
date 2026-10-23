@@ -393,6 +393,62 @@ public struct WordBook: Codable {
     public let bookId: String
     public let title: String
     public let words: [Word]
+    public let language: StudyLanguage?
+    public let contentVersion: String?
+    public let audioPathPrefix: String?
+    public let sortOrder: Int
+    public let isRemote: Bool
+
+    public init(
+        bookId: String,
+        title: String,
+        words: [Word],
+        language: StudyLanguage? = nil,
+        contentVersion: String? = nil,
+        audioPathPrefix: String? = nil,
+        sortOrder: Int = 0,
+        isRemote: Bool = false
+    ) {
+        self.bookId = bookId
+        self.title = title
+        self.words = words
+        self.language = language
+        self.contentVersion = contentVersion
+        self.audioPathPrefix = audioPathPrefix
+        self.sortOrder = sortOrder
+        self.isRemote = isRemote
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case bookId, title, words, language, contentVersion, audioPathPrefix, sortOrder, isRemote
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        bookId = try container.decode(String.self, forKey: .bookId)
+        title = try container.decode(String.self, forKey: .title)
+        words = try container.decode([Word].self, forKey: .words)
+        language = try container.decodeIfPresent(StudyLanguage.self, forKey: .language)
+        contentVersion = try container.decodeIfPresent(String.self, forKey: .contentVersion)
+        audioPathPrefix = try container.decodeIfPresent(String.self, forKey: .audioPathPrefix)
+        sortOrder = try container.decodeIfPresent(Int.self, forKey: .sortOrder) ?? 0
+        isRemote = try container.decodeIfPresent(Bool.self, forKey: .isRemote) ?? false
+    }
+}
+
+public struct RemoteWordBookDescriptor: Codable, Equatable {
+    public let bookId: String
+    public let title: String
+    public let language: StudyLanguage
+    public let contentVersion: String
+    public let dataUrl: URL
+    public let audioPathPrefix: String?
+    public let sortOrder: Int
+}
+
+private struct CachedRemoteWordBook: Codable {
+    let descriptor: RemoteWordBookDescriptor
+    let words: [Word]
 }
 
 public enum DataLoader {
@@ -411,7 +467,16 @@ public enum DataLoader {
         let d = try Data(contentsOf: url)
         let decodedWords = try JSONDecoder().decode([Word].self, from: d)
         let words = wordsForDisplay(decodedWords, bookId: name)
-        return WordBook(bookId: name, title: title(for: name), words: words)
+        let language: StudyLanguage = ["KaoYan_2", "IELTS_9400"].contains(name) ? .english : .german
+        let audioPrefix = "v2/words/\(language == .english ? "en-us" : "de-de")/\(name.lowercased())"
+        return WordBook(
+            bookId: name,
+            title: title(for: name),
+            words: words,
+            language: language,
+            contentVersion: "bundled",
+            audioPathPrefix: audioPrefix
+        )
     }
 
     // Load multiple books by names
@@ -435,5 +500,120 @@ public enum DataLoader {
         return words.sorted {
             $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending
         }
+    }
+}
+
+/// Adds validated backend word books without making app startup or offline use
+/// depend on the network. A corrupt remote payload can never replace bundled data.
+public enum RemoteWordBookRepository {
+    private static let cacheFolderName = "TingHuiErWordBooksV1"
+    private static let maximumWordCount = 100_000
+
+    public static func mergedBooks(bundled: [WordBook]) async -> [WordBook] {
+        do {
+            let descriptors = try await SupabaseClient.shared.fetchWordBookCatalog()
+            var remoteBooks: [WordBook] = []
+            for descriptor in descriptors where isValid(descriptor) {
+                if let words = try? await SupabaseClient.shared.fetchWordBookWords(from: descriptor),
+                   isValid(words: words) {
+                    let cached = CachedRemoteWordBook(descriptor: descriptor, words: words)
+                    try? save(cached)
+                    remoteBooks.append(makeBook(from: cached))
+                } else if let cached = load(bookId: descriptor.bookId),
+                          cached.descriptor.contentVersion == descriptor.contentVersion,
+                          isValid(cached.descriptor), isValid(words: cached.words) {
+                    remoteBooks.append(makeBook(from: cached))
+                }
+            }
+            return merge(bundled: bundled, remote: remoteBooks)
+        } catch {
+            return merge(bundled: bundled, remote: loadAllValidCaches())
+        }
+    }
+
+    public static func isValid(words: [Word]) -> Bool {
+        guard !words.isEmpty, words.count <= maximumWordCount else { return false }
+        var identities = Set<String>()
+        for word in words {
+            let id = word.id.trimmingCharacters(in: .whitespacesAndNewlines)
+            let text = word.word.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !id.isEmpty, !text.isEmpty, identities.insert(id).inserted else { return false }
+        }
+        return true
+    }
+
+    private static func isValid(_ descriptor: RemoteWordBookDescriptor) -> Bool {
+        let id = descriptor.bookId.trimmingCharacters(in: .whitespacesAndNewlines)
+        let version = descriptor.contentVersion.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !id.isEmpty, !version.isEmpty, descriptor.dataUrl.scheme == "https" else { return false }
+        if let prefix = descriptor.audioPathPrefix,
+           (prefix.contains("..") || prefix.hasPrefix("/")) { return false }
+        return true
+    }
+
+    private static func makeBook(from cached: CachedRemoteWordBook) -> WordBook {
+        let descriptor = cached.descriptor
+        return WordBook(
+            bookId: descriptor.bookId,
+            title: descriptor.title,
+            words: DataLoader.wordsForRemoteDisplay(cached.words, language: descriptor.language),
+            language: descriptor.language,
+            contentVersion: descriptor.contentVersion,
+            audioPathPrefix: descriptor.audioPathPrefix,
+            sortOrder: descriptor.sortOrder,
+            isRemote: true
+        )
+    }
+
+    private static func merge(bundled: [WordBook], remote: [WordBook]) -> [WordBook] {
+        let byID = Dictionary(remote.map { ($0.bookId, $0) }, uniquingKeysWith: { first, _ in first })
+        var result = bundled.map { byID[$0.bookId] ?? $0 }
+        let bundledIDs = Set(bundled.map(\.bookId))
+        result.append(contentsOf: remote.filter { !bundledIDs.contains($0.bookId) }.sorted {
+            ($0.sortOrder, $0.title) < ($1.sortOrder, $1.title)
+        })
+        return result
+    }
+
+    private static func cacheDirectory() throws -> URL {
+        let root = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let directory = root.appendingPathComponent(cacheFolderName, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory
+    }
+
+    private static func cacheURL(bookId: String) throws -> URL {
+        let safeID = bookId.unicodeScalars.map { CharacterSet.alphanumerics.contains($0) ? String($0) : "_" }.joined()
+        return try cacheDirectory().appendingPathComponent(safeID + ".json")
+    }
+
+    private static func save(_ cached: CachedRemoteWordBook) throws {
+        let data = try JSONEncoder().encode(cached)
+        try data.write(to: cacheURL(bookId: cached.descriptor.bookId), options: .atomic)
+    }
+
+    private static func load(bookId: String) -> CachedRemoteWordBook? {
+        guard let url = try? cacheURL(bookId: bookId), let data = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode(CachedRemoteWordBook.self, from: data)
+    }
+
+    private static func loadAllValidCaches() -> [WordBook] {
+        guard let directory = try? cacheDirectory(),
+              let urls = try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil) else {
+            return []
+        }
+        return urls.compactMap { url in
+            guard url.pathExtension == "json", let data = try? Data(contentsOf: url),
+                  let cached = try? JSONDecoder().decode(CachedRemoteWordBook.self, from: data),
+                  isValid(cached.descriptor), isValid(words: cached.words) else { return nil }
+            return makeBook(from: cached)
+        }
+    }
+}
+
+private extension DataLoader {
+    static func wordsForRemoteDisplay(_ words: [Word], language: StudyLanguage) -> [Word] {
+        guard language == .english else { return words }
+        return words.sorted { $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending }
     }
 }

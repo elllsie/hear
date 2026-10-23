@@ -397,6 +397,15 @@ struct ContentView: View {
                 if loadedBooks.isEmpty {
                     self.loadErrorMessage = "没有加载到词书"
                 }
+
+                Task {
+                    let mergedBooks = await RemoteWordBookRepository.mergedBooks(bundled: loadedBooks)
+                    await MainActor.run {
+                        guard !mergedBooks.isEmpty else { return }
+                        self.books = mergedBooks
+                        self.loadUserWordBooks()
+                    }
+                }
             }
         }
     }
@@ -446,6 +455,9 @@ struct ContentView: View {
     }
 
     private func isBookForSelectedLanguage(_ book: WordBook) -> Bool {
+        if let language = book.language {
+            return language == studyLanguage
+        }
         switch studyLanguage {
         case .english:
             return ["KaoYan_2", "IELTS_9400"].contains(book.bookId)
@@ -501,8 +513,12 @@ struct ContentView: View {
         AudioPlayerManager.shared.volume = 1.0
         if book.bookId == FavoriteWordStore.favoriteBookId {
             AudioPlayerManager.shared.audioFolderName = studyLanguage == .english ? "KaoYan_2" : "A1"
+            AudioPlayerManager.shared.wordAudioPathPrefix = nil
+            AudioPlayerManager.shared.wordAudioLanguage = studyLanguage
         } else {
             AudioPlayerManager.shared.audioFolderName = book.bookId
+            AudioPlayerManager.shared.wordAudioPathPrefix = book.audioPathPrefix
+            AudioPlayerManager.shared.wordAudioLanguage = book.language ?? studyLanguage
         }
         AudioPlayerManager.shared.learningLanguage = learningLanguage
         AudioPlayerManager.shared.play(words: book.words, startIndex: safeIndex)
@@ -1752,7 +1768,7 @@ private struct BookSelectionView: View {
                                 onStudyLanguageChange(.english)
                             } label: {
                                 Label(
-                                    "English Learning",
+                                    isEnglish ? "English Learning" : "英语学习",
                                     systemImage: studyLanguage == .english ? "checkmark" : "character.book.closed"
                                 )
                             }
@@ -1761,13 +1777,17 @@ private struct BookSelectionView: View {
                                 onStudyLanguageChange(.german)
                             } label: {
                                 Label(
-                                    "Deutsch Lernen",
+                                    isEnglish ? "German Learning" : "德语学习",
                                     systemImage: studyLanguage == .german ? "checkmark" : "character.book.closed"
                                 )
                             }
                         } label: {
                             HStack(spacing: 12) {
-                                Text(studyLanguage == .english ? "English Learning" : "Deutsch Lernen")
+                                Text(
+                                    studyLanguage == .english
+                                        ? (isEnglish ? "English Learning" : "英语学习")
+                                        : (isEnglish ? "German Learning" : "德语学习")
+                                )
                                     .font(.system(size: 44, weight: .bold))
                                     .minimumScaleFactor(0.75)
 
@@ -1957,6 +1977,9 @@ private struct BookListView: View {
             return isEnglish ? "IELTS 9400 Words" : "雅思9400词"
         }
 
+        if book.language == .english {
+            return book.title
+        }
         return isEnglish ? "German \(book.title)" : "德语 \(book.title)"
     }
 }
@@ -2121,20 +2144,6 @@ private struct ProfileSettingsView: View {
                             .padding(.horizontal, 6)
 
                         VStack(spacing: 0) {
-                            SettingsActionButton(
-                                title: isEnglish ? "Cloud Sync" : "云端同步",
-                                subtitle: isEnglish ? "Favorites and progress are synced after login" : "登录后同步收藏和学习记录",
-                                iconName: "checkmark.icloud",
-                                tint: AppColors.muted,
-                                isPassive: true,
-                                action: {}
-                            )
-                            .disabled(true)
-
-                            Divider()
-                                .background(AppColors.stroke)
-                                .padding(.leading, 24)
-
                             SettingsActionButton(
                                 title: isEnglish ? "Delete Account" : "删除账号",
                                 subtitle: isEnglish ? "Delete account and cloud learning data" : "删除账号和云端学习数据",

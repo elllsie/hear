@@ -182,6 +182,8 @@ struct AutoWordPlayerView: View {
         self.playbackDelegate = newDelegate
         AudioPlayerManager.shared.delegate = newDelegate
         AudioPlayerManager.shared.audioFolderName = "A1"
+        AudioPlayerManager.shared.wordAudioPathPrefix = nil
+        AudioPlayerManager.shared.wordAudioLanguage = .german
         AudioPlayerManager.shared.play(word: word)
     }
     

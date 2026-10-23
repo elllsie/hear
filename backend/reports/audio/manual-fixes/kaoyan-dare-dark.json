@@ -1,0 +1,20 @@
+[
+  {
+    "book": "KaoYan_2",
+    "word_id": "1179",
+    "word": "dare",
+    "kind": "word",
+    "language": "en-US",
+    "text": "dare",
+    "target_path": "v2/words/en-US/KaoYan_2/dare_1179.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1793",
+    "word": "dark",
+    "kind": "word",
+    "language": "en-US",
+    "text": "dark",
+    "target_path": "v2/words/en-US/KaoYan_2/dark_1793.mp3"
+  }
+]

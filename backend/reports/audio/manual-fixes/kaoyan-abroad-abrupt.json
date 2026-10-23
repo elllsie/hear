@@ -1,0 +1,20 @@
+[
+  {
+    "book": "KaoYan_2",
+    "word_id": "1171",
+    "word": "abroad",
+    "kind": "word",
+    "language": "en-US",
+    "text": "abroad",
+    "target_path": "v2/words/en-US/KaoYan_2/abroad_1171.mp3"
+  },
+  {
+    "book": "KaoYan_2",
+    "word_id": "1900",
+    "word": "abrupt",
+    "kind": "word",
+    "language": "en-US",
+    "text": "abrupt",
+    "target_path": "v2/words/en-US/KaoYan_2/abrupt_1900.mp3"
+  }
+]

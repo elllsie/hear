@@ -136,3 +136,13 @@ python scripts/process_podcast_content.py --source overthink --skip-rss
 ```
 
 iOS 始终只读取统一的 `episodes` 与 `episode_sentences`，新增节目不需要修改播放器和字幕页面。
+
+## 本地内容管理网页
+
+项目根目录双击 `启动内容管理台.command`，或运行：
+
+```bash
+backend/.venv/bin/python -B -m backend.local_admin.server --open
+```
+
+提供词书与音频检查、草稿生成、发布备份、问题标记、播客处理、文章 AI 总结和任务日志。仅监听本机回环地址并要求登录。完整操作说明见 [本地内容工作室](../docs/local_content_studio.md)。

@@ -16,4 +16,21 @@ final class AppPolicyTests: XCTestCase {
     func testPodcastExplanationAlwaysDefaultsToChinese() {
         XCTAssertEqual(AppPolicy.podcastExplanationLanguage, .chinese)
     }
+
+    func testRemoteWordBookRejectsEmptyAndDuplicateWordIDs() {
+        XCTAssertFalse(RemoteWordBookRepository.isValid(words: []))
+        let duplicate = [
+            Word(id: "1", word: "hello", translation: "你好"),
+            Word(id: "1", word: "world", translation: "世界")
+        ]
+        XCTAssertFalse(RemoteWordBookRepository.isValid(words: duplicate))
+    }
+
+    func testRemoteWordBookAcceptsValidWords() {
+        let words = [
+            Word(id: "1", word: "hello", translation: "你好"),
+            Word(id: "2", word: "world", translation: "世界")
+        ]
+        XCTAssertTrue(RemoteWordBookRepository.isValid(words: words))
+    }
 }

@@ -164,6 +164,30 @@ public final class SupabaseClient {
         return try decoder.decode([RemotePodcast].self, from: data).compactMap(\.appModel)
     }
 
+    func fetchWordBookCatalog() async throws -> [RemoteWordBookDescriptor] {
+        let selection = "book_id,title,language,content_version,data_url,audio_path_prefix,sort_order"
+        let path = "/rest/v1/word_books?is_active=eq.true&select=\(selection)&order=sort_order.asc,title.asc"
+        let data = try await request(path: path, method: "GET", bodyData: nil)
+        return try decoder.decode([RemoteWordBookDescriptor].self, from: data)
+    }
+
+    func fetchWordBookWords(from descriptor: RemoteWordBookDescriptor) async throws -> [Word] {
+        guard descriptor.dataUrl.scheme == "https" else {
+            throw SupabaseClientError.message("词书数据地址必须使用 HTTPS")
+        }
+        var urlRequest = URLRequest(url: descriptor.dataUrl)
+        urlRequest.timeoutInterval = 30
+        urlRequest.cachePolicy = .reloadRevalidatingCacheData
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            throw SupabaseClientError.message("词书数据下载失败")
+        }
+        guard data.count <= 25 * 1024 * 1024 else {
+            throw SupabaseClientError.message("词书数据超过 25 MB 安全限制")
+        }
+        return try decoder.decode([Word].self, from: data)
+    }
+
     func fetchPodcastEpisodes(language: StudyLanguage? = nil, podcastID: String? = nil, limit: Int = 20, offset: Int = 0) async throws -> [PodcastEpisode] {
         let safeLimit = min(max(limit, 1), 50)
         let safeOffset = max(offset, 0)

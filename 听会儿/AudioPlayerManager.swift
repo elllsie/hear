@@ -45,6 +45,10 @@ public final class AudioPlayerManager: NSObject {
     public var playbackRate: Float = 1.0
     public var volume: Float = 1.0
     public var audioFolderName: String?
+    /// Backend-provided Storage prefix for a word book. Nil preserves all
+    /// legacy routing and bundled-book behavior.
+    public var wordAudioPathPrefix: String?
+    public var wordAudioLanguage: StudyLanguage?
     public var learningLanguage: LearningLanguage = .chinese
     public var chineseMeaningFileRateMultiplier: Float = 1.5
     public var chineseMeaningFallbackSpeechRateMultiplier: Float = 1.5
@@ -132,7 +136,10 @@ public final class AudioPlayerManager: NSObject {
     }
 
     private func wordSpeechLanguageCode() -> String {
-        ["KaoYan_2", "IELTS_9400"].contains(audioFolderName ?? "") ? "en-US" : "de-DE"
+        if let wordAudioLanguage {
+            return wordAudioLanguage == .english ? "en-US" : "de-DE"
+        }
+        return ["KaoYan_2", "IELTS_9400"].contains(audioFolderName ?? "") ? "en-US" : "de-DE"
     }
 
     private var activeNaturalWordAudioVersion: String? {
@@ -150,7 +157,7 @@ public final class AudioPlayerManager: NSObject {
     }
 
     private func preferredAudioFileName(for word: Word) -> String? {
-        if activeNaturalWordAudioVersion != nil {
+        if activeNaturalWordAudioVersion != nil || wordAudioPathPrefix != nil {
             return "\(safeAudioFileName(for: word.word))_\(safeAudioFileName(for: word.id)).mp3"
         }
         if let fileName = word.audioFileName, !fileName.isEmpty {
@@ -504,6 +511,10 @@ public final class AudioPlayerManager: NSObject {
         if let preferredSubdirectory, !preferredSubdirectory.isEmpty {
             var path = preferredSubdirectory.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
             if path.hasPrefix("audio/") { path.removeFirst("audio/".count) }
+            return "\(path)/\(remoteName)"
+        }
+        if let wordAudioPathPrefix, !wordAudioPathPrefix.isEmpty {
+            let path = wordAudioPathPrefix.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
             return "\(path)/\(remoteName)"
         }
         if let audioFolderName,
