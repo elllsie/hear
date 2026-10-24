@@ -51,7 +51,8 @@ public final class AudioPlayerManager: NSObject {
     public var wordAudioLanguage: StudyLanguage?
     public var learningLanguage: LearningLanguage = .chinese
     public var chineseMeaningFileRateMultiplier: Float = 1.5
-    public var chineseMeaningFallbackSpeechRateMultiplier: Float = 1.5
+    /// Compatibility field only. Chinese system speech always uses the default rate.
+    public var chineseMeaningFallbackSpeechRateMultiplier: Float = 1.0
 
     private(set) public var isPlaying: Bool = false {
         didSet { delegate?.audioPlayerManager(didUpdateState: isPlaying) }
@@ -114,13 +115,11 @@ public final class AudioPlayerManager: NSObject {
 
     // Enqueue word repeated `repeatTimes`
     private func enqueue(word: Word, wordIndex: Int, totalWords: Int) {
-        let wordLanguage = wordSpeechLanguageCode()
+        let location = wordAudioLocation(for: word)
+        let wordLanguage = location.language
         for repeatIndex in 0..<max(1, repeatTimes) {
-            if let file = preferredAudioFileName(for: word) {
-                queue.append(.file(name: file, description: "file:\(file)", fallbackText: word.word, fallbackLanguage: wordLanguage, word: word, wordIndex: wordIndex, totalWords: totalWords))
-            } else {
-                queue.append(.text(text: word.word, language: wordLanguage, description: "word:\(word.word)", word: word, wordIndex: wordIndex, totalWords: totalWords))
-            }
+            let file = location.name
+            queue.append(.file(name: file, subdirectory: location.directory, description: "file:\(file)", fallbackText: word.word, fallbackLanguage: wordLanguage, word: word, wordIndex: wordIndex, totalWords: totalWords))
 
             let isLastRepeat = repeatIndex == max(1, repeatTimes) - 1
             if isLastRepeat {
@@ -143,28 +142,53 @@ public final class AudioPlayerManager: NSObject {
     }
 
     private var activeNaturalWordAudioVersion: String? {
-        guard let audioFolderName else { return nil }
-        if audioFolderName == "KaoYan_2" {
-            return SupabaseConfig.kaoYanEnglishWordAudioVersion
-        }
-        if audioFolderName == "IELTS_9400" {
-            return SupabaseConfig.ieltsEnglishWordAudioVersion
-        }
-        if ["12yue", "A1", "A2", "B1"].contains(audioFolderName) {
-            return SupabaseConfig.germanWordAudioVersion
-        }
-        return nil
+        naturalWordAudioVersion(for: audioFolderName)
     }
 
-    private func preferredAudioFileName(for word: Word) -> String? {
-        if activeNaturalWordAudioVersion != nil || wordAudioPathPrefix != nil {
+    private func naturalWordAudioVersion(for bookID: String?) -> String? {
+        switch bookID {
+        case "KaoYan_2": return SupabaseConfig.kaoYanEnglishWordAudioVersion
+        case "IELTS_9400": return SupabaseConfig.ieltsEnglishWordAudioVersion
+        case "12yue", "A1", "A2", "B1": return SupabaseConfig.germanWordAudioVersion
+        default: return nil
+        }
+    }
+
+    private func audioFileName(for word: Word, bookID: String?, prefix: String?) -> String {
+        if naturalWordAudioVersion(for: bookID) != nil || prefix != nil {
             return "\(safeAudioFileName(for: word.word))_\(safeAudioFileName(for: word.id)).mp3"
         }
-        if let fileName = word.audioFileName, !fileName.isEmpty {
-            return fileName
-        }
-
+        if let file = word.audioFileName, !file.isEmpty { return file }
         return "\(safeAudioFileName(for: word.word)).mp3"
+    }
+
+    private func sourceDirectory(_ source: IndexedWordAudioSource) -> String {
+        if let prefix = source.pathPrefix, !prefix.isEmpty { return prefix }
+        if ["KaoYan_2", "IELTS_9400"].contains(source.bookID) {
+            if let version = naturalWordAudioVersion(for: source.bookID) {
+                return "\(version)/words/en-us/\(source.bookID.lowercased())"
+            }
+            return "words/\(source.bookID)"
+        }
+        if ["12yue", "A1", "A2", "B1"].contains(source.bookID),
+           let version = naturalWordAudioVersion(for: source.bookID) {
+            return "\(version)/words/de-de/\(source.bookID.lowercased())"
+        }
+        return "words"
+    }
+
+    func wordAudioLocation(for word: Word) -> (name: String, directory: String?, language: String) {
+        if let source = word.indexedAudioSource {
+            let language = source.language.map { $0 == .english ? "en-US" : "de-DE" }
+                ?? (["KaoYan_2", "IELTS_9400"].contains(source.bookID) ? "en-US" : "de-DE")
+            return (audioFileName(for: word, bookID: source.bookID, prefix: source.pathPrefix), sourceDirectory(source), language)
+        }
+        return (audioFileName(for: word, bookID: audioFolderName, prefix: wordAudioPathPrefix), nil, wordSpeechLanguageCode())
+    }
+
+    func wordAudioURLs(for word: Word) -> [URL] {
+        let location = wordAudioLocation(for: word)
+        return remoteAudioURLs(named: location.name, preferredSubdirectory: location.directory)
     }
 
     private func preferredMeaningAudioFileName(for meaning: String, language: LearningLanguage) -> String? {
@@ -510,7 +534,10 @@ public final class AudioPlayerManager: NSObject {
         let remoteName = storageSafeAudioFileName(name)
         if let preferredSubdirectory, !preferredSubdirectory.isEmpty {
             var path = preferredSubdirectory.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-            if path.hasPrefix("audio/") { path.removeFirst("audio/".count) }
+            if preferredSubdirectory == LearningLanguage.chinese.meaningAudioSubdirectory
+                || preferredSubdirectory == LearningLanguage.english.meaningAudioSubdirectory {
+                path.removeFirst("audio/".count)
+            }
             return "\(path)/\(remoteName)"
         }
         if let wordAudioPathPrefix, !wordAudioPathPrefix.isEmpty {
@@ -572,10 +599,14 @@ public final class AudioPlayerManager: NSObject {
     private func remoteAudioURLs(named name: String, preferredSubdirectory: String?) -> [URL] {
         let primaryPath = remotePath(named: name, preferredSubdirectory: preferredSubdirectory)
         var paths = [primaryPath]
-        if preferredSubdirectory == nil,
-           SupabaseConfig.germanWordAudioVersion != nil,
-           let currentBook = audioFolderName,
-           ["12yue", "A1", "A2", "B1"].contains(currentBook) {
+        let germanBooks = ["12yue", "A1", "A2", "B1"]
+        let originBook = germanBooks.first { book in
+            guard let directory = preferredSubdirectory?.lowercased() else { return false }
+            return directory.contains("/words/de-de/") && directory.hasSuffix("/" + book.lowercased())
+        }
+        if SupabaseConfig.germanWordAudioVersion != nil,
+           let currentBook = originBook ?? (preferredSubdirectory == nil ? audioFolderName : nil),
+           germanBooks.contains(currentBook) {
             let remoteName = storageSafeAudioFileName(name)
             let version = SupabaseConfig.germanWordAudioVersion ?? "v2"
             for book in ["12yue", "A1", "A2", "B1"] where book != currentBook {
@@ -640,10 +671,9 @@ public final class AudioPlayerManager: NSObject {
             suppressedSpeechCancelUtterance = activeSpeechUtterance
             tts.stopSpeaking(at: .immediate)
         }
-        let utter = AVSpeechUtterance(string: text)
+        let utter = makeSpeechUtterance(text: text, language: language)
         utter.voice = preferredSpeechVoice(for: language)
-        utter.rate = adjustedSpeechRate(for: language)
-        utter.volume = volume
+        audioDiagnostic("system speech language=\(language) rate=\(utter.rate) description=\(description)")
         activeSpeechUtterance = utter
         activeSpeechGeneration = playbackGeneration
         delegate?.audioPlayerManager(didStartPlaying: description)
@@ -652,14 +682,21 @@ public final class AudioPlayerManager: NSObject {
         prefetchUpcomingAudio()
     }
 
-    private func adjustedPlaybackRate(for preferredSubdirectory: String?) -> Float {
+    func makeSpeechUtterance(text: String, language: String) -> AVSpeechUtterance {
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.rate = adjustedSpeechRate(for: language)
+        utterance.volume = volume
+        return utterance
+    }
+
+    func adjustedPlaybackRate(for preferredSubdirectory: String?) -> Float {
         let multiplier = preferredSubdirectory == LearningLanguage.chinese.meaningAudioSubdirectory ? chineseMeaningFileRateMultiplier : 1.0
         return min(max(playbackRate * multiplier, 0.5), 2.0)
     }
 
-    private func adjustedSpeechRate(for language: String) -> Float {
-        let multiplier = language.lowercased().hasPrefix("zh") ? chineseMeaningFallbackSpeechRateMultiplier : 1.0
-        return min(max(rate * multiplier, AVSpeechUtteranceMinimumSpeechRate), AVSpeechUtteranceMaximumSpeechRate)
+    func adjustedSpeechRate(for language: String) -> Float {
+        let speechRate = language.lowercased().hasPrefix("zh") ? AVSpeechUtteranceDefaultSpeechRate : rate
+        return min(max(speechRate, AVSpeechUtteranceMinimumSpeechRate), AVSpeechUtteranceMaximumSpeechRate)
     }
 
     private func preferredSpeechVoice(for language: String) -> AVSpeechSynthesisVoice? {

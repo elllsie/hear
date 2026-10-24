@@ -524,9 +524,8 @@ final class PodcastWordStore: ObservableObject {
         return added
     }
 
-    @discardableResult
-    func addToHomeWordBook(ids: Set<String>, destinationID: String) -> Int {
-        let selectedWords = words.filter { ids.contains($0.id) }.map { saved in
+    private func homeWords(ids: Set<String>) -> [Word] {
+        words.filter { ids.contains($0.id) }.map { saved in
             Word(
                 id: "podcast-context-\(saved.id)",
                 word: saved.word,
@@ -537,6 +536,22 @@ final class PodcastWordStore: ObservableObject {
                 source: "\(saved.podcastTitle) · \(saved.episodeTitle)"
             )
         }
+    }
+
+    func createHomeWordBook(name: String, ids: Set<String>) -> UserWordBook? {
+        let selected = homeWords(ids: ids)
+        guard !selected.isEmpty else { return nil }
+        var updated = wordBookLibrary
+        guard let created = updated.createWordBook(named: name, words: selected),
+              UserWordBookStore.save(updated, for: userKey, language: language) else { return nil }
+        wordBookLibrary = updated
+        uploadWordBooksToCloud()
+        return created
+    }
+
+    @discardableResult
+    func addToHomeWordBook(ids: Set<String>, destinationID: String) -> Int {
+        let selectedWords = homeWords(ids: ids)
         guard let index = wordBookLibrary.books.firstIndex(where: { $0.id == destinationID }) else { return 0 }
         var known = Set(wordBookLibrary.books[index].words.map { $0.word.lowercased() })
         let unique = selectedWords.filter { known.insert($0.word.lowercased()).inserted }
@@ -617,12 +632,13 @@ final class PodcastWordStore: ObservableObject {
                         value: words
                     )
                 }
-                if let remoteLibrary: UserWordBookLibrary = try await SupabaseClient.shared.fetchUserState(
+                if let remoteLibrary = try await SupabaseClient.shared.fetchUserWordBookLibrary(
                     accessToken: accessToken,
                     userId: cloudUserID,
-                    key: UserWordBookStore.cloudKey(for: language)
+                    language: language,
+                    includeLegacy: !UserWordBookStore.hasIndexedStorage(for: userKey, language: language)
                 ) {
-                    wordBookLibrary = remoteLibrary
+                    wordBookLibrary = UserWordBookStore.resolve(remoteLibrary)
                     wordBookLibrary.normalize()
                     UserWordBookStore.save(wordBookLibrary, for: userKey, language: language)
                 }
@@ -2793,7 +2809,13 @@ private struct PodcastWordsView: View {
                             selectedWordIDs: $selectedWordIDs,
                             wordBooks: store.wordBookLibrary.books,
                             selectedBookID: store.wordBookLibrary.selectedBookID,
-                            onSelectBook: store.selectWordBook
+                            onSelectBook: store.selectWordBook,
+                            onCreateBook: { name in store.createHomeWordBook(name: name, ids: selectedWordIDs) },
+                            onCreatedBook: { created in
+                                let skipped = max(0, selectedWordIDs.count - created.entryCount)
+                                pendingImportMessage = "已将 \(created.entryCount) 个单词加入“\(created.name)”，跳过 \(skipped) 个重复词。"
+                                activeSheet = nil
+                            }
                         ) {
                             let destinationID = store.wordBookLibrary.selectedBookID
                             let destinationName = store.wordBookLibrary.books.first(where: { $0.id == destinationID })?.name ?? "默认"
@@ -2831,7 +2853,11 @@ private struct PodcastWordBookSelectionView: View {
     let wordBooks: [UserWordBook]
     let selectedBookID: String
     let onSelectBook: (String) -> Void
+    let onCreateBook: (String) -> UserWordBook?
+    let onCreatedBook: (UserWordBook) -> Void
     let onAdd: () -> Void
+    @State private var isCreatingBook = false
+    @State private var createdBook: UserWordBook?
     @Environment(\.dismiss) private var dismiss
     @Environment(\.podcastInterfaceLanguage) private var learningLanguage
 
@@ -2843,6 +2869,10 @@ private struct PodcastWordBookSelectionView: View {
         NavigationView {
             List {
                 Section("加入到列表") {
+                    Button { isCreatingBook = true } label: {
+                        Label("新建词书…", systemImage: "plus.circle")
+                    }
+                    .disabled(selectedWordIDs.isEmpty)
                     ForEach(wordBooks) { book in
                         Button { onSelectBook(book.id) } label: {
                             HStack {
@@ -2850,7 +2880,7 @@ private struct PodcastWordBookSelectionView: View {
                                     .foregroundColor(book.id == selectedBookID ? .mint : .secondary)
                                 Text(book.name).foregroundColor(.primary)
                                 Spacer()
-                                Text("\(book.words.count)").foregroundColor(.secondary)
+                                Text("\(book.entryCount)").foregroundColor(.secondary)
                             }
                         }
                     }
@@ -2905,6 +2935,18 @@ private struct PodcastWordBookSelectionView: View {
             }
         }
         .navigationViewStyle(.stack)
+        .sheet(isPresented: $isCreatingBook, onDismiss: {
+            if let created = createdBook {
+                createdBook = nil
+                onCreatedBook(created)
+            }
+        }) {
+            CreateWordBookSheet(selectedWordCount: selectedWordIDs.count, isEnglish: learningLanguage == .english) { name in
+                guard let created = onCreateBook(name) else { return "创建或保存失败，所选单词已保留，请重试。" }
+                createdBook = created
+                return nil
+            }
+        }
     }
 }
 

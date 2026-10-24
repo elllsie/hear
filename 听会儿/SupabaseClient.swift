@@ -520,6 +520,17 @@ private struct RemotePodcastDifficultWord: Decodable {
     }
 }
 
+extension SupabaseClient {
+    func fetchUserWordBookLibrary(accessToken: String, userId: String, language: StudyLanguage, includeLegacy: Bool = true) async throws -> UserWordBookLibrary? {
+        if let indexed: UserWordBookLibrary = try await fetchUserState(accessToken: accessToken,
+            userId: userId, key: UserWordBookStore.cloudKey(for: language)) { return indexed }
+        guard includeLegacy else { return nil }
+        // Read the old snapshot without overwriting it, so the previous app remains usable.
+        return try await fetchUserState(accessToken: accessToken, userId: userId,
+            key: UserWordBookStore.legacyCloudKey(for: language))
+    }
+}
+
 private struct RemoteFavoriteWordUpsert: Codable {
     let userId: String
     let bookId: String

@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 public enum StudyLanguage: String, CaseIterable, Identifiable, Codable, Sendable {
     case english
@@ -36,6 +37,9 @@ public struct Word: Codable, Equatable {
     public let meaningZh: String? // Additional field
     public let meaningEn: String? // Additional field
     public let source: String? // Additional field for some datasets
+    // Runtime metadata only. Personal books encode the reference, not this resolved content.
+    var sourceReference: WordSourceReference? = nil
+    var indexedAudioSource: IndexedWordAudioSource? = nil
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -167,11 +171,67 @@ enum ContextWordBookStore {
     }
 }
 
+struct WordSourceReference: Codable, Equatable, Hashable {
+    let bookID: String
+    let wordID: String
+    private enum CodingKeys: String, CodingKey { case bookID = "bookId", wordID = "wordId" }
+}
+
+struct IndexedWordAudioSource: Equatable {
+    let bookID: String
+    let pathPrefix: String?
+    let language: StudyLanguage?
+}
+
+extension Word {
+    func indexed(in book: WordBook) -> Word {
+        guard sourceReference == nil, !book.bookId.hasPrefix("user-"),
+              book.bookId != "favorites" else { return self }
+        var result = self
+        result.sourceReference = WordSourceReference(bookID: book.bookId, wordID: id)
+        result.indexedAudioSource = IndexedWordAudioSource(bookID: book.bookId,
+            pathPrefix: book.audioPathPrefix, language: book.language)
+        return result
+    }
+}
+
 struct UserWordBook: Codable, Equatable, Identifiable {
     let id: String
     var name: String
+    // Resolved projection used by the existing UI. Only standalone words are serialized here.
     var words: [Word]
     let createdAt: Date
+    var unresolvedReferences: [WordSourceReference] = []
+
+    var references: [WordSourceReference] {
+        var seen = Set<WordSourceReference>()
+        return (words.compactMap(\.sourceReference) + unresolvedReferences).filter { seen.insert($0).inserted }
+    }
+    var entryCount: Int { words.filter { $0.sourceReference == nil }.count + references.count }
+
+    private enum CodingKeys: String, CodingKey { case id, name, words, createdAt, sourceReferences }
+
+    init(id: String, name: String, words: [Word], createdAt: Date) {
+        self.id = id; self.name = name; self.words = words; self.createdAt = createdAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        words = try container.decodeIfPresent([Word].self, forKey: .words) ?? []
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        unresolvedReferences = try container.decodeIfPresent([WordSourceReference].self, forKey: .sourceReferences) ?? []
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(words.filter { $0.sourceReference == nil }, forKey: .words)
+        try container.encode(references, forKey: .sourceReferences)
+    }
 
     static func defaultBook(words: [Word] = []) -> UserWordBook {
         UserWordBook(id: UserWordBookStore.defaultBookID, name: "默认", words: words, createdAt: .distantPast)
@@ -184,6 +244,88 @@ struct UserWordBookLibrary: Codable, Equatable {
 
     static var empty: UserWordBookLibrary {
         UserWordBookLibrary(books: [.defaultBook()], selectedBookID: UserWordBookStore.defaultBookID)
+    }
+
+    private enum CodingKeys: String, CodingKey { case books, selectedBookID, selectedBookId }
+
+    init(books: [UserWordBook], selectedBookID: String) {
+        self.books = books; self.selectedBookID = selectedBookID
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        books = try container.decode([UserWordBook].self, forKey: .books)
+        selectedBookID = try container.decodeIfPresent(String.self, forKey: .selectedBookID)
+            ?? container.decodeIfPresent(String.self, forKey: .selectedBookId)
+            ?? UserWordBookStore.defaultBookID
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(books, forKey: .books)
+        try container.encode(selectedBookID, forKey: .selectedBookID)
+    }
+
+    func resolving(in sources: [WordBook]) -> UserWordBookLibrary {
+        let legacyReferences = books.flatMap(\.words).compactMap { word -> WordSourceReference? in
+            guard word.sourceReference == nil, let source = word.source, !source.isEmpty else { return nil }
+            return WordSourceReference(bookID: source, wordID: word.id)
+        }
+        let needed = Set(books.flatMap(\.references) + legacyReferences)
+        guard !needed.isEmpty else { return self }
+        var resolved: [WordSourceReference: Word] = [:]
+        for source in sources {
+            for word in source.words {
+                let key = WordSourceReference(bookID: source.bookId, wordID: word.id)
+                if needed.contains(key) { resolved[key] = word.indexed(in: source) }
+            }
+        }
+        var result = self
+        for index in result.books.indices {
+            let references = result.books[index].references
+            let standalone = result.books[index].words.filter { $0.sourceReference == nil }.map { word in
+                // Old copies keep all user content. Restore only runtime audio routing,
+                // and only with an explicit source plus an exact ID and spelling match.
+                guard let source = word.source,
+                      let original = resolved[WordSourceReference(bookID: source, wordID: word.id)],
+                      original.word == word.word else { return word }
+                var restored = word
+                restored.indexedAudioSource = original.indexedAudioSource
+                return restored
+            }
+            result.books[index].words = (standalone + references.compactMap { resolved[$0] }).sorted {
+                $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending
+            }
+            result.books[index].unresolvedReferences = references.filter { resolved[$0] == nil }
+        }
+        return result
+    }
+
+    /// Creates a new target with only the supplied selection. Names and duplicate
+    /// handling match existing personal books; referenced words keep their provenance.
+    @discardableResult
+    mutating func createWordBook(named name: String, words: [Word]) -> UserWordBook? {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        var known = Set<String>()
+        let unique = words.filter { known.insert($0.word.lowercased()).inserted }.sorted {
+            $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending
+        }
+        let book = UserWordBook(id: UUID().uuidString, name: trimmed, words: unique, createdAt: Date())
+        books.append(book)
+        selectedBookID = book.id
+        return book
+    }
+
+    @discardableResult
+    mutating func addLinkedWords(_ candidates: [Word], from source: WordBook, to destinationID: String) -> Int {
+        guard let index = books.firstIndex(where: { $0.id == destinationID }) else { return 0 }
+        var known = Set(books[index].words.map { $0.word.lowercased() })
+        let additions = candidates.filter { known.insert($0.word.lowercased()).inserted }.map { $0.indexed(in: source) }
+        books[index].words.append(contentsOf: additions)
+        books[index].words.sort { $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending }
+        selectedBookID = destinationID
+        return additions.count
     }
 
     mutating func normalize() {
@@ -202,21 +344,65 @@ enum UserWordBookStore {
     static let defaultBookID = "default"
     static let didChange = Notification.Name("tinghui.userWordBooks.didChange")
 
-    static func load(for userKey: String, language: StudyLanguage) -> UserWordBookLibrary {
-        guard let data = UserDefaults.standard.data(forKey: key(for: userKey, language: language)),
-              var library = try? JSONDecoder().decode(UserWordBookLibrary.self, from: data) else {
-            return .empty
+    // Separate v2 storage leaves legacy preferences and cloud snapshots intact for rollback.
+    private static var cachedSources: [WordBook] = []
+
+    static func updateSources(_ sources: [WordBook]) { cachedSources = sources }
+
+    static func resolve(_ library: UserWordBookLibrary) -> UserWordBookLibrary {
+        guard library.books.contains(where: {
+            !$0.references.isEmpty || $0.words.contains(where: { $0.source != nil })
+        }) else { return library }
+        if cachedSources.isEmpty {
+            cachedSources = RemoteWordBookRepository.cachedBooks(bundled:
+                DataLoader.loadBooks(named: ["A1", "A2", "B1", "KaoYan_2", "IELTS_9400"]))
         }
-        library.normalize()
-        return library
+        return library.resolving(in: cachedSources)
     }
 
-    static func save(_ library: UserWordBookLibrary, for userKey: String, language: StudyLanguage) {
+    static func storageURL(for userKey: String, language: StudyLanguage, directory: URL? = nil) throws -> URL {
+        let root = try directory ?? FileManager.default.url(for: .applicationSupportDirectory,
+            in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("IndexedWordBooksV2", isDirectory: true)
+        let filename = SHA256.hash(data: Data(key(for: userKey, language: language).utf8))
+            .map { String(format: "%02x", $0) }.joined()
+        return root.appendingPathComponent(filename + ".json")
+    }
+
+    static func hasIndexedStorage(for userKey: String, language: StudyLanguage) -> Bool {
+        guard let url = try? storageURL(for: userKey, language: language) else { return false }
+        return FileManager.default.fileExists(atPath: url.path)
+    }
+
+    static func load(for userKey: String, language: StudyLanguage, directory: URL? = nil,
+                     defaults: UserDefaults = .standard) -> UserWordBookLibrary {
+        let diskData = (try? storageURL(for: userKey, language: language, directory: directory))
+            .flatMap { try? Data(contentsOf: $0) }
+        let legacyData = defaults.data(forKey: key(for: userKey, language: language))
+        for data in [diskData, legacyData].compactMap({ $0 }) {
+            if var library = try? JSONDecoder().decode(UserWordBookLibrary.self, from: data) {
+                library.normalize()
+                return resolve(library)
+            }
+        }
+        return .empty
+    }
+
+    @discardableResult
+    static func save(_ library: UserWordBookLibrary, for userKey: String, language: StudyLanguage,
+                     directory: URL? = nil) -> Bool {
         var normalized = library
         normalized.normalize()
-        guard let data = try? JSONEncoder().encode(normalized) else { return }
-        UserDefaults.standard.set(data, forKey: key(for: userKey, language: language))
-        NotificationCenter.default.post(name: didChange, object: changeKey(for: userKey, language: language))
+        do {
+            let data = try JSONEncoder().encode(normalized)
+            let url = try storageURL(for: userKey, language: language, directory: directory)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try data.write(to: url, options: .atomic)
+            NotificationCenter.default.post(name: didChange, object: changeKey(for: userKey, language: language))
+            return true
+        } catch {
+            NSLog("Personal word book save failed: %@", error.localizedDescription)
+            return false
+        }
     }
 
     static func changeKey(for userKey: String, language: StudyLanguage) -> String {
@@ -224,6 +410,10 @@ enum UserWordBookStore {
     }
 
     static func cloudKey(for language: StudyLanguage) -> String {
+        "word_book_library_v2_\(language.rawValue)"
+    }
+
+    static func legacyCloudKey(for language: StudyLanguage) -> String {
         "word_book_library_\(language.rawValue)"
     }
 
@@ -509,6 +699,10 @@ public enum RemoteWordBookRepository {
     private static let cacheFolderName = "TingHuiErWordBooksV1"
     private static let maximumWordCount = 100_000
 
+    public static func cachedBooks(bundled: [WordBook]) -> [WordBook] {
+        merge(bundled: bundled, remote: loadAllValidCaches())
+    }
+
     public static func mergedBooks(bundled: [WordBook]) async -> [WordBook] {
         do {
             let descriptors = try await SupabaseClient.shared.fetchWordBookCatalog()
@@ -615,5 +809,77 @@ private extension DataLoader {
     static func wordsForRemoteDisplay(_ words: [Word], language: StudyLanguage) -> [Word] {
         guard language == .english else { return words }
         return words.sorted { $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending }
+    }
+}
+
+
+enum WordBookRecommendation {
+    static let percentages = [70, 60, 50, 40, 30]
+
+    private struct DifficultyData: Decodable {
+        let scores: [String: Int]
+    }
+
+    private static let scores = loadScores("EnglishWordFrequency")
+
+    private static func loadScores(_ name: String) -> [String: Int] {
+        let url = Bundle.main.url(forResource: name, withExtension: "json", subdirectory: "data")
+            ?? Bundle.main.url(forResource: name, withExtension: "json")
+        guard let url, let data = try? Data(contentsOf: url),
+              let decoded = try? JSONDecoder().decode(DifficultyData.self, from: data) else { return [:] }
+        return decoded.scores
+    }
+
+    /// Rarity is an offline proxy, not an AI or CEFR assessment.
+    static func rankedWords(in book: WordBook) -> [Word]? {
+        guard ["KaoYan_2", "IELTS_9400"].contains(book.bookId), !book.words.isEmpty,
+              book.words.allSatisfy({ scores[key($0)] != nil }) else { return nil }
+        return book.words.sorted {
+            let lhs = scores[key($0)]!, rhs = scores[key($1)]!
+            if lhs != rhs { return lhs > rhs }
+            if let lhsID = Int($0.id), let rhsID = Int($1.id), lhsID != rhsID { return lhsID < rhsID }
+            return $0.id < $1.id
+        }
+    }
+
+    private static func key(_ word: Word) -> String {
+        word.word.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+}
+
+struct WordRecommendationSelection {
+    private(set) var percentage: Int?
+    private(set) var recommended = Set<String>()
+    private(set) var supplemental = Set<String>()
+    private var additions = Set<String>()
+    private var removals = Set<String>()
+
+    var selected: Set<String> { recommended.union(additions).subtracting(removals) }
+    var recommendationCount: Int { recommended.intersection(selected).count }
+    var additionCount: Int { selected.subtracting(recommended).count }
+
+    mutating func apply(_ percentage: Int, rankedIDs: [String], reset: Bool = false) {
+        self.percentage = percentage
+        // Round down to ensure at least the stated proportion is filtered out.
+        recommended = Set(rankedIDs.prefix(rankedIDs.count * percentage / 100))
+        if reset { additions.removeAll(); removals.removeAll() }
+        supplemental = Set(rankedIDs).subtracting(recommended).union(removals.intersection(rankedIDs))
+    }
+
+    mutating func set(_ ids: Set<String>, selected: Bool) {
+        if selected {
+            additions.formUnion(ids)
+            removals.subtract(ids)
+        } else {
+            additions.subtract(ids)
+            removals.formUnion(ids)
+            supplemental.formUnion(ids)
+        }
+    }
+
+    mutating func clear() {
+        additions.removeAll()
+        removals.formUnion(recommended)
+        supplemental.formUnion(recommended)
     }
 }

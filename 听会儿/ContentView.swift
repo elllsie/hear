@@ -2,7 +2,8 @@ import SwiftUI
 import AVFoundation
 
 private func storedWordIdentity(_ word: Word) -> String {
-    "\(word.id)\u{1F}\(word.word.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())"
+    if let reference = word.sourceReference { return "\(reference.bookID)\u{1F}\(reference.wordID)" }
+    return "\(word.id)\u{1F}\(word.word.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())"
 }
 
 private struct SyncedPreferences: Codable {
@@ -152,6 +153,9 @@ struct ContentView: View {
                                 },
                                 onMove: { wordIDs, destinationID in
                                     addWords(wordIDs, from: selectedBook, to: destinationID)
+                                },
+                                onCreateAndAdd: { name, wordIDs in
+                                    createWordBookAndAdd(name: name, wordIDs: wordIDs, from: selectedBook)
                                 },
                                 onLoginRequired: promptForFavoriteSignIn
                             )
@@ -392,6 +396,7 @@ struct ContentView: View {
 
             DispatchQueue.main.async {
                 self.books = loadedBooks
+                UserWordBookStore.updateSources(loadedBooks)
                 self.loadUserWordBooks()
                 self.isLoadingBooks = false
                 if loadedBooks.isEmpty {
@@ -403,6 +408,7 @@ struct ContentView: View {
                     await MainActor.run {
                         guard !mergedBooks.isEmpty else { return }
                         self.books = mergedBooks
+                        UserWordBookStore.updateSources(mergedBooks)
                         self.loadUserWordBooks()
                     }
                 }
@@ -425,7 +431,7 @@ struct ContentView: View {
     }
 
     private func favoriteBook() -> WordBook {
-        let count = wordBookLibrary.books.reduce(0) { $0 + $1.words.count }
+        let count = wordBookLibrary.books.reduce(0) { $0 + $1.entryCount }
         return WordBook(bookId: FavoriteWordStore.favoriteBookId, title: FavoriteWordStore.favoriteBookTitle, words: Array(repeating: placeholderWord, count: count))
     }
 
@@ -439,7 +445,7 @@ struct ContentView: View {
 
     private func loadUserWordBooks() {
         var library = UserWordBookStore.load(for: activeUser.storageKey, language: studyLanguage)
-        if library.books.first(where: { $0.id == UserWordBookStore.defaultBookID })?.words.isEmpty == true {
+        if library.books.first(where: { $0.id == UserWordBookStore.defaultBookID })?.entryCount == 0 {
             let allowedBookIDs = Set(books.filter(isBookForSelectedLanguage).map(\.bookId))
             let legacyWords = contextWords + favoriteRefs
                 .filter { allowedBookIDs.contains($0.bookId) }
@@ -565,7 +571,7 @@ struct ContentView: View {
     }
 
     private func toggleFavorite(word: Word, in book: WordBook) {
-        toggleWord(word, in: wordBookLibrary.selectedBookID)
+        toggleWord(word.indexed(in: book), in: wordBookLibrary.selectedBookID)
     }
 
     private func toggleWord(_ word: Word, in destinationID: String) {
@@ -575,7 +581,8 @@ struct ContentView: View {
         }) {
             wordBookLibrary.books[index].words.remove(at: wordIndex)
         } else {
-            wordBookLibrary.books[index].words.append(word)
+            let entry = selectedBook.map { word.indexed(in: $0) } ?? word
+            wordBookLibrary.books[index].words.append(entry)
             wordBookLibrary.books[index].words.sort { $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending }
         }
         wordBookLibrary.selectedBookID = destinationID
@@ -632,19 +639,21 @@ struct ContentView: View {
 
     @discardableResult
     private func addWords(_ wordIDs: Set<String>, from source: WordBook, to destinationID: String) -> Int {
-        guard let destinationIndex = wordBookLibrary.books.firstIndex(where: { $0.id == destinationID }) else { return 0 }
         let moving = source.words.filter { wordIDs.contains(storedWordIdentity($0)) }
-        var known = Set(wordBookLibrary.books[destinationIndex].words.map { $0.word.lowercased() })
-        let addedWords = moving.filter {
-            known.insert($0.word.lowercased()).inserted
-        }
-        wordBookLibrary.books[destinationIndex].words.append(contentsOf: addedWords)
-        wordBookLibrary.books[destinationIndex].words.sort {
-            $0.word.localizedCaseInsensitiveCompare($1.word) == .orderedAscending
-        }
-        wordBookLibrary.selectedBookID = destinationID
+        let addedCount = wordBookLibrary.addLinkedWords(moving, from: source, to: destinationID)
         saveUserWordBooks()
-        return addedWords.count
+        return addedCount
+    }
+
+    private func createWordBookAndAdd(name: String, wordIDs: Set<String>, from source: WordBook) -> UserWordBook? {
+        guard !isGuestMode else { promptForFavoriteSignIn(); return nil }
+        let words = source.words.filter { wordIDs.contains(storedWordIdentity($0)) }.map { $0.indexed(in: source) }
+        guard !words.isEmpty else { return nil }
+        var updated = wordBookLibrary
+        guard let created = updated.createWordBook(named: name, words: words),
+              UserWordBookStore.save(updated, for: activeUser.storageKey, language: studyLanguage) else { return nil }
+        wordBookLibrary = updated
+        return created
     }
 
     private func openBuiltInBook(_ book: WordBook, at word: Word) {
@@ -658,7 +667,8 @@ struct ContentView: View {
     }
 
     private func openUserWordBook(_ userBook: UserWordBook, word: Word? = nil) {
-        let book = WordBook(bookId: "user-\(userBook.id)", title: userBook.name, words: userBook.words)
+        let resolved = UserWordBookLibrary(books: [userBook], selectedBookID: userBook.id).resolving(in: books).books[0]
+        let book = WordBook(bookId: "user-\(userBook.id)", title: userBook.name, words: resolved.words)
         selectedBook = book
         currentIndex = word.flatMap { selectedWord in
             book.words.firstIndex { storedWordIdentity($0) == storedWordIdentity(selectedWord) }
@@ -952,11 +962,12 @@ struct ContentView: View {
             let libraryKey = UserWordBookStore.cloudKey(for: language)
             let localLibrary = UserWordBookStore.load(for: user.storageKey, language: language)
             do {
-                if let remote: UserWordBookLibrary = try await SupabaseClient.shared.fetchUserState(
-                    accessToken: accessToken, userId: user.id, key: libraryKey
+                if let remote = try await SupabaseClient.shared.fetchUserWordBookLibrary(
+                    accessToken: accessToken, userId: user.id, language: language,
+                    includeLegacy: !UserWordBookStore.hasIndexedStorage(for: user.storageKey, language: language)
                 ) {
                     UserWordBookStore.save(remote, for: user.storageKey, language: language)
-                } else if localLibrary.books.contains(where: { !$0.words.isEmpty }) || localLibrary.books.count > 1 {
+                } else if localLibrary.books.contains(where: { $0.entryCount > 0 }) || localLibrary.books.count > 1 {
                     try await SupabaseClient.shared.upsertUserState(
                         accessToken: accessToken, userId: user.id, key: libraryKey, value: localLibrary
                     )
@@ -2439,12 +2450,28 @@ private struct ReadOnlyWordBookListView: View {
     let onBack: () -> Void
     let onPlay: (Word) -> Void
     let onMove: (Set<String>, String) -> Int
+    let onCreateAndAdd: (String, Set<String>) -> UserWordBook?
     let onLoginRequired: () -> Void
     @State private var selectedIDs = Set<String>()
     @State private var isSelecting = false
     @State private var isShowingMoveTargets = false
     @State private var addResultMessage: String?
     @State private var searchText = ""
+
+    @State private var recommendation = WordRecommendationSelection()
+    @State private var rankedIDs: [String] = []
+    @State private var showsSelected = false
+    @State private var pendingDestination: UserWordBook?
+    @State private var isCreatingDestination = false
+
+    private var usesRecommendation: Bool {
+        isSelecting && ["KaoYan_2", "IELTS_9400"].contains(book.bookId)
+    }
+    private var hasRecommendation: Bool { usesRecommendation && recommendation.percentage != nil }
+    private var candidateWords: [Word] {
+        // Keep manually checked rows in place until the recommendation tier changes.
+        visibleWords.filter { recommendation.supplemental.contains(storedWordIdentity($0)) }
+    }
 
     private var visibleWords: [Word] {
         prioritizedWordSearch(in: book.words, query: searchText)
@@ -2461,28 +2488,42 @@ private struct ReadOnlyWordBookListView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(visibleWords.map { (id: storedWordIdentity($0), word: $0) }, id: \.id) { row in
-                    let word = row.word
-                    Button {
-                        let identity = storedWordIdentity(word)
-                        if isSelecting {
-                            if selectedIDs.contains(identity) { selectedIDs.remove(identity) }
-                            else { selectedIDs.insert(identity) }
-                        } else {
-                            onPlay(word)
+                if usesRecommendation { recommendationControls }
+                if hasRecommendation {
+                    Section {
+                        DisclosureGroup(isExpanded: $showsSelected) {
+                            wordRows(visibleWords.filter { selectedIDs.contains(storedWordIdentity($0)) })
+                        } label: {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(isEnglish ? "Selected \(selectedIDs.count) words" : "已选 \(selectedIDs.count) 词")
+                                    .font(.headline)
+                                Text(isEnglish
+                                     ? "Recommended: \(recommendation.recommendationCount) · Added: \(recommendation.additionCount)"
+                                     : "推荐 \(recommendation.recommendationCount) 词 · 手动补选 \(recommendation.additionCount) 词")
+                                    .font(.caption).foregroundColor(.secondary)
+                            }
                         }
-                    } label: {
-                        UserWordSelectionRow(
-                            word: word,
-                            learningLanguage: learningLanguage,
-                            showsPhonetic: showsPhonetic,
-                            isSelecting: isSelecting,
-                            isSelected: selectedIDs.contains(storedWordIdentity(word))
-                        )
+                        Button(isEnglish ? "Clear selection" : "清空选择") {
+                            recommendation.clear()
+                            selectedIDs = recommendation.selected
+                        }
                     }
-                    .buttonStyle(.plain)
+                    Section {
+                        Button(isEnglish ? "Select search results" : "全选当前搜索结果") {
+                            setSelection(visibleWordIDs, selected: true)
+                        }
+                        wordRows(candidateWords)
+                    } header: {
+                        Text(isEnglish ? "Want to learn these too? (\(book.words.count - selectedIDs.count) unselected)" : "还想学这些词吗？（剩余 \(book.words.count - selectedIDs.count) 词未选）")
+                    } footer: {
+                        Text(isEnglish ? "Tap a word to add it. Checked words stay here so you can undo."
+                             : "点击单词补选；已补选的词保留原位，可再次点击取消。")
+                    }
+                } else {
+                    wordRows(visibleWords)
                 }
             }
+
             .navigationTitle(book.title)
             .searchable(text: $searchText, prompt: learningLanguage == .english ? "Search words" : "搜索单词")
             .toolbar {
@@ -2492,26 +2533,50 @@ private struct ReadOnlyWordBookListView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(isSelecting ? (learningLanguage == .english ? "Done" : "完成") : (learningLanguage == .english ? "Select" : "选择")) {
                         isSelecting.toggle()
-                        if !isSelecting { selectedIDs.removeAll() }
+                        if !isSelecting {
+                            selectedIDs.removeAll()
+                            recommendation = WordRecommendationSelection()
+                            showsSelected = false
+                        }
                     }
                     .disabled(book.words.isEmpty)
                 }
             }
-            .overlay(alignment: .bottom) {
-                if isSelecting {
+            .safeAreaInset(edge: .bottom) {
+                if usesRecommendation {
+                    VStack(spacing: 10) {
+                        Button(allVisibleWordsSelected
+                               ? (isEnglish ? "Deselect search results" : "取消全选当前结果")
+                               : (isEnglish ? "Select search results" : "全选当前搜索结果")) {
+                            setSelection(visibleWordIDs, selected: !allVisibleWordsSelected)
+                        }
+                        .font(.subheadline)
+                        Button {
+                            if requiresLoginForAdding { onLoginRequired() }
+                            else { isShowingMoveTargets = true }
+                        } label: {
+                            Text(isEnglish ? "Add \(selectedIDs.count) words to another book"
+                                 : "将已选 \(selectedIDs.count) 词加入其他词书")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(selectedIDs.isEmpty)
+
+                    }
+                    .padding()
+                    .background(.regularMaterial)
+                } else if isSelecting {
                     WordSelectionActionBar(
                         allSelected: allVisibleWordsSelected,
-                        canMove: !selectedIDs.isEmpty && (requiresLoginForAdding || !destinationBooks.isEmpty),
+                        canMove: !selectedIDs.isEmpty,
                         canDelete: false,
                         showsDelete: false,
                         isMoveRestricted: requiresLoginForAdding,
-                        moveTitle: learningLanguage == .english ? "Add to Word Book" : "加入词书",
+                        moveTitle: isEnglish ? "Add \(selectedIDs.count) words" : "将已选 \(selectedIDs.count) 词加入其他词书",
                         onSelectAll: {
-                            if allVisibleWordsSelected {
-                                selectedIDs.subtract(visibleWordIDs)
-                            } else {
-                                selectedIDs.formUnion(visibleWordIDs)
-                            }
+                            setSelection(visibleWordIDs, selected: !allVisibleWordsSelected)
                         },
                         onMove: {
                             if requiresLoginForAdding {
@@ -2528,32 +2593,47 @@ private struct ReadOnlyWordBookListView: View {
                 learningLanguage == .english ? "Add to a word book" : "加入词书",
                 isPresented: $isShowingMoveTargets
             ) {
+                Button(isEnglish ? "New word book…" : "新建词书…") {
+                    isCreatingDestination = true
+                }
                 ForEach(destinationBooks) { destination in
                     Button(destination.name) {
-                        let selectedCount = selectedIDs.count
-                        let addedCount = onMove(selectedIDs, destination.id)
-                        let skippedCount = max(0, selectedCount - addedCount)
-                        if learningLanguage == .english {
-                            addResultMessage = skippedCount == 0
-                                ? "Added \(addedCount) words to \(destination.name)."
-                                : "Added \(addedCount) words to \(destination.name); \(skippedCount) already existed."
-                        } else {
-                            addResultMessage = skippedCount == 0
-                                ? "已将 \(addedCount) 个单词加入“\(destination.name)”。"
-                                : "已加入 \(addedCount) 个，跳过 \(skippedCount) 个已存在的单词。"
-                        }
-                        selectedIDs.removeAll()
-                        isSelecting = false
+                        pendingDestination = destination
                     }
                 }
                 Button(learningLanguage == .english ? "Cancel" : "取消", role: .cancel) {}
             } message: {
                 Text(learningLanguage == .english
-                     ? "System word books are read-only. Selected words will be added to your word book."
-                     : "系统词书为只读，所选单词会加入目标个人词书。")
+                     ? "Selected words will be linked to their original entries. Source books stay unchanged."
+                     : "所选单词将以引用方式加入个人词书，内容与音频沿用原词书。")
+            }
+            .sheet(isPresented: $isCreatingDestination) {
+                CreateWordBookSheet(selectedWordCount: selectedIDs.count, isEnglish: isEnglish) { name in
+                    let count = selectedIDs.count
+                    guard let created = onCreateAndAdd(name, selectedIDs) else {
+                        return isEnglish ? "Could not create and save the word book. Your selection is kept. Please retry."
+                            : "创建或保存失败，所选单词已保留，请重试。"
+                    }
+                    finishAddition(selectedCount: count, addedCount: created.entryCount, destinationName: created.name)
+                    return nil
+                }
+            }
+            .alert(isEnglish ? "Confirm adding words" : "确认加入词书", isPresented: Binding(
+                get: { pendingDestination != nil },
+                set: { if !$0 { pendingDestination = nil } }
+            )) {
+                Button(isEnglish ? "Add" : "加入") {
+                    if let destination = pendingDestination { addSelection(to: destination) }
+                    pendingDestination = nil
+                }
+                Button(isEnglish ? "Cancel" : "取消", role: .cancel) { pendingDestination = nil }
+            } message: {
+                Text(isEnglish
+                     ? "Add \(selectedIDs.count) words to \(pendingDestination?.name ?? "")? Existing words will be skipped."
+                     : "将已选 \(selectedIDs.count) 词加入“\(pendingDestination?.name ?? "")”，已有单词会自动跳过。")
             }
             .alert(learningLanguage == .english ? "Add Complete" : "加入完成", isPresented: Binding(
-                get: { addResultMessage != nil },
+                get: { addResultMessage != nil && !isCreatingDestination },
                 set: { if !$0 { addResultMessage = nil } }
             )) {
                 Button(learningLanguage == .english ? "OK" : "好") { addResultMessage = nil }
@@ -2562,6 +2642,226 @@ private struct ReadOnlyWordBookListView: View {
             }
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            if rankedIDs.isEmpty {
+                rankedIDs = WordBookRecommendation.rankedWords(in: book)?.map(storedWordIdentity) ?? []
+            }
+        }
+    }
+
+    private var isEnglish: Bool { learningLanguage == .english }
+
+    private var recommendationControls: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 12) {
+                Label(isEnglish ? "Difficulty suggestions" : "难度选词建议", systemImage: "slider.horizontal.3")
+                    .font(.headline)
+                Text(isEnglish ? "Choose your level, then add any extra words below." : "按掌握程度选择难度，再从下方补选想学的词。")
+                    .font(.subheadline).foregroundColor(.secondary)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(alignment: .top, spacing: 10) {
+                        ForEach(Array(WordBookRecommendation.percentages.enumerated()), id: \.element) { index, percentage in
+                            Button {
+                                recommendation.apply(percentage, rankedIDs: rankedIDs)
+                                selectedIDs = recommendation.selected
+                            } label: {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    VStack(alignment: .leading, spacing: 3) {
+                                        Text(isEnglish ? "Select \(percentage)%" : "选中 \(percentage)%")
+                                            .font(.headline)
+                                        Text(isEnglish
+                                             ? "Filter \(100 - percentage)% basic words"
+                                             : "\(["基础巩固", "稳步提升", "重点突破", "高阶强化", "难词攻坚"][index]) · 过滤基础词 \(100 - percentage)%")
+                                            .font(.caption).foregroundColor(.secondary)
+                                    }
+                                    Image(systemName: recommendation.percentage == percentage ? "checkmark.circle.fill" : "circle")
+                                }
+                                .frame(width: 142, alignment: .leading)
+                                .padding(12)
+                                .background(recommendation.percentage == percentage ? Color.mint.opacity(0.12) : Color.secondary.opacity(0.06))
+                                .cornerRadius(12)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(rankedIDs.isEmpty)
+                            .accessibilityLabel(isEnglish ? "Select \(percentage) percent, filter \(100 - percentage) percent" : "选中百分之\(percentage)，过滤百分之\(100 - percentage)")
+                            .accessibilityAddTraits(recommendation.percentage == percentage ? .isSelected : [])
+                        }
+                    }
+                }
+                if let percentage = recommendation.percentage,
+                   let index = WordBookRecommendation.percentages.firstIndex(of: percentage) {
+                    difficultyDetails(index: index, percentage: percentage)
+                }
+                if rankedIDs.isEmpty {
+                    Text(isEnglish ? "Frequency data is not available for every word yet. You can select words manually below."
+                         : "词频参考数据暂未覆盖全部词汇，可在下方手动选词加入其他词书。")
+                        .font(.caption).foregroundColor(.secondary)
+                }
+                if let percentage = recommendation.percentage {
+                    Button(isEnglish ? "Restore this recommendation" : "恢复本档推荐") {
+                        recommendation.apply(percentage, rankedIDs: rankedIDs, reset: true)
+                        selectedIDs = recommendation.selected
+                    }
+                    Text(isEnglish
+                         ? "Offline frequency reference: rarer words are prioritized. Frequency does not fully represent difficulty. Manual changes are preserved."
+                         : "依据离线词频辅助筛选，优先保留低频词。词频不完全代表难度；切换档位会保留手动调整。")
+                        .font(.caption).foregroundColor(.secondary)
+                    Link("wordfreq 3.1.1 · CC BY-SA 4.0", destination: URL(string: "https://github.com/rspeer/wordfreq#license")!)
+                        .font(.caption)
+                }
+            }
+            .padding(.vertical, 6)
+        }
+    }
+
+    private func difficultyDetails(index: Int, percentage: Int) -> some View {
+        let titles = isEnglish
+            ? ["Build your foundation", "Develop confidence", "Focus on key vocabulary", "Strengthen advanced vocabulary", "Tackle rare vocabulary"]
+            : ["基础巩固", "稳步提升", "重点突破", "高阶强化", "难词攻坚"]
+        let descriptions = isEnglish
+            ? ["For learners who still need to consolidate familiar vocabulary. Keep a broad range of words.",
+               "For learners comfortable with everyday English. Focus more on exam and academic vocabulary.",
+               "For learners with a solid foundation. Reduce familiar vocabulary and focus on less common words.",
+               "For learners comfortable with common exam vocabulary. Concentrate on rarer and more specialized words.",
+               "For advanced learners reviewing their gaps. Keep only the least frequent words in this book."]
+            : ["适合基础词还不够熟练的学习者。保留较广的词汇范围，兼顾巩固与进阶。",
+               "适合已掌握日常词汇的学习者。减少常见词，把精力放在考试与学术表达上。",
+               "适合基础较扎实的学习者。进一步缩小范围，重点学习较少接触的词汇。",
+               "适合已熟悉常见考试词汇的学习者。集中学习低频词与较专业的表达。",
+               "适合进阶复习、查漏补缺的学习者。只保留本词书中词频最低的一部分。"]
+        // Preview the newly included boundary of each tier rather than repeating the hardest words.
+        let count = rankedIDs.count * percentage / 100
+        let previewIDs = Set(rankedIDs.prefix(count).suffix(4))
+        let preview = book.words.filter { previewIDs.contains(storedWordIdentity($0)) }
+        return VStack(alignment: .leading, spacing: 8) {
+            Text(titles[index]).font(.headline)
+            Text(descriptions[index]).font(.subheadline).foregroundColor(.secondary)
+            Text(isEnglish ? "Recommend \(count) words · Filter \(book.words.count - count) words"
+                 : "本档推荐 \(count) 词 · 过滤 \(book.words.count - count) 词")
+                .font(.caption).foregroundColor(.secondary)
+            if !preview.isEmpty {
+                Text(isEnglish ? "Words near this level’s cutoff" : "本档难度边界词预览")
+                    .font(.caption.weight(.semibold))
+                ForEach(preview, id: \.id) { word in
+                    Text("\(word.word) · \(word.meaning(for: learningLanguage))")
+                        .font(.caption).lineLimit(2)
+                }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.mint.opacity(0.08))
+        .cornerRadius(12)
+    }
+
+    private func setSelection(_ ids: Set<String>, selected: Bool) {
+        if usesRecommendation {
+            recommendation.set(ids, selected: selected)
+            selectedIDs = recommendation.selected
+        } else if selected {
+            selectedIDs.formUnion(ids)
+        } else {
+            selectedIDs.subtract(ids)
+        }
+    }
+
+    private func wordRows(_ words: [Word]) -> some View {
+        ForEach(words.map { (id: storedWordIdentity($0), word: $0) }, id: \.id) { row in
+            Button {
+                if isSelecting {
+                    setSelection([row.id], selected: !selectedIDs.contains(row.id))
+                } else {
+                    onPlay(row.word)
+                }
+            } label: {
+                VStack(alignment: .leading, spacing: 4) {
+                    UserWordSelectionRow(
+                        word: row.word, learningLanguage: learningLanguage,
+                        showsPhonetic: showsPhonetic, isSelecting: isSelecting,
+                        isSelected: selectedIDs.contains(row.id)
+                    )
+                    if hasRecommendation && selectedIDs.contains(row.id) && !recommendation.recommended.contains(row.id) {
+                        Text(isEnglish ? "Added manually" : "已补选")
+                            .font(.caption).foregroundColor(.secondary)
+                    }
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(selectedIDs.contains(row.id) ? .isSelected : [])
+        }
+    }
+
+    private func addSelection(to destination: UserWordBook) {
+        let count = selectedIDs.count
+        let added = onMove(selectedIDs, destination.id)
+        finishAddition(selectedCount: count, addedCount: added, destinationName: destination.name)
+    }
+
+    private func finishAddition(selectedCount: Int, addedCount: Int, destinationName: String) {
+        let skipped = max(0, selectedCount - addedCount)
+        addResultMessage = isEnglish
+            ? "Added \(addedCount) words to \(destinationName); \(skipped) already existed or were duplicates."
+            : "已将 \(addedCount) 词加入“\(destinationName)”，跳过 \(skipped) 个重复词。"
+        selectedIDs.removeAll()
+        recommendation = WordRecommendationSelection()
+        showsSelected = false
+        isSelecting = false
+    }
+}
+
+/// Shared by both source-book and podcast selection flows.
+struct CreateWordBookSheet: View {
+    let selectedWordCount: Int
+    let isEnglish: Bool
+    let onCreate: (String) -> String?
+    @Environment(\.dismiss) private var dismiss
+    @FocusState private var isNameFocused: Bool
+    @State private var name = ""
+    @State private var errorMessage: String?
+    @State private var isSubmitting = false
+
+    private var canCreate: Bool {
+        !isSubmitting && selectedWordCount > 0 && !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section {
+                    TextField(isEnglish ? "Word book name" : "词书名称", text: $name)
+                        .focused($isNameFocused)
+                        .submitLabel(.done)
+                        .onSubmit(create)
+                } footer: {
+                    Text(isEnglish ? "Create a word book and add the \(selectedWordCount) selected words."
+                         : "创建后将直接加入当前选中的 \(selectedWordCount) 个单词。")
+                }
+                if let errorMessage { Text(errorMessage).foregroundColor(.red) }
+            }
+            .navigationTitle(isEnglish ? "New word book" : "新建词书")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(isEnglish ? "Cancel" : "取消") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(isEnglish ? "Create and add" : "创建并加入", action: create)
+                        .disabled(!canCreate)
+                }
+            }
+        }
+        .navigationViewStyle(.stack)
+        .onAppear { isNameFocused = true }
+    }
+
+    private func create() {
+        guard canCreate else { return }
+        isSubmitting = true
+        errorMessage = onCreate(name.trimmingCharacters(in: .whitespacesAndNewlines))
+        if errorMessage == nil { dismiss() }
+        else { isSubmitting = false }
     }
 }
 
@@ -2636,7 +2936,7 @@ private struct UserWordBooksView: View {
                                     .foregroundColor(.mint)
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(book.name).font(.headline).foregroundColor(.primary)
-                                    Text("\(book.words.count) \(learningLanguage == .english ? "words" : "个单词")")
+                                    Text("\(book.entryCount) \(learningLanguage == .english ? "words" : "个单词")")
                                         .font(.subheadline).foregroundColor(.secondary)
                                 }
                                 Spacer()
@@ -2722,7 +3022,14 @@ private struct UserWordBookDetailView: View {
 
     var body: some View {
         List {
-            if book.words.isEmpty {
+            if !book.unresolvedReferences.isEmpty {
+                Text(learningLanguage == .english
+                     ? "\(book.unresolvedReferences.count) source entries are unavailable. Their references are kept and will return when the source is available."
+                     : "\(book.unresolvedReferences.count) 个原词条暂不可用，引用已保留，原词书恢复后会重新显示。")
+                    .font(.footnote).foregroundColor(.secondary)
+            }
+
+            if book.entryCount == 0 {
                 Text(learningLanguage == .english ? "No words yet" : "这个词书还没有单词")
                     .foregroundColor(.secondary)
             } else {
